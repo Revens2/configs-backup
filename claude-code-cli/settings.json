@@ -48,12 +48,7 @@
       "mcp__codegraph__codegraph_find_uninitialized",
       "mcp__codegraph__codegraph_reaching_defs"
     ],
-    "deny": [
-      "mcp__obsidian__*",
-      "mcp__obsidian-semantic__*",
-      "mcp__anytype__*",
-      "mcp__notebooklm__*"
-    ],
+    "deny": [],
     "defaultMode": "default"
   },
   "model": "haiku",
@@ -89,6 +84,35 @@
           {
             "type": "command",
             "command": "bash C:/Users/Juliann/.claude/hooks/auto-graph-setup.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "startup|resume|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/Juliann/.claude/hooks/state-restore.mjs"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/Juliann/.claude/hooks/state-save.mjs"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/Juliann/.claude/hooks/state-save.mjs"
           }
         ]
       }
