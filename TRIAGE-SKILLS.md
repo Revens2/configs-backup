@@ -78,17 +78,29 @@ Destination naturelle : le projet du vault, aux côtés du worker `obsidian-cont
 
 ---
 
-## Doublons constatés
+## Doublons constatés — **corrigé après vérification**
 
-| Skill | Copie utilisateur | Copie plugin | Action |
-|---|---|---|---|
-| `caveman` | oui | oui | supprimer la copie utilisateur (−106 tok) |
-| `skill-creator` | oui | oui | supprimer la copie utilisateur (−61 tok) |
-| `frontend-design` | oui | oui | supprimer la copie utilisateur (−64 tok) |
+Une copie présente dans un *marketplace* cloné n'est pas une copie chargée : seuls comptent les
+plugins **activés**. `~/.claude/settings.json:147` ne déclare qu'un seul plugin actif :
+`frontend-design@claude-plugins-official`.
 
-Les 42 skills fournis par des plugins s'ajoutent aux 63 utilisateur et **ne sont pas comptés** dans les
-6 057 tok ci-dessus. Le coût réel du listing est donc supérieur à la mesure. Levier complémentaire
-repéré dans le schéma des settings : `disableBundledSkills` et `skillOverrides`.
+| Skill | Copie utilisateur | Plugin présent | Plugin **activé** | Verdict |
+|---|---|---|---|---|
+| `frontend-design` | oui | `claude-plugins-official` | **oui** | vrai doublon → copie utilisateur retirée (−64 tok) |
+| `caveman` | oui | `caveman` (marketplace) | **non** | la copie utilisateur est la **seule source** — ne pas supprimer |
+| `skill-creator` | oui | `claude-plugins-official` | **non** | la copie utilisateur est la **seule source** — ne pas supprimer |
+
+Gain réel : **64 tok**, pas 231. L'estimation initiale confondait « présent dans un marketplace cloné »
+et « chargé ».
+
+Anomalie relevée au passage : `plugins/installed_plugins.json` et `known_marketplaces.json` pointent
+tous leurs chemins sur `C:\Users\julia\…`, un profil qui n'existe plus (réinstallation du PC le
+2026-07-17). Les plugins non activés le sont peut-être pour cette raison. À traiter hors de cette
+mission.
+
+Les 42 skills présents dans les marketplaces s'ajouteraient aux 63 utilisateur **s'ils étaient
+activés** — ce n'est pas le cas aujourd'hui, donc ils ne pèsent pas sur le contexte du CLI. Leviers
+complémentaires repérés dans le schéma des settings : `disableBundledSkills`, `skillOverrides`.
 
 **Écart CLI / Desktop à connaître :** côté Desktop, un plugin `anthropic-skills` fournit en plus
 `docx`, `pdf`, `pptx`, `xlsx`, `caveman`, `skill-creator` — les mêmes noms que des skills utilisateur,
@@ -100,7 +112,8 @@ disparaît du CLI.
 
 ## Ordre d'exécution proposé (quand la Phase 1 sera dégelée)
 
-1. Supprimer les 3 doublons — gain immédiat 231 tok, risque nul.
+1. ~~Supprimer les 3 doublons~~ → **fait** : seul `frontend-design` était un vrai doublon,
+   retiré vers `~/.claude/skills-retires-20260803/`. 64 tok. 62 skills utilisateur restants.
 2. Descendre les blocs monolithiques : CKM (643), métier (1 063), Obsidian (321) — 2 027 tok,
    aucun arbitrage nécessaire, ces skills n'ont de sens que dans leur projet.
 3. Bureautique (925) et Front (935) — nécessitent de choisir les projets de destination.

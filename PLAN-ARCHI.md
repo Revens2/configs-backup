@@ -75,13 +75,18 @@ Le reste des correspondances du scan sont des placeholders de documentation
 
 ---
 
-## PHASE 1 — Assainissement préalable (bloquante)
+## PHASE 1 — Assainissement préalable — **DÉGELÉE ET CLOSE le 2026-08-04**
 
-- [ ] 1.1 Scan credentials sur les 4 arbres de config (fait pour le dépôt ; à refaire sur les fichiers vivants après modification)
-- [ ] 1.2 S1 : purge de l'historique git ou rotation de la clé — **décision utilisateur requise**
-- [ ] 1.3 S2 : remplacer par `${ANYTYPE_API_KEY}`, créer `.example` sanitisés, `.gitignore` sur le fichier réel
-- [ ] 1.4 ~~BOM `settings.local.json`~~ — sans objet (vérifié : pas de BOM)
-- [ ] 1.5 Commit `chore(security): sanitize credentials, add example configs`
+- [x] 1.1 Scan credentials sur les 4 arbres de config
+- [x] 1.2 S1 **révoquée par l'utilisateur**. Vérifié : `GET 127.0.0.1:31009/v1/spaces` → **HTTP 401**.
+      L'historique git n'est pas réécrit (décision assumée) : la clé y reste, mais inerte.
+- [x] 1.3 S2 **révoquée également** (même vérification → HTTP 401). Traitement retenu :
+      **suppression du bloc `anytype`** des deux configs plutôt qu'indirection par variable d'env —
+      le serveur ne démarrait pas et n'avait aucun appel en 18 jours, une `${ANYTYPE_API_KEY}`
+      n'aurait fait que déplacer un secret inutile. Plus aucune occurrence de `Bearer` dans
+      `~/.mcp.json` ni `claude_desktop_config.json`.
+- [x] 1.4 ~~BOM `settings.local.json`~~ — sans objet (vérifié : pas de BOM)
+- [x] 1.5 Commit
 
 ## PHASE 2 — Orchestrateur nu (Claude Code CLI) — **révisée 2026-08-04**
 
@@ -101,6 +106,24 @@ Le reste des correspondances du scan sont des placeholders de documentation
     `disableClaudeAiConnectors` (connecteurs claude.ai).
   - **anytype** : 0 appel en 18 jours **et** serveur en panne (`claude mcp list` → `× Failed to connect,
     -32000: Connection closed`). Candidat à la suppression pure, pas au déplacement.
+
+#### 2.2a — premier retrait, exécuté le 2026-08-04
+
+`anytype` (50 outils, 0 appel, serveur mort, clé révoquée) et `canva` (11 outils, 0 appel) retirés de
+`~/.mcp.json` **et** de `claude_desktop_config.json`. Sauvegardes `.bak.20260804-010257` conservées.
+Vérifié : les deux fichiers restent du JSON valide, `claude mcp list` démarre sans erreur, les 5
+serveurs restants se connectent.
+
+| | avant | après |
+|---|---:|---:|
+| Serveurs `.mcp.json` | 7 | **5** |
+| Outils MCP exposés | ~195 | **~134** |
+| Coût MCP estimé | ~39 000 tok | **~26 800 tok** |
+
+Gain : **~12 200 tok/session**, sans perte de capacité (aucun des deux serveurs n'avait servi).
+Reste à arbitrer pour aller plus loin : `obsidian`, `obsidian-semantic`, `notebooklm` sont les MCP des
+workers — les retirer de la racine désarme les workers depuis `C:\Users\Juliann` (cf. limite
+structurelle ci-dessous).
 - [ ] 2.3 Descendre les skills non universels dans les projets → < 20 skills utilisateur
   (actuel : **63**, 6 057 tok). Deuxième levier, 12 % du démarrage.
   **Triage prêt : [`TRIAGE-SKILLS.md`](TRIAGE-SKILLS.md)** — 15 conservés (906 tok), 47 déplacés,

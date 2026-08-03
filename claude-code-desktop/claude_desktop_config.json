@@ -14,14 +14,6 @@
         "notebooklm-mcp"
       ]
     },
-    "canva": {
-      "command": "npx.cmd",
-      "args": [
-        "-y",
-        "@canva/cli@latest",
-        "mcp"
-      ]
-    },
     "codegraph": {
       "command": "node",
       "args": [
@@ -46,18 +38,6 @@
         "C:\\Users\\Juliann\\mcp-obsidian-semantic\\src\\index.js",
         "G:\\Mon Drive\\Obsidian Vault"
       ]
-    },
-    "anytype": {
-      "command": "cmd",
-      "args": [
-        "/c",
-        "npx",
-        "-y",
-        "@anyproto/anytype-mcp"
-      ],
-      "env": {
-        "OPENAPI_MCP_HEADERS": "{\"Authorization\":\"Bearer REDACTED_BEARER_TOKEN\",\"Anytype-Version\":\"2025-11-08\"}"
-      }
     }
   },
   "coworkUserFilesPath": "C:\\Users\\Juliann\\Claude",
