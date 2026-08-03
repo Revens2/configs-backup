@@ -121,9 +121,36 @@ serveurs restants se connectent.
 | Coût MCP estimé | ~39 000 tok | **~26 800 tok** |
 
 Gain : **~12 200 tok/session**, sans perte de capacité (aucun des deux serveurs n'avait servi).
-Reste à arbitrer pour aller plus loin : `obsidian`, `obsidian-semantic`, `notebooklm` sont les MCP des
-workers — les retirer de la racine désarme les workers depuis `C:\Users\Juliann` (cf. limite
-structurelle ci-dessous).
+
+#### 2.2b — second retrait, exécuté le 2026-08-04
+
+Arbitrage utilisateur : sortir `notebooklm` et `obsidian`, garder `obsidian-semantic`.
+Retirés des deux runtimes.
+
+| | départ | après 2.2a | après 2.2b |
+|---|---:|---:|---:|
+| Serveurs | 7 | 5 | **3** |
+| Outils MCP | ~195 | ~134 | **~74** |
+| Coût MCP estimé | ~39 000 tok | ~26 800 tok | **~14 800 tok** |
+
+Restent : `codegraph`, `github`, `obsidian-semantic`. **Gain cumulé ~24 200 tok/session (−62 %).**
+Vérifié : JSON valide sur les deux fichiers, `claude mcp list` démarre, les 3 serveurs se connectent.
+
+#### 2.4 — workers réalignés sur les MCP réellement disponibles
+
+| Worker | Avant | Après | Traitement |
+|---|---:|---:|---|
+| `obsidian-context-retriever` | 3 591 o | **2 564 o** | 15 outils `mcp__obsidian__*` retirés ; accède désormais au vault par le système de fichiers (`Glob`/`Grep`/`Read`/`Write` sur `G:\Mon Drive\Obsidian Vault`) + `semantic-search`. Capacité de lecture intacte. |
+| `web-researcher` | 3 428 o | **2 256 o** | 11 outils `mcp__notebooklm__*` retirés ; bascule sur `WebSearch`/`WebFetch`. |
+| `anytype-manager` | 4 044 o | — | **retiré** vers `~/.claude/agents/retires-20260804/` : ses 16 outils avaient tous disparu avec le serveur. |
+
+Listing des agents : 863 → **502 tok**. Sauvegardes `.bak` dans le dossier `retires-20260804/`.
+
+**Dette ouverte — `~/.claude/CLAUDE.md` non modifié.** Ta règle « niveau 3 : `CLAUDE.md` finalisé avant
+de démarrer, jamais édité en cours de session » l'interdit. Trois passages sont désormais faux :
+la ligne `anytype-manager` du tableau de délégation, la ligne `mcp__anytype__* → anytype-manager` du
+confinement MCP, et `mcp__obsidian__*` / `mcp__notebooklm__*` qui ne référencent plus rien.
+**À corriger en début de prochaine session, avec réplication dans `gemini.md`.**
 - [ ] 2.3 Descendre les skills non universels dans les projets → < 20 skills utilisateur
   (actuel : **63**, 6 057 tok). Deuxième levier, 12 % du démarrage.
   **Triage prêt : [`TRIAGE-SKILLS.md`](TRIAGE-SKILLS.md)** — 15 conservés (906 tok), 47 déplacés,
