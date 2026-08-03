@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.skills.sh)",
+      "mcp__puppeteer__puppeteer_screenshot",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(mkdir *)",
+      "Bash(npm init *)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Juliann\\\\AppData\\\\Roaming\\\\Hermes\" -Recurse -File -ErrorAction SilentlyContinue | Where-Object {$_.Extension -in '.json','.toml','.yaml'} | Select-Object FullName, Length)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Juliann\\\\AppData\\\\Roaming\\\\Hermes\" -Recurse -ErrorAction SilentlyContinue | Select-Object FullName -First 40; \"---\"; Get-ChildItem \"C:\\\\Users\\\\Juliann\\\\AppData\\\\Local\\\\hermes\" -ErrorAction SilentlyContinue | Select-Object FullName -First 40)",
+      "PowerShell(Select-String *)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "codegraph"
+  ]
+}
