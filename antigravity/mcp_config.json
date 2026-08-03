@@ -7,7 +7,7 @@
         "@anyproto/anytype-mcp"
       ],
       "env": {
-        "OPENAPI_MCP_HEADERS": "{\"Authorization\":\"Bearer REDACTED_ANYTYPE_BEARER_TOKEN\", \"Anytype-Version\":\"2025-11-08\"}"
+        "OPENAPI_MCP_HEADERS": "{\"Authorization\":\"Bearer REDACTED_BEARER_TOKEN\", \"Anytype-Version\":\"2025-11-08\"}"
       }
     },
     "kicad-gui-bridge": {

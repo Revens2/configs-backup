@@ -23,14 +23,15 @@
       ]
     },
     "codegraph": {
-      "command": "C:\\Users\\Juliann\\.cargo\\bin\\codegraph.exe",
+      "command": "node",
       "args": [
-        "serve"
+        "C:\\Users\\Juliann\\.claude\\hooks\\codegraph-wrapper.mjs"
       ],
       "env": {
-        "CODEGRAPH_DB": ".codegraph/codegraph.db"
-      },
-      "serverInstructions": "ALWAYS prefer CodeGraph tools over Grep/Glob/Explore for code search, dependency analysis, and symbol lookup. The pre-built AST index provides instant results across 32 languages."
+        "CODEGRAPH_DB": ".codegraph/codegraph.db",
+        "CODEGRAPH_BIN": "C:\\Users\\Juliann\\.cargo\\bin\\codegraph.exe",
+        "RUST_LOG": "off"
+      }
     },
     "github": {
       "command": "npx.cmd",
@@ -39,35 +40,24 @@
         "@modelcontextprotocol/server-github"
       ]
     },
-    "files-stream": {
-      "command": "npx.cmd",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "C:\\Users\\Juliann"
-      ]
-    },
-    "docx": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "office-word-mcp-server",
-        "word_mcp_server"
-      ]
-    },
-    "browsermcp": {
-      "command": "npx.cmd",
-      "args": [
-        "-y",
-        "@browsermcp/mcp@latest"
-      ]
-    },
     "obsidian-semantic": {
       "command": "node",
       "args": [
         "C:\\Users\\Juliann\\mcp-obsidian-semantic\\src\\index.js",
         "G:\\Mon Drive\\Obsidian Vault"
       ]
+    },
+    "anytype": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@anyproto/anytype-mcp"
+      ],
+      "env": {
+        "OPENAPI_MCP_HEADERS": "{\"Authorization\":\"Bearer REDACTED_BEARER_TOKEN\",\"Anytype-Version\":\"2025-11-08\"}"
+      }
     }
   },
   "coworkUserFilesPath": "C:\\Users\\Juliann\\Claude",
@@ -120,13 +110,15 @@
         "C:\\Users\\Juliann\\Desktop\\maxi_mistère:auto",
         "C:\\Users\\Juliann\\Desktop\\maxi_mistère:bypassPermissions",
         "G:\\Mon Drive\\VPS ETUDE:bypassPermissions",
-        "C:\\Users\\Juliann\\Desktop\\Watchy:bypassPermissions"
+        "C:\\Users\\Juliann\\Desktop\\Watchy:bypassPermissions",
+        "C:\\Users\\Juliann:bypassPermissions"
       ],
       "epitaxy-folder-permission-mode.5f2efb2f-9ab7-4534-870a-73fd49af8fb2": {
         "C:\\Users\\Juliann\\Desktop\\rgrg": "bypassPermissions",
         "C:\\Users\\Juliann\\Desktop\\maxi_mistère": "bypassPermissions",
         "G:\\Mon Drive\\VPS ETUDE": "bypassPermissions",
-        "C:\\Users\\Juliann\\Desktop\\Watchy": "bypassPermissions"
+        "C:\\Users\\Juliann\\Desktop\\Watchy": "bypassPermissions",
+        "C:\\Users\\Juliann": "bypassPermissions"
       },
       "cc-landing-worktree-enabled": true,
       "epitaxy-pr-create-mode": "create"

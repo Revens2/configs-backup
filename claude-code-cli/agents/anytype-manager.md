@@ -1,7 +1,7 @@
 ---
 name: anytype-manager
 description: Agent spécialisé dans la gestion de la base de connaissances orientée objet Anytype via MCP. À déclencher automatiquement dès que la demande de l'utilisateur implique la recherche, la création, la mise à jour ou l'organisation de données dans Anytype.
-tools: mcp__anytype__API-search-global, mcp__anytype__API-list-objects, mcp__anytype__API-get-object, mcp__anytype__API-create-object, mcp__anytype__API-update-object, mcp__anytype__API-delete-object, mcp__anytype__API-list-types, mcp__anytype__API-list-properties, mcp__anytype__API-list-tags
+tools: mcp__anytype__API-list-spaces, mcp__anytype__API-get-space, mcp__anytype__API-search-global, mcp__anytype__API-search-space, mcp__anytype__API-list-objects, mcp__anytype__API-get-object, mcp__anytype__API-create-object, mcp__anytype__API-update-object, mcp__anytype__API-delete-object, mcp__anytype__API-list-types, mcp__anytype__API-get-type, mcp__anytype__API-list-properties, mcp__anytype__API-list-tags, mcp__anytype__API-list-templates, mcp__anytype__API-get-list-objects, mcp__anytype__API-add-list-objects
 ---
 
 ### 🎯 Role & Paradigm
