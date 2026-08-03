@@ -183,12 +183,29 @@ Réorientation qui en découle : **AGY porte l'orchestration profonde** (déjà 
 ~2 000 tok, zéro MCP), **Claude Code fait l'implémentation fine** avec un `.mcp.json` racine quasi vide
 et des serveurs déclarés par projet.
 
-## PHASE 3 — Boucle de plan sur fichier
+## PHASE 3 — Boucle de plan sur fichier — **exécutée le 2026-08-04**
 
-- [ ] 3.1 Skill `/plan-run` (lire → décider → valider → cocher)
-- [ ] 3.2 Format `progress.md` : intitulé, critère d'acceptation, cible, statut, section erreurs append-only
-- [ ] 3.3 Réactiver `SessionStart` + `PreCompact` depuis `hooks_disabled`, en `.mjs` via `node`
-- [ ] 3.4 Test de compaction réelle
+- [x] 3.1 Skill `/plan-run` créé (`~/.claude/skills/plan-run/SKILL.md`) : boucle lire → décider →
+  vérifier → cocher, critère bruit/conclusion, arbitrage (A) inscrit, liste des workers disponibles.
+  16ᵉ skill utilisateur, listing 905 → 1 002 tok.
+- [x] 3.2 Format `progress.md` spécifié dans le skill : une tâche = une ligne cochable, critère
+  d'acceptation **vérifiable**, cible (orchestrateur ou worker), section `Décisions`, section
+  `Erreurs` **append-only**.
+- [x] 3.3 **Rien à réactiver — l'énoncé était périmé.** `SessionStart` (matchers `startup|resume|compact`
+  → `state-restore.mjs`) et `PreCompact` (→ `state-save.mjs`) sont **déjà actifs** dans le bloc `hooks`,
+  **déjà en `.mjs` appelés par `node`**, exactement la forme demandée.
+  Le bloc `hooks_disabled` contient une **génération antérieure en `bash *.sh`** (`session-start.sh`,
+  `pre-compact.sh`, `stop.sh`, …). La réactiver serait une **régression** : c'est précisément le
+  `.sh` sous Windows que la mission interdit. Bloc laissé en place, inerte.
+  Modification réellement utile apportée à la place : `state-lib.mjs` gagne `planPointer(cwd)` et
+  `renderState` écrit désormais en tête de `STATE.md` un **pointeur vers `progress.md`**, le compteur
+  `n/total` et les **3 prochaines tâches non cochées** — pour que la reprise post-compaction reparte
+  de la bonne ligne. Sauvegarde `state-lib.mjs.bak.20260804-010257`.
+- [~] 3.4 **Testé partiellement.** `node --check` OK sur les 3 hooks ; `state-save.mjs` exécuté de bout
+  en bout avec une charge utile `PreCompact` synthétique sur un répertoire contenant un `progress.md`
+  → `STATE.md` correctement généré avec le pointeur et les 3 tâches suivantes ; ré-exécuté sur un
+  répertoire **sans** `progress.md` → aucune régression, `{"continue":true}`.
+  **Non testé : une compaction réelle.** Elle ne se provoque pas à la demande. À valider en usage.
 
 ## PHASE 4 — Claude Code Desktop
 
