@@ -49,3 +49,7 @@ if [ "${CAVEMAN_STATUSLINE_SAVINGS:-1}" != "0" ]; then
   fi
 fi
 
+# An empty suffix file leaves the last [ -n ] test as the script's exit status
+# (1), and Claude Code hides the whole status bar on non-zero exit (#711).
+exit 0
+
