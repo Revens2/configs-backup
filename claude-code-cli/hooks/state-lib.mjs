@@ -125,11 +125,39 @@ export async function scanTranscript(transcriptPath) {
   return out;
 }
 
+// Le plan vit dans progress.md, pas dans le contexte : un fichier ne se compacte pas.
+// On ne recopie pas le plan dans STATE.md — on pointe dessus et on rappelle la tâche
+// en cours, pour que la reprise après compaction reparte de la bonne ligne.
+export function planPointer(cwd) {
+  try {
+    const file = path.join(cwd || process.cwd(), 'progress.md');
+    if (!fs.existsSync(file)) return null;
+    const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
+    const done = lines.filter((l) => /^\s*[-*]\s*\[x\]/i.test(l)).length;
+    const todo = lines.filter((l) => /^\s*[-*]\s*\[[ ~]\]/.test(l));
+    return { file, done, total: done + todo.length, next: todo.slice(0, 3) };
+  } catch {
+    return null;
+  }
+}
+
 export function renderState({ cwd, trigger, scan, stamp }) {
   const L = [];
   L.push(`# STATE — ${cwd || '(inconnu)'}`);
   L.push(`_maj ${stamp} · déclencheur : ${trigger}_`);
   L.push('');
+  const plan = planPointer(cwd);
+  if (plan) {
+    L.push('## Plan en cours — source de vérité');
+    L.push(`**${plan.file}** — ${plan.done}/${plan.total} tâches cochées.`);
+    L.push('Relire ce fichier avant toute action ; ne pas se fier au résumé ci-dessous.');
+    if (plan.next.length) {
+      L.push('');
+      L.push('Prochaines tâches non cochées :');
+      plan.next.forEach((t) => L.push(t.trim()));
+    }
+    L.push('');
+  }
   if (scan.prompts.length) {
     L.push('## Demandes récentes (chronologique)');
     scan.prompts.forEach((p) => L.push(`- ${p}`));
@@ -164,4 +192,3 @@ export function bail(err) {
   process.stdout.write(JSON.stringify({ continue: true }));
   process.exit(0);
 }
-
