@@ -1,0 +1,43 @@
+{
+  "mcpServers": {
+    "codegraph": {
+      "command": "node",
+      "args": [
+        "C:\\Users\\Juliann\\.claude\\hooks\\codegraph-wrapper.mjs"
+      ],
+      "env": {
+        "CODEGRAPH_DB": ".codegraph/codegraph.db",
+        "CODEGRAPH_BIN": "C:\\Users\\Juliann\\.cargo\\bin\\codegraph.exe",
+        "RUST_LOG": "off"
+      }
+    },
+    "github": {
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ]
+    },
+    "obsidian": {
+      "command": "mcpvault.cmd",
+      "args": [
+        "G:\\Mon Drive\\Obsidian Vault"
+      ]
+    },
+    "obsidian-semantic": {
+      "command": "node",
+      "args": [
+        "C:\\Users\\Juliann\\mcp-obsidian-semantic\\src\\index.js",
+        "G:\\Mon Drive\\Obsidian Vault"
+      ]
+    },
+    "notebooklm": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "notebooklm-mcp-cli",
+        "notebooklm-mcp"
+      ]
+    }
+  }
+}
