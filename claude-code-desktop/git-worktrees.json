@@ -1,0 +1,62 @@
+{
+	"schemaVersion": 2,
+	"worktrees": {
+		"numworks-reverse-engineering-8d5e22": {
+			"name": "numworks-reverse-engineering-8d5e22",
+			"path": "C:\\Users\\Juliann\\Desktop\\maxi_mistère\\.claude\\worktrees\\numworks-reverse-engineering-8d5e22",
+			"leasedBy": "local_b36d40ba-33be-4c54-b028-ae243f2d39e4",
+			"baseRepo": "C:\\Users\\Juliann\\Desktop\\maxi_mistère",
+			"branch": "claude/numworks-reverse-engineering-8d5e22",
+			"sourceBranch": "master",
+			"createdAt": 1785455855560
+		},
+		"rapport-problemes-6465e6": {
+			"name": "rapport-problemes-6465e6",
+			"path": "C:\\Users\\Juliann\\Desktop\\maxi_mistère\\.claude\\worktrees\\rapport-problemes-6465e6",
+			"leasedBy": "local_5568230d-26bc-4252-876d-75064ff6ebfa",
+			"baseRepo": "C:\\Users\\Juliann\\Desktop\\maxi_mistère",
+			"branch": "claude/rapport-problemes-6465e6",
+			"sourceBranch": "master",
+			"createdAt": 1785457740791
+		},
+		"claude-md-graphify-auto-install-d6da76": {
+			"name": "claude-md-graphify-auto-install-d6da76",
+			"path": "C:\\Users\\Juliann\\Desktop\\maxi_mistère\\.claude\\worktrees\\claude-md-graphify-auto-install-d6da76",
+			"leasedBy": null,
+			"baseRepo": "C:\\Users\\Juliann\\Desktop\\maxi_mistère",
+			"branch": "claude/claude-md-graphify-auto-install-d6da76",
+			"sourceBranch": "master",
+			"createdAt": 1785600115338,
+			"pooledAt": 1785686701345
+		},
+		"notebooklm-web-search-agent-4bb389": {
+			"name": "notebooklm-web-search-agent-4bb389",
+			"path": "C:\\Users\\Juliann\\Desktop\\maxi_mistère\\.claude\\worktrees\\notebooklm-web-search-agent-4bb389",
+			"leasedBy": null,
+			"baseRepo": "C:\\Users\\Juliann\\Desktop\\maxi_mistère",
+			"branch": "claude/notebooklm-web-search-agent-4bb389",
+			"sourceBranch": "master",
+			"createdAt": 1785460102694,
+			"pooledAt": 1785548100963
+		},
+		"mystifying-clarke-48366d": {
+			"name": "mystifying-clarke-48366d",
+			"path": "C:\\Users\\Juliann\\Desktop\\maxi_mistère\\.claude\\worktrees\\mystifying-clarke-48366d",
+			"leasedBy": null,
+			"baseRepo": "C:\\Users\\Juliann\\Desktop\\maxi_mistère",
+			"branch": "claude/mystifying-clarke-48366d",
+			"sourceBranch": "master",
+			"createdAt": 1785461379143,
+			"pooledAt": 1785574869851
+		},
+		"watchy-refonte-optimisation-f4c49c": {
+			"name": "watchy-refonte-optimisation-f4c49c",
+			"path": "C:\\Users\\Juliann\\Desktop\\Watchy\\.claude\\worktrees\\watchy-refonte-optimisation-f4c49c",
+			"leasedBy": "local_7f6c7188-f29c-4dde-abb6-216220361ebd",
+			"baseRepo": "C:\\Users\\Juliann\\Desktop\\Watchy",
+			"branch": "claude/watchy-refonte-optimisation-f4c49c",
+			"sourceBranch": "main",
+			"createdAt": 1785704668269
+		}
+	}
+}

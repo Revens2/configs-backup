@@ -1,0 +1,28 @@
+# Logs & temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# Caches and session dumps
+cache/
+sessions/
+node_modules/
+dist/
+coverage/
+tmp/
+.env
+.env.*
+*.pem
+*.key
+*.token
+
+# Claude CLI / Antigravity internal runtime state
+history.jsonl
+stats-cache.json
+file-history/
+paste-cache/
+telemetry/
+daemon/
