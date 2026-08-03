@@ -207,10 +207,18 @@ et des serveurs déclarés par projet.
   répertoire **sans** `progress.md` → aucune régression, `{"continue":true}`.
   **Non testé : une compaction réelle.** Elle ne se provoque pas à la demande. À valider en usage.
 
-## PHASE 4 — Claude Code Desktop
+## PHASE 4 — Claude Code Desktop — **exécutée le 2026-08-04**
 
-- [ ] 4.1 Mêmes deny rules, retrait des MCP de domaine
-- [ ] 4.2 Documenter partagé vs séparé avec preuve (fichier + chemin)
+- [x] 4.1 MCP de domaine retirés en même temps que ceux du CLI (phases 2.2a et 2.2b). Vérifié :
+  les deux fichiers déclarent le même jeu `codegraph, github, obsidian-semantic`.
+  **Pas de deny rules** : elles ne réduisent pas le contexte (un serveur refusé est quand même
+  connecté), le retrait des serveurs les rend inutiles ici.
+- [x] 4.2 [`CLI-VS-DESKTOP.md`](CLI-VS-DESKTOP.md) — partagé vs séparé, chemin par chemin.
+  Fait notable : **tout `~/.claude/` est partagé** (CLAUDE.md, settings, agents, skills, hooks,
+  mémoire, state). Il n'y avait donc rien à « aligner » de ce côté : les phases 2.3 et 2.4 ont
+  profité aux deux runtimes d'un coup.
+  Séparés : la déclaration MCP (`~/.mcp.json` vs `claude_desktop_config.json`, **aucune
+  synchronisation automatique** — toute modif est à porter deux fois) et les plugins.
 
 ## PHASE 5 — AGY CLI
 
