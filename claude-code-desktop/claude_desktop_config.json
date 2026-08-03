@@ -1,19 +1,5 @@
 {
   "mcpServers": {
-    "obsidian": {
-      "command": "mcpvault.cmd",
-      "args": [
-        "G:\\Mon Drive\\Obsidian Vault"
-      ]
-    },
-    "notebooklm": {
-      "command": "uvx",
-      "args": [
-        "--from",
-        "notebooklm-mcp-cli",
-        "notebooklm-mcp"
-      ]
-    },
     "codegraph": {
       "command": "node",
       "args": [
