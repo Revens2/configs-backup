@@ -101,6 +101,51 @@ Le contexte de démarrage consomme donc **~5 %** de la fenêtre — mais les 3 a
 | OpenCode | ~4 800 | agents chargés en entier (55 %) |
 | AGY CLI | ~2 000 | `GEMINI.md` |
 
+---
+
+# Mesure « APRÈS » — 2026-08-04, phases 1, 2.2, 2.3, 2.4 exécutées
+
+Même méthode, mêmes postes. Le poste MCP reste une estimation à ~200 tok/outil.
+
+## Claude Code CLI / Desktop
+
+| Poste | Avant | Après | Delta |
+|---|---:|---:|---:|
+| `~/.claude/CLAUDE.md` | 1 693 | 1 693 | 0 — phase 2.1 abandonnée |
+| `~/.claude/RTK.md` | 248 | 248 | 0 |
+| `~/CLAUDE.md` (projet) | 912 | 912 | 0 |
+| `memory/MEMORY.md` | 938 | 938 | 0 |
+| Listing skills | 6 057 | **905** | **−5 152** |
+| Listing agents | 863 | **502** | **−361** |
+| Commands | 704 | 704 | 0 |
+| Sous-total statique | 11 415 | **5 902** | −5 513 |
+| Schémas MCP *(est.)* | ~39 000 | **~14 800** | **−24 200** |
+| **TOTAL** | **~50 400** | **~20 700** | **−29 700 (−59 %)** |
+
+Détail des postes travaillés :
+
+| | avant | après |
+|---|---:|---:|
+| Serveurs MCP | 7 | 3 (`codegraph`, `github`, `obsidian-semantic`) |
+| Outils MCP exposés | ~195 | ~74 |
+| Skills au niveau utilisateur | 63 | **15** |
+| Workers | 6 | 5 |
+
+## Ce que ça a coûté en capacité
+
+- `anytype` : rien. Serveur en panne, 0 appel en 18 jours, clé révoquée.
+- `canva` : rien. 0 appel en 18 jours.
+- `notebooklm` : `web-researcher` perd le corpus persistant, garde `WebSearch`/`WebFetch`. 2 appels en 18 j.
+- `obsidian` : `obsidian-context-retriever` perd l'écriture par MCP, **garde la lecture** via le système
+  de fichiers et `semantic-search`. 3 appels en 18 j.
+- 47 skills : aucun perdu. Déplacés dans `~/.claude/skills-hors-scope/<bloc>/`, redéployables dans un
+  projet en une commande (`claude-code-cli/SKILLS-HORS-SCOPE.md`).
+
+## Reste à faire pour la Phase 7
+
+Fiabiliser le poste MCP par un relevé réel (`/context`) au lieu de l'estimation à 200 tok/outil, et
+mesurer AGY et OpenCode après leurs phases respectives (5 et 6), non encore exécutées.
+
 **Incertitude assumée :** le poste MCP est une estimation. Pour le fiabiliser il faut lancer chaque
 runtime avec un prompt trivial et relever le compteur de contexte réel (`/context` côté CLI).
 À faire avant de valider Phase 7 « après ».

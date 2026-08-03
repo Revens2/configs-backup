@@ -151,11 +151,17 @@ de démarrer, jamais édité en cours de session » l'interdit. Trois passages s
 la ligne `anytype-manager` du tableau de délégation, la ligne `mcp__anytype__* → anytype-manager` du
 confinement MCP, et `mcp__obsidian__*` / `mcp__notebooklm__*` qui ne référencent plus rien.
 **À corriger en début de prochaine session, avec réplication dans `gemini.md`.**
-- [ ] 2.3 Descendre les skills non universels dans les projets → < 20 skills utilisateur
-  (actuel : **63**, 6 057 tok). Deuxième levier, 12 % du démarrage.
-  **Triage prêt : [`TRIAGE-SKILLS.md`](TRIAGE-SKILLS.md)** — 15 conservés (906 tok), 47 déplacés,
-  **5 151 tok rendus (−85 %)**, ordre d'exécution en 5 temps, 3 doublons user/plugin à supprimer.
-  Exécution suspendue au dégel de la Phase 1.
+- [x] 2.3 **FAIT le 2026-08-04.** 63 → **15 skills** au niveau utilisateur. Listing 6 057 → **905 tok**
+  (**−5 152**). Triage : [`TRIAGE-SKILLS.md`](TRIAGE-SKILLS.md).
+  Les 47 skills déplacés vont dans `~/.claude/skills-hors-scope/<bloc>/` — dossier non lu par Claude
+  Code, donc coût nul, contenu intact et redéployable en une commande (voir
+  [`SKILLS-HORS-SCOPE.md`](claude-code-cli/SKILLS-HORS-SCOPE.md)).
+  Blocs : `outillage-dev` 14 · `front-ui` 10 · `ckm-claudekit` 7 · `metier` 6 · `bureautique` 6 ·
+  `obsidian` 4 · `divers` 7 (skills `google-agents-cli-*` présents seulement dans le dépôt, résidus
+  d'avant la réinstallation du PC).
+  **Aucun projet de destination réel n'existe sur la machine** pour les blocs CKM et métier — les
+  skills `ckm:*` viennent du bundle claudekit, ils ne correspondent à aucun projet. Le bloc `obsidian`
+  n'a pas pu être déposé dans le vault : `G:` n'était pas monté au moment de l'opération.
 - [ ] 2.4 Réécrire les 6 workers ~1 200 o chacun, `description` = déclencheur précis.
   **Réserve : voir « limite structurelle » ci-dessous** — « déclarer les MCP de son domaine » n'est pas
   implémentable sur Claude Code.
