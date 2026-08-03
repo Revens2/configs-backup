@@ -50,7 +50,7 @@ Structure : `antigravity/` (73 f), `claude-code-cli/` (1 442 f), `claude-code-de
 | S1 | Clé API Anytype, **ancienne** (préfixe `PLTV…`) | `antigravity/mcp_config.json:10` au commit **`adb1957`** | **OUI — dans l'historique git** | **À RÉVOQUER** |
 | S2 | Clé API Anytype, **courante** (préfixe `FOZy…`) | `~/.mcp.json:59` et `%APPDATA%\Claude\claude_desktop_config.json:59` | Non (les copies du dépôt sont rédigées) | Sortir en variable d'env (Phase 1) |
 
-| S3 | Endpoint MCP Obsidian exposé publiquement via ngrok, **le secret est le chemin de l'URL** (`…ngrok-free.dev/mcp/<jeton>`) | Connecteur claude.ai « MCP Obsidiann Juliann », **configuré côté claude.ai** — absent des fichiers locaux et du dépôt | Non | À arbitrer (cf. ci-dessous) |
+| S3 | Endpoint MCP Obsidian exposé publiquement via ngrok, **le secret est le chemin de l'URL** (`…ngrok-free.dev/mcp/<jeton>`), vault en lecture **et écriture** | Connecteur claude.ai « MCP Obsidiann Juliann », **configuré côté claude.ai** — absent des fichiers locaux et du dépôt | Non | **Risque assumé par l'utilisateur (2026-08-04). Ne pas y revenir.** Tunnel hors ligne au moment du relevé (HTTP 503). L'URL complète s'imprime à chaque `claude mcp list` → présente dans les transcripts locaux. |
 
 > Valeurs complètes volontairement absentes de ce fichier : il est versionné.
 > Les retrouver si besoin : `git -C configs-backup show adb1957:antigravity/mcp_config.json` (S1),
@@ -103,6 +103,9 @@ Le reste des correspondances du scan sont des placeholders de documentation
     -32000: Connection closed`). Candidat à la suppression pure, pas au déplacement.
 - [ ] 2.3 Descendre les skills non universels dans les projets → < 20 skills utilisateur
   (actuel : **63**, 6 057 tok). Deuxième levier, 12 % du démarrage.
+  **Triage prêt : [`TRIAGE-SKILLS.md`](TRIAGE-SKILLS.md)** — 15 conservés (906 tok), 47 déplacés,
+  **5 151 tok rendus (−85 %)**, ordre d'exécution en 5 temps, 3 doublons user/plugin à supprimer.
+  Exécution suspendue au dégel de la Phase 1.
 - [ ] 2.4 Réécrire les 6 workers ~1 200 o chacun, `description` = déclencheur précis.
   **Réserve : voir « limite structurelle » ci-dessous** — « déclarer les MCP de son domaine » n'est pas
   implémentable sur Claude Code.
