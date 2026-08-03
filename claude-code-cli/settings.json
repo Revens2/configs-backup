@@ -1,0 +1,246 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__codegraph__codegraph_query",
+      "mcp__codegraph__codegraph_search",
+      "mcp__codegraph__codegraph_deep_query",
+      "mcp__codegraph__codegraph_dependencies",
+      "mcp__codegraph__codegraph_callers",
+      "mcp__codegraph__codegraph_callees",
+      "mcp__codegraph__codegraph_impact",
+      "mcp__codegraph__codegraph_structure",
+      "mcp__codegraph__codegraph_tests",
+      "mcp__codegraph__codegraph_context",
+      "mcp__codegraph__codegraph_diagram",
+      "mcp__codegraph__codegraph_node",
+      "mcp__codegraph__codegraph_dead_code",
+      "mcp__codegraph__codegraph_frameworks",
+      "mcp__codegraph__codegraph_languages",
+      "mcp__codegraph__codegraph_blame",
+      "mcp__codegraph__codegraph_file_history",
+      "mcp__codegraph__codegraph_recent_changes",
+      "mcp__codegraph__codegraph_commit_diff",
+      "mcp__codegraph__codegraph_symbol_history",
+      "mcp__codegraph__codegraph_branch_info",
+      "mcp__codegraph__codegraph_modified_files",
+      "mcp__codegraph__codegraph_hotspots",
+      "mcp__codegraph__codegraph_contributors",
+      "mcp__codegraph__codegraph_scan_security",
+      "mcp__codegraph__codegraph_check_owasp",
+      "mcp__codegraph__codegraph_check_cwe",
+      "mcp__codegraph__codegraph_explain_vulnerability",
+      "mcp__codegraph__codegraph_suggest_fix",
+      "mcp__codegraph__codegraph_find_injections",
+      "mcp__codegraph__codegraph_taint_sources",
+      "mcp__codegraph__codegraph_security_summary",
+      "mcp__codegraph__codegraph_trace_taint",
+      "mcp__codegraph__codegraph_stats",
+      "mcp__codegraph__codegraph_circular_imports",
+      "mcp__codegraph__codegraph_project_tree",
+      "mcp__codegraph__codegraph_find_references",
+      "mcp__codegraph__codegraph_export_map",
+      "mcp__codegraph__codegraph_import_graph",
+      "mcp__codegraph__codegraph_file",
+      "mcp__codegraph__codegraph_find_path",
+      "mcp__codegraph__codegraph_complexity",
+      "mcp__codegraph__codegraph_data_flow",
+      "mcp__codegraph__codegraph_dead_stores",
+      "mcp__codegraph__codegraph_find_uninitialized",
+      "mcp__codegraph__codegraph_reaching_defs"
+    ],
+    "deny": [
+      "mcp__obsidian__*",
+      "mcp__obsidian-semantic__*",
+      "mcp__anytype__*",
+      "mcp__notebooklm__*"
+    ],
+    "defaultMode": "default"
+  },
+  "model": "haiku",
+  "skillOverrides": {
+    "template-skill": "off",
+    "notebooklm-py": "off",
+    "brand-guidelines": "off",
+    "canvas-design": "off",
+    "ckm-banner-design": "off",
+    "ckm-brand": "off",
+    "ckm-design": "off",
+    "ckm-design-system": "off",
+    "ckm-slides": "off",
+    "ckm-ui-styling": "off",
+    "frontend-design": "off",
+    "make-interfaces-feel-better": "off",
+    "theme-factory": "off",
+    "commissaire-aux-comptes": "off",
+    "comptable": "off",
+    "controleur-fiscal": "off",
+    "fiscaliste": "off",
+    "notaire": "off",
+    "syndic": "off"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/Juliann/.claude/sync-mcp.js"
+          },
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/auto-graph-setup.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
+      },
+      {
+        "matcher": "PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
+      }
+    ]
+  },
+  "enableWorkflows": true,
+  "statusLine": {
+    "type": "command",
+    "command": "\"C:\\Program Files\\nodejs\\node.exe\" \"C:\\Users\\Juliann\\AppData\\Local\\Programs\\multi-terms\\resources\\app.asar\\statusline-recorder.js\"",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
+  },
+  "effortLevel": "low",
+  "autoUpdatesChannel": "latest",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "verbose": true,
+  "autoCompactEnabled": true,
+  "agentPushNotifEnabled": true,
+  "hooks_disabled": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/post-tool-use.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/post-tool-failure.sh"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/pre-compact.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|Read|Grep|Glob|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/pre-tool-use.sh"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/session-end.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/session-start.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/stop.sh"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/subagent-start.sh"
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/task-completed.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/prompt-submit.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "agents": {
+    "overrides": {
+      "browser_agent": {
+        "enabled": true
+      }
+    }
+  },
+  "defaultMode": "bypassPermissions"
+}
+

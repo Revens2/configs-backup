@@ -1,0 +1,135 @@
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "mcpvault.cmd",
+      "args": [
+        "G:\\Mon Drive\\Obsidian Vault"
+      ]
+    },
+    "notebooklm": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "notebooklm-mcp-cli",
+        "notebooklm-mcp"
+      ]
+    },
+    "canva": {
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "@canva/cli@latest",
+        "mcp"
+      ]
+    },
+    "codegraph": {
+      "command": "C:\\Users\\Juliann\\.cargo\\bin\\codegraph.exe",
+      "args": [
+        "serve"
+      ],
+      "env": {
+        "CODEGRAPH_DB": ".codegraph/codegraph.db"
+      },
+      "serverInstructions": "ALWAYS prefer CodeGraph tools over Grep/Glob/Explore for code search, dependency analysis, and symbol lookup. The pre-built AST index provides instant results across 32 languages."
+    },
+    "github": {
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ]
+    },
+    "files-stream": {
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "C:\\Users\\Juliann"
+      ]
+    },
+    "docx": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "office-word-mcp-server",
+        "word_mcp_server"
+      ]
+    },
+    "browsermcp": {
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "@browsermcp/mcp@latest"
+      ]
+    },
+    "obsidian-semantic": {
+      "command": "node",
+      "args": [
+        "C:\\Users\\Juliann\\mcp-obsidian-semantic\\src\\index.js",
+        "G:\\Mon Drive\\Obsidian Vault"
+      ]
+    }
+  },
+  "coworkUserFilesPath": "C:\\Users\\Juliann\\Claude",
+  "preferences": {
+    "launchPreviewPersistedWorkspaces": [],
+    "launchPreviewSessionScopedSessions": [],
+    "coworkScheduledTasksEnabled": true,
+    "coworkHipaaRestricted": false,
+    "ccdScheduledTasksEnabled": true,
+    "sidebarMode": "epitaxy",
+    "bypassPermissionsOptInByAccount": {
+      "5f2efb2f-9ab7-4534-870a-73fd49af8fb2": true
+    },
+    "bypassPermissionsGateByAccount": {
+      "5f2efb2f-9ab7-4534-870a-73fd49af8fb2": true
+    },
+    "dockBounceEnabled": true,
+    "coworkWebSearchEnabled": true,
+    "coworkModelAutoFallbackByAccount": {
+      "5f2efb2f-9ab7-4534-870a-73fd49af8fb2": true
+    },
+    "remoteToolsDeviceName": "desktop-v30kq19",
+    "ccRemoteControlDefaultEnabled": false,
+    "epitaxyPrefs": {
+      "starred-local-code-sessions": [],
+      "starred-cowork-spaces": [],
+      "starred-session-groups": [],
+      "ccd-sessions-filter": {
+        "state": {
+          "selectedProjects": []
+        },
+        "version": 0
+      },
+      "dframe-group-scopes": {},
+      "dframe-local-slice": {
+        "pinnedOrder": [],
+        "homeProjectsPinnedOrder": []
+      },
+      "desktop-frame.paneStore.v1": {
+        "state": {
+          "extraPanesByMode": {},
+          "colWeightsByMode": {},
+          "rowSplit": 0.5,
+          "draftNonce": 0
+        },
+        "version": 4
+      },
+      "epitaxy-perm-mode-acks.5f2efb2f-9ab7-4534-870a-73fd49af8fb2": [
+        "C:\\Users\\Juliann\\Desktop\\rgrg:bypassPermissions",
+        "C:\\Users\\Juliann\\Desktop\\maxi_mistère:auto",
+        "C:\\Users\\Juliann\\Desktop\\maxi_mistère:bypassPermissions",
+        "G:\\Mon Drive\\VPS ETUDE:bypassPermissions",
+        "C:\\Users\\Juliann\\Desktop\\Watchy:bypassPermissions"
+      ],
+      "epitaxy-folder-permission-mode.5f2efb2f-9ab7-4534-870a-73fd49af8fb2": {
+        "C:\\Users\\Juliann\\Desktop\\rgrg": "bypassPermissions",
+        "C:\\Users\\Juliann\\Desktop\\maxi_mistère": "bypassPermissions",
+        "G:\\Mon Drive\\VPS ETUDE": "bypassPermissions",
+        "C:\\Users\\Juliann\\Desktop\\Watchy": "bypassPermissions"
+      },
+      "cc-landing-worktree-enabled": true,
+      "epitaxy-pr-create-mode": "create"
+    }
+  }
+}
