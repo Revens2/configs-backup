@@ -68,7 +68,15 @@ diffère.
 | **Activation/désactivation à chaud d'un bundle** | plugins | **natif** — renommage `plugin.json` ↔ `plugin.json.disabled` | — |
 | **Mesure du contexte de démarrage** | `claude -p --output-format json`, `cache_creation + cache_read` | `agy -p --output-format json`, `input_tokens + cache_read_tokens` | **aucun compteur de tokens** — capture du prompt système par hook, mesure en caractères |
 
-### Deux pièges d'OpenCode, découverts en testant
+### Quatre pièges d'OpenCode, découverts en testant
+
+- **`opencode run --command <nom>` se bloque au démarrage.** Le journal s'arrête sur `init` : aucune
+  session, aucun appel au modèle, stdout vide, mort au timeout. Les deux voies qui marchent sont la
+  **TUI** et la route API `POST /session/{id}/command` avec
+  `{"command":"<nom>","arguments":"…"}` — c'est ainsi que la boucle `plan-run` a été validée.
+- **`opencode run "/nom …"` n'expande pas la commande.** Le `/nom` arrive au modèle comme du texte.
+  Sur l'essai, il a confondu `/plan-run` avec le skill `loop` et annoncé une exécution « toutes les
+  5 minutes » sans rien faire. Une commande ne s'invoque pas par le message.
 
 - **`opencode run --agent <sous-agent>` ne fait pas ce qu'on croit.** Il avertit
   `is a subagent, not a primary agent. Falling back to default agent` et exécute la tâche avec
