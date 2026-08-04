@@ -1,0 +1,63 @@
+# Répartition des tâches entre runtimes
+
+Écrit le 2026-08-04, phase 5.3. Fondé sur ce que chaque runtime **sait faire**, vérifié binaire en
+main, pas sur ce qu'on lui prête.
+
+## Capacités réelles
+
+| | Claude Code | AGY (Antigravity 1.1.10) | OpenCode 1.18.3 |
+|---|---|---|---|
+| Sous-agents | **oui** (`~/.claude/agents/*.md`) | **non** | oui |
+| MCP par sous-agent | non | — | non |
+| MCP par plugin activable | non | **oui** | non |
+| Retirer un sous-agent du contexte | non | — | **oui** (`task` deny) |
+| Nesting | 1 niveau | — | 2 niveaux |
+| Contexte de démarrage | ~20 700 tok | ~2 000 tok | ~4 800 tok |
+
+### Correction d'un postulat de la mission
+
+L'énoncé affirmait : « AGY gère nativement les sous-agents dynamiques et le nesting, contrairement à
+Claude Code. C'est donc lui qui porte l'orchestration profonde. » **C'est faux pour ce build.**
+
+Les types de customisation d'Antigravity sont **Rules, Skills, Plugins, Hooks, MCP Servers** — il n'y
+a pas de sous-agents (source : skill intégré `agy-customizations`, `~/.gemini/config/` comme racine
+globale). Le dossier `antigravity/subagents/` du dépôt et le skill `create-subagent` (qui documente
+`.cursor/agents/`) sont des **résidus de lignée Cursor**, pas des fonctionnalités d'Antigravity.
+`agy agents` renvoie une liste vide, y compris après dépôt d'un fichier d'agent aux deux emplacements
+candidats.
+
+Le runtime qui a réellement des sous-agents, c'est **Claude Code**. Celui qui sait réellement confiner
+un MCP, c'est **AGY — par plugin**. Ce ne sont pas les mêmes leviers, et aucun runtime n'a les deux.
+
+## Répartition retenue
+
+**Claude Code — implémentation fine et travail multi-étapes.**
+C'est le seul à avoir des sous-agents. Il porte les 5 workers et le skill `/plan-run`.
+MCP racine réduit à `codegraph`, `github`, `obsidian-semantic` ; les autres se déclarent dans le
+`.mcp.json` du projet qui en a besoin.
+
+**AGY — travail à fort volume et sessions où le contexte doit rester minuscule.**
+~2 000 tok au démarrage, aucun MCP global actif. Les serveurs de domaine sont packagés en plugins
+**désactivés par défaut** :
+
+```bash
+agy plugin list
+agy plugin enable obsidian-kit      # charge le MCP obsidian, le temps du besoin
+agy plugin enable orchestrateur-kit # charge la règle de conduite de travail long
+```
+
+C'est la seule confinement per-domaine réel de tout le parc. À privilégier pour : balayage de gros
+volumes, tâches longues répétitives, tout ce qui n'a pas besoin de déléguer.
+
+**OpenCode — quand il faut du nesting.**
+Deux niveaux, et le seul à pouvoir **retirer un sous-agent du contexte** via les règles de permission
+`task` en `deny` (le sous-agent disparaît de la description de l'outil Task). Modèle local
+`Qwen 3.6 35B MoE` sur `100.99.75.104:4002`, fenêtre 98 304 tokens — coût marginal nul, donc le
+runtime naturel pour ce qui est volumineux mais peu exigeant en raisonnement.
+
+## Règle de décision
+
+1. Besoin de déléguer à un spécialiste → **Claude Code**.
+2. Besoin d'un MCP de domaine sans le payer partout → **AGY**, plugin activé le temps du besoin.
+3. Besoin d'imbriquer des agents, ou volume énorme sur modèle local → **OpenCode**.
+4. Sinon → Claude Code, qui reste le mieux outillé.
