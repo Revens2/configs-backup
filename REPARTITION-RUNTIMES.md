@@ -12,7 +12,22 @@ main, pas sur ce qu'on lui prête.
 | MCP par plugin activable | non | **oui** | non |
 | Retirer un sous-agent du contexte | non | — | **oui** (`task` deny) |
 | Nesting | 1 niveau | — | 2 niveaux |
-| Contexte de démarrage | ~20 700 tok | ~2 000 tok | ~4 800 tok |
+| Contexte de démarrage **mesuré** | **16 021 tok** | **21 530 tok** | non mesuré |
+
+### Correction : AGY n'est pas le runtime le plus léger
+
+Les chiffres ci-dessus sont des relevés réels, pas des estimations tirées des tailles de fichiers.
+`agy -p … --output-format json` renvoie `usage.input_tokens = 21 530`. Ma première estimation
+(~2 000 tok, déduite de `GEMINI.md` + `settings.json`) était fausse d'un facteur 10 : elle ignorait
+le prompt système d'Antigravity et ses outils intégrés, exactement l'erreur que j'avais commise sur
+Claude Code.
+
+**Après coupure des connecteurs claude.ai, Claude Code démarre plus léger qu'AGY** — 16 021 contre
+21 530. L'argument « AGY est le runtime le plus léger » tombe. Ce qui reste vrai d'AGY, c'est le
+confinement MCP par plugin ; ce n'est pas un argument de contexte de départ.
+
+OpenCode n'a pas pu être mesuré : son modèle est hébergé sur `100.99.75.104:4002`, injoignable au
+moment du relevé (Tailscale inactif).
 
 ### Correction d'un postulat de la mission
 
@@ -36,8 +51,8 @@ C'est le seul à avoir des sous-agents. Il porte les 5 workers et le skill `/pla
 MCP racine réduit à `codegraph`, `github`, `obsidian-semantic` ; les autres se déclarent dans le
 `.mcp.json` du projet qui en a besoin.
 
-**AGY — travail à fort volume et sessions où le contexte doit rester minuscule.**
-~2 000 tok au démarrage, aucun MCP global actif. Les serveurs de domaine sont packagés en plugins
+**AGY — quand il faut un MCP de domaine sans le payer partout.**
+21 530 tok au démarrage, aucun MCP global actif. Les serveurs de domaine sont packagés en plugins
 **désactivés par défaut** :
 
 ```bash
@@ -59,5 +74,6 @@ runtime naturel pour ce qui est volumineux mais peu exigeant en raisonnement.
 
 1. Besoin de déléguer à un spécialiste → **Claude Code**.
 2. Besoin d'un MCP de domaine sans le payer partout → **AGY**, plugin activé le temps du besoin.
-3. Besoin d'imbriquer des agents, ou volume énorme sur modèle local → **OpenCode**.
-4. Sinon → Claude Code, qui reste le mieux outillé.
+3. Besoin d'imbriquer des agents, ou volume énorme sur modèle local → **OpenCode**
+   (nécessite Tailscale actif et le VPS `100.99.75.104` en ligne).
+4. Sinon → Claude Code : le mieux outillé **et**, depuis la coupure des connecteurs, le plus léger.

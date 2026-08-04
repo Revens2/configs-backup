@@ -322,6 +322,66 @@ Claude Code, pas supprimé à la source.
 
 ---
 
+## Dette ouverte — à solder en début de prochaine session
+
+### 1. `~/.claude/CLAUDE.md` — correction **préparée**, pas appliquée
+
+Le fichier référence encore `anytype-manager` et des MCP supprimés. Ta règle de niveau 3 interdit de
+l'éditer en cours de session (invalidation du préfixe caché). La version corrigée est donc **prête à
+côté**, avec sa réplication `gemini.md` à l'identique (mêmes octets, vérifié par hash) :
+
+```powershell
+Move-Item ~\.claude\CLAUDE.md ~\.claude\CLAUDE.md.bak.avant-corrections -Force
+Move-Item ~\.claude\CLAUDE.md.next ~\.claude\CLAUDE.md -Force
+Move-Item ~\.claude\gemini.md ~\.claude\gemini.md.bak.avant-corrections -Force
+Move-Item ~\.claude\gemini.md.next ~\.claude\gemini.md -Force
+```
+
+Contenu des corrections : ligne `anytype-manager` retirée du tableau de délégation · section
+« Confinement MCP » réécrite (seul `mcp__obsidian-semantic__*` subsiste) · note sur l'accès
+filesystem du vault · **distinction des trois leviers** `permissions.deny` (exécution, aucun gain de
+contexte) / `deniedMcpServers` (admission, gain réel) / portée projet · mention que le confinement
+par sous-agent n'existe pas sur Claude Code. 6 771 → 7 450 o.
+
+### 2. Bloc `obsidian` (4 skills) — en attente du montage de `G:`
+
+`G:\Mon Drive\Obsidian Vault` n'était monté à aucun moment de la session. Les skills attendent dans
+`~/.claude/skills-hors-scope/obsidian/`.
+
+```powershell
+New-Item -ItemType Directory -Force -Path 'G:\Mon Drive\Obsidian Vault\.claude\skills'
+Copy-Item ~\.claude\skills-hors-scope\obsidian\* 'G:\Mon Drive\Obsidian Vault\.claude\skills\' -Recurse
+```
+
+### 3. Secret S4 — action utilisateur
+
+Clé `ref.tools` vivante, en query string, dans `~/.cursor\mcp.json`. Hors dépôt. À faire tourner.
+
+### 4. Mesure d'OpenCode — impossible ce jour
+
+Son modèle est sur `100.99.75.104:4002`, injoignable (Tailscale inactif). À refaire VPN actif.
+
+### 5. Compaction réelle — à observer en usage
+
+Le pointeur `progress.md` dans `STATE.md` est testé par exécution directe du hook, pas par une
+compaction réelle, qui ne se provoque pas sur commande.
+
+---
+
 ## Erreurs rencontrées (append-only)
 
-_(vide)_
+- **Estimation du coût MCP à ~200 tok/outil.** Réel : ~12 tok/outil, Claude Code chargeant les outils
+  MCP en différé. Facteur 17. A conduit à survendre les phases 2.2a/2.2b (~24 200 tok annoncés,
+  quelques centaines en réalité) et à traiter le mauvais poste pendant l'essentiel du chantier.
+  *Leçon : mesurer avant d'optimiser — le plan le disait en phase 7, je l'ai gardée pour la fin.*
+- **« AGY : 0 MCP ».** Faux : je n'avais regardé que `~/.antigravitycli/mcp/` (vide) en ignorant
+  `~/.gemini/config/`, la vraie racine, qui portait 3 serveurs **et un troisième exemplaire de la
+  clé S1**. *Leçon : une racine de config vide ne prouve pas l'absence de config.*
+- **« AGY est le runtime le plus léger, ~2 000 tok ».** Réel : 21 530 tok. Même erreur que sur Claude
+  Code — estimation à partir des tailles de fichiers, en oubliant le prompt système et les outils
+  intégrés du runtime.
+- **« 3 doublons de skills, gain 231 tok, risque nul ».** Un seul doublon réel (`frontend-design`,
+  64 tok) : un marketplace cloné n'est pas un plugin activé. Supprimer `caveman` et `skill-creator`
+  les aurait fait disparaître.
+- **`git rm` sur les skills du dépôt** — aurait détruit la sauvegarde au lieu de la réorganiser.
+  Rattrapé par `reset` + `checkout`, refait en `git mv`. Rien de perdu.
