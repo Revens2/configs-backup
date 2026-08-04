@@ -1,15 +1,5 @@
 {
   "mcpServers": {
-    "anytype": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@anyproto/anytype-mcp"
-      ],
-      "env": {
-        "OPENAPI_MCP_HEADERS": "{\"Authorization\":\"Bearer REDACTED_BEARER_TOKEN\", \"Anytype-Version\":\"2025-11-08\"}"
-      }
-    },
     "kicad-gui-bridge": {
       "command": "python",
       "args": [
@@ -32,12 +22,6 @@
       },
       "disabled": true,
       "cwd": "C:\\Users\\Juliann\\kicad-ai\\qa\\tools\\ipc_tools"
-    },
-    "obsidian": {
-      "command": "mcpvault.cmd",
-      "args": [
-        "G:\\Mon Drive\\Obsidian Vault"
-      ]
     }
   }
 }
