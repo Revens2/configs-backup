@@ -1,76 +1,119 @@
-# CLAUDE.md — répertoire personnel (`C:\Users\Juliann`)
+<!-- CODEGRAPH_START -->
+## CodeGraph — Codebase Intelligence
 
-Spécifique à ce répertoire. Le comportement des agents (délégation, confinement MCP, RTK,
-stratégie de contexte, réplication `gemini.md`) est défini une seule fois dans
-`~/.claude/CLAUDE.md` — ne pas le dupliquer ici.
+CodeGraph is installed. When a `.codegraph/` directory exists in a project, use CodeGraph MCP tools for faster code exploration:
 
-## Sources de vérité pour l'infrastructure
+- **Start here:** `codegraph_context` — describe your task, get everything you need in one call
+- **Drill down:** `codegraph_callers`, `codegraph_node`, `codegraph_query` — specific lookups
+- **Instead of grep/glob:** CodeGraph tools are 10x faster for finding symbols, callers, and dependencies
 
-Avant de poser une question sur un VPS, une IP, un port, une config ou un credential :
-chercher, dans cet ordre.
+If `.codegraph/` does NOT exist, suggest: "Run `codegraph init` to enable code intelligence for this project."
+<!-- CODEGRAPH_END -->
 
-1. **Mémoire auto** — `~/.claude/projects/C--Users-Juliann/memory/` (index `MEMORY.md`).
-2. **Vault Obsidian** — `G:\Mon Drive\Obsidian Vault\raw\assets\`, via le sous-agent
-   `obsidian-context-retriever`. Fiches connues : `VPS_IA.md`, `Rapport_VPS_ETUDE.md`,
-   `config_vps.md`, `NEXUS_*.md`, `Audit_VPS_OCI*.md`.
+# Règles globales — comportement des agents
 
-Ce n'est qu'en l'absence d'information dans ces deux sources qu'il faut me demander.
+Ce fichier ne contient que du **comportemental**, valable dans tous les projets.
+L'infrastructure (VPS, IP, ports, credentials) n'est pas ici : elle vit dans la mémoire
+auto (`~/.claude/projects/*/memory/`) et dans le vault Obsidian, consultés à la demande.
 
-### Accès SSH — toujours par alias `~/.ssh/config`
+## Autonomie
 
-`ssh vps-etude '<cmd>'`, jamais IP + `-i` + `user@`.
+Décider et exécuter sans confirmation intermédiaire quand l'intention est claire — ne jamais
+me faire répéter. En cas d'ambiguïté réelle, poser une question précise avec options plutôt
+qu'avancer à tâtons. Tout processus qui exige une interaction visuelle (login navigateur,
+`notebooklm login`) doit s'ouvrir dans une fenêtre GUI au premier plan (`Start-Process`),
+jamais en tâche d'arrière-plan muette.
 
-| Alias | Hôte | Rôle |
-|---|---|---|
-| `vps-nexus` | `${VPS_NEXUS_TAILSCALE}` (`ia_admin`) | Prod NEXUS / allermarche — clé `cle_ai.ssh`, **pas** `id_rsa_linux` |
-| `vps-etude` | `${VPS_ETUDE_TAILSCALE}` (`juliann`) | VPS étude (variantes `-ubuntu`, `-ludo`) |
-| `vps-ia` | `${VPS_IA_TAILSCALE}` (`oui`) | Serveur Qwen — clé `id_rsa_linux` |
+## Délégation aux sous-agents
 
-Détails complets de chaque machine : fiches mémoire (`nexus-vps-allermarche`, `ufo-vps-llm`,
-`vps-etude-tailscale`) et vault. Ne pas les recopier ici.
+Autorisation permanente et globale : ces déclenchements priment sur « ne pas utiliser
+d'agent sans demande explicite ». Lancer **immédiatement, sans confirmation**. Le rapport
+d'un sous-agent ne m'est pas visible → toujours relayer l'essentiel avant de continuer.
 
-⚠️ Ne pas boucler sur une connexion qui échoue. `Connection timed out` = port fermé ou sshd
-down côté serveur ; changer de clé ou d'utilisateur ne sert à rien et risque de faire
-blacklister l'IP. **Maximum 2 tentatives**, puis diagnostiquer :
+| Déclencheur | Sous-agent |
+|---|---|
+| Chercher sur internet, veille, état de l'art, doc d'API externe | `web-researcher` |
+| Question sur mon vault Obsidian, ou action technique dont le contexte manque (déploiement, config VPS, refactoring, audit, intégration) | `obsidian-context-retriever` |
+| Fichier statique volumineux sur disque (log, dump, NDJSON > ~1 000 lignes ou > ~500 Ko) | `triage-contexte` |
+| Tâche brute, répétitive, lourde en tokens mais faible en raisonnement | `little-tasks` |
+| Gestion Anytype (objets, types, relations, collections) | `anytype-manager` |
+| Administration Linux, Docker, PM2, durcissement, sauvegardes | `vps-sysadmin` |
 
-```powershell
-Test-NetConnection -Port 22 <ip>; tailscale status
-```
+Précisions :
 
-Si Tailscale est inactif (`unexpected state: NoState`) ou si le SSH expire, relancer le VPN
-avant toute nouvelle tentative — le skill `vps-connect` automatise cette reprise.
+- **`obsidian-context-retriever`** — interdiction de deviner la stack, la topologie VPS,
+  les ports ou les scripts de build ; interdiction de me demander une info qui existe déjà
+  dans le vault. Le déclencher même si la mémoire native semble déjà répondre : le vault
+  peut être plus complet ou plus à jour.
+- **`triage-contexte`** — seul responsable du triage de logs. Au-delà de 500 Ko il délègue
+  le filtrage brut à `agy` (`cat <fichier> | agy "STRICT: ..." > <sortie>`) puis ne lit que
+  l'extrait.
+- **`little-tasks`** — périmètre : conversion de formats (JSON↔YAML, cURL→`.env.example`,
+  table MD↔JSON), mocks/fixtures (JSON, SQL, CSV), documentation passive (JSDoc, README sur
+  code existant), scaffolding (`mkdir -p`/`touch`). Il délègue à `agy` et redirige vers un
+  fichier ; l'agent principal ne lit jamais la sortie brute, il reprend sur la ligne
+  `[little-tasks] … <CHEMIN>`. **Pas** pour le triage de logs.
 
-## Amorçage d'un projet
+Exceptions communes : question factuelle triviale, lecture d'une URL unique que je fournis
+(`defuddle`/WebFetch suffit), contexte déjà présent dans la conversation ou dans ce fichier,
+sorties de commandes terminal (RTK s'en charge).
 
-À l'ouverture de travaux sur un projet, si l'élément manque, le créer sans demander :
+## Confinement MCP
 
-- **`.claudeignore`** — au minimum `*.log`, `dist/`, `coverage/`, `tmp/`.
-- **Graphes** — `graphify extract <chemin> --code-only` puis `graphify tree`, et
-  `codegraph init`. Les remettre à jour après toute fonctionnalité importante.
+L'agent principal **n'exécute jamais** ces outils : il instancie le sous-agent dédié et ne
+traite que la synthèse.
 
-<!-- AUTO_GRAPH_START -->
-## Navigation du code — CodeGraph & Graphify
+- `mcp__obsidian__*`, `mcp__obsidian-semantic__*` → `obsidian-context-retriever`
+- `mcp__anytype__*` → `anytype-manager`
+- `mcp__notebooklm__*` → `web-researcher`
 
-Ce projet est indexé par deux graphes. **Passe par eux avant `Grep`/`Glob`/lecture
-exhaustive** : ils répondent en une passe là où une recherche textuelle demande
-dix allers-retours.
+Le confinement passe par les définitions de sous-agents, **pas** par `permissions.deny` :
+`deny` est global à la session et neutraliserait aussi les sous-agents.
 
-- **CodeGraph** (`.codegraph/`) — graphe AST + recherche sémantique, via MCP
-  `mcp__codegraph__*`. Point d'entrée : `codegraph_context` (décris la tâche,
-  récupère tout le contexte utile). Détail des outils : section « CodeGraph —
-  Codebase Intelligence » plus bas dans ce fichier.
-- **Graphify** (`graphify-out/graph.json`) — graphe de connaissance du projet
-  (code *et* docs), communautés et god nodes.
+## RTK — compression des sorties terminal
 
-### Graphify — commandes
-Toute question sur l'architecture, le rôle d'un fichier ou le contenu du projet
-se traite **d'abord comme une requête graphify** (skill `graphify`) :
-- `graphify query "<question>"` — traversée BFS depuis la question.
-- `graphify explain "<noeud>"` — explication d'un nœud et de son voisinage.
-- `graphify path "A" "B"` — chemin le plus court entre deux nœuds.
-- `graphify god-nodes` — les hubs architecturaux du projet.
-- `graphify affected "X"` — ce qui est impacté par un changement sur X.
+Le hook `PreToolUse` réécrit automatiquement les commandes en `rtk <cmd>` (0 token
+d'overhead). RTK compresse 100 % des sorties de build, test et commandes **à la source** :
+ne jamais invoquer de sous-agent de filtrage pour une sortie de terminal. Voir `@RTK.md`
+pour les méta-commandes (`rtk gain`, `rtk discover`, `rtk proxy`).
 
-Réindexation : `codegraph index` et `graphify update .` (les deux sont incrémentaux).
-<!-- AUTO_GRAPH_END -->
+## Gestion de contexte — stratégie à 3 niveaux
 
+Bascule **automatique** dès qu'une tâche dépasse 3 étapes, touche des fichiers volumineux
+ou enchaîne de multiples appels d'outils.
+
+**Niveau 1 — externaliser.** `progress.md` à la racine dès le départ ; résumés et états
+intermédiaires dans des fichiers Markdown ; ne garder en mémoire active que les chemins.
+Déléguer aux sous-agents ci-dessus.
+
+**Niveau 2 — réciter (append-only).** Sérialiser la checklist complète avant toute
+exécution. Réémettre le bloc todo **à la toute fin de chaque message** pour le maintenir
+dans la zone d'attention récente. Aucune tâche marquée `completed` sans vérification
+effective (test, linter, typecheck). Conserver les erreurs et stack traces passées dans
+`progress.md` — les supprimer fait rejouer les mêmes échecs.
+
+**Niveau 3 — préserver le cache KV.** Préfixe strictement immuable : pas de timestamp ni de
+donnée volatile en tête, `CLAUDE.md` finalisé **avant** de démarrer et jamais édité en cours
+de session (une modification invalide tout le préfixe caché, ×10 sur le coût). Toute
+réinjection d'état est un **ajout en fin de contexte**, jamais une édition du préfixe.
+
+**Filet anti-compaction.** Les hooks `PreCompact`/`SessionEnd` (`hooks/state-save.mjs`)
+sérialisent l'état vivant dans `~/.claude/state/<projet>/STATE.md` ; `SessionStart`
+(`hooks/state-restore.mjs`) le réinjecte via `additionalContext`, y compris sur le matcher
+`compact`. Garantie partielle assumée : la réinjection post-compaction n'est pas toujours
+traitée de façon fiable.
+
+## Réplication des fichiers d'instructions
+
+Toute écriture d'un `CLAUDE.md` (création, réécriture, simple édition de section) est
+**répliquée à l'identique** dans le `gemini.md` du même répertoire, et réciproquement.
+Immédiatement, sans confirmation, dans la même réponse. Contenu identique — pas de résumé
+ni d'adaptation. Sauvegarder l'ancien fichier (`.bak.<timestamp>`) avant tout écrasement.
+Si un `AGENTS.md` existe, le signaler sans y toucher. Si le projet est déployé ailleurs
+(VPS, miroir), y propager les deux fichiers.
+
+Raison : je travaille aussi avec Gemini / Antigravity (`agy`) sur les mêmes projets, et
+Gemini ne lit que `gemini.md`. Deux fichiers divergents produisent des comportements
+arbitraires.
+
+@RTK.md

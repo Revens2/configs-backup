@@ -67,4 +67,3 @@
 
 *Budget préparé par le syndic et soumis à l'avis du conseil syndical le {{date_avis_cs}}.*
 *Vote en AG à la majorité de l'article 24 de la loi du 10 juillet 1965.*
-

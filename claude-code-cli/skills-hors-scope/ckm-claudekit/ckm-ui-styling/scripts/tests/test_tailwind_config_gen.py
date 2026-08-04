@@ -334,4 +334,3 @@ class TestTailwindConfigGenerator:
         assert "module.exports" in content
         assert "primary" in content
         assert "@tailwindcss/forms" in content
-

@@ -138,4 +138,3 @@ Voir `data/regimes-fonciers-lmnp.json` → `sci_ir`.
 - LMP : art. 155-IV CGI
 - SCI : art. 8 CGI (transparence)
 - BOFiP : BOI-RFPI (fonciers) et BOI-BIC-CHAMP-40 (meublés)
-

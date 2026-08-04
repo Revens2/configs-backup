@@ -92,4 +92,3 @@ python .claude/skills/design-system/scripts/search-slides.py "series a funding" 
 | Public speaking | Conference Talk, Workshop |
 | Proving value | Case Study, Competitive Analysis |
 | Lead generation | Webinar |
-

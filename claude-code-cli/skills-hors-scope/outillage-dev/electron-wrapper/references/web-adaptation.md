@@ -337,4 +337,3 @@ export function isHostedEnvironment(): boolean {
 ```
 
 The general principle: Electron users have the app installed locally with their own data, so hosted/demo/marketing features should be disabled.
-

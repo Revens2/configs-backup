@@ -174,4 +174,3 @@ L'enregistrement chez un notaire est recommandé si :
 
 ⚠️ **CE DOCUMENT EST UN PROJET DE TRAVAIL.**
 Il ne constitue pas une convention de PACS enregistrée. La convention doit être enregistrée en mairie ou chez un notaire pour produire ses effets.
-

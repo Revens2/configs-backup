@@ -64,4 +64,3 @@ Veuillez agréer, Madame, Monsieur, l'expression de nos salutations distinguées
 
 Le syndic,
 {{syndic_nom}}
-

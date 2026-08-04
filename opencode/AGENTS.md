@@ -106,4 +106,3 @@ Dès que l'utilisateur fait une demande concernant son vault Obsidian, ses notes
 ### 3. `obsidian-context-retriever` (Extraction & Mémoire du Vault Obsidian)
 - **Déclenchement** : Automatique sur tout doute d'infra/VPS/projet ou recherche dans le vault Obsidian.
 - **Rendu** : Retourne un brief de contexte structuré.
-

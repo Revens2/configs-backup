@@ -155,4 +155,3 @@ jq '.assets[] | select(.status == "approved")' .assets/manifest.json
 3. Update manifest.json with new entries
 4. Tag appropriately
 5. Remove duplicates/outdated versions
-

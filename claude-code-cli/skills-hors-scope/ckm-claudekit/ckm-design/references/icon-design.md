@@ -120,4 +120,3 @@ python3 ~/.claude/skills/design/scripts/icon/generate.py --list-categories
 export GEMINI_API_KEY="your-key"
 pip install google-genai
 ```
-

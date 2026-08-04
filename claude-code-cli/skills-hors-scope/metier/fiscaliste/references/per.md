@@ -153,4 +153,3 @@ L'abondement est un complément versé par l'entreprise pour chaque euro versé 
 - Sortie en capital : art. 158-5-b bis CGI
 - Mutualisation couple : art. 163 quatervicies-I-2° CGI
 - BOFiP : BOI-IR-BASE-20-50-20
-

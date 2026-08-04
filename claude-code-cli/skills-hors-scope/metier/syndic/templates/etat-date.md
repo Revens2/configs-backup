@@ -105,4 +105,3 @@ Le syndic,
 ---
 
 *Ce document est établi sous la responsabilité du syndic. Il n'a pas valeur d'audit comptable. Le notaire instrumentaire vérifiera la concordance des informations avec les pièces comptables.*
-

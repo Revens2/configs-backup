@@ -371,4 +371,3 @@ className="rounded-lg"  /* Uses var(--radius) */
 5. **Accessibility**: Maintain sufficient color contrast (WCAG AA minimum)
 6. **Component Overrides**: Use `className` prop for one-off customization
 7. **Extract Patterns**: Create custom variants for repeated customizations
-

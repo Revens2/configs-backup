@@ -54,4 +54,3 @@ Pour chaque résolution, cocher **une seule case**. Toute résolution sans vote 
 ---
 
 *À retourner à : {{syndic_nom}}, {{syndic_adresse}} avant le {{date_limite}}*
-

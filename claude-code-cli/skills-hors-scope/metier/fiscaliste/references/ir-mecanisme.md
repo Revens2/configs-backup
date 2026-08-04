@@ -133,4 +133,3 @@ Mécanisme de collecte en temps réel — pas d'imposition supplémentaire.
 - CEHR : art. 223 sexies CGI
 - Revenus exceptionnels : art. 163-0 A CGI
 - PAS : art. 204 A à 204 N CGI
-

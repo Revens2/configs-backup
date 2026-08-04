@@ -248,4 +248,3 @@ En dehors des actes tarifés, le notaire peut facturer des honoraires libres pou
 | **Total avec droit de partage** | **~23 900 EUR** |
 
 Note : les droits de succession eux-mêmes s'ajoutent à ces frais.
-

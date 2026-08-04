@@ -453,4 +453,3 @@ Use square brackets for custom values:
 <div class="select-text">Text selectable</div>
 <div class="select-all">Select all</div>
 ```
-

@@ -34,4 +34,3 @@
     { "id": "main", "name": "WebAgency SaaS", "env_key": "STRIPE_SECRET_WEBAGENCY" }
   ]
 }
-

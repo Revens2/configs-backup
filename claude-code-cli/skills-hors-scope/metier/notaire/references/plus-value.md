@@ -169,4 +169,3 @@ Le notaire est responsable du calcul, du prélèvement et du versement à la rec
 - Prélèvement de 19% IR (ou taux conventionnel)
 - Représentant fiscal obligatoire si PV > 150 000 EUR et résidence hors UE/EEE
 - Prélèvements sociaux : 7,5% (au lieu de 17,2%) pour les affiliés à un régime de sécurité sociale UE/EEE/Suisse
-

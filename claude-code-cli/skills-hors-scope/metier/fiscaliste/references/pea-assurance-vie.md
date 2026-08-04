@@ -180,4 +180,3 @@ L'ancienneté compte. Un contrat ouvert avec 100 € prend date → 8 ans plus t
 - Abattement annuel AV : art. 125-0 A-I-2° CGI
 - Seuil 150 000 € : art. 125-0 A-I-2° bis CGI
 - BOFiP : BOI-RPPM-RCM-40-50 (PEA) et BOI-RPPM-RCM-20-10-20-50 (AV)
-

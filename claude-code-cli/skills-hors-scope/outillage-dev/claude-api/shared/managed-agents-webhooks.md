@@ -108,4 +108,3 @@ Switch on `data.type`, fetch the resource by `data.id`, return any **2xx** to ac
 - **3xx is failure.** Redirects are not followed — update the URL in Console if your endpoint moves.
 - **Auto-disable** after ~20 consecutive failed deliveries, or immediately if the hostname resolves to a private IP or returns a redirect. Re-enable manually in Console.
 - **Thin payload is intentional.** Don't expect `stop_reason`, `outcome_evaluations`, credential secrets, etc. on the webhook body — fetch the resource.
-

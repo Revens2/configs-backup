@@ -2,4 +2,3 @@ Invoke `slides` skill to create persuasive HTML slides using design tokens, Char
 
 ## Task
 <task>$ARGUMENTS</task>
-

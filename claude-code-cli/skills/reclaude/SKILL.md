@@ -115,4 +115,3 @@ After making changes:
 - Anything Claude can infer from reading the codebase
 - Standard practices for the language/framework
 - Documentation that exists elsewhere (link instead)
-

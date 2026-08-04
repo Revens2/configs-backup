@@ -320,4 +320,3 @@ echo "📚 Import components like:"
 echo "  import { Button } from '@/components/ui/button'"
 echo "  import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'"
 echo "  import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'"
-

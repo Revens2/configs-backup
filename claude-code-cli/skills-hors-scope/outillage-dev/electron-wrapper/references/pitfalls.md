@@ -388,4 +388,3 @@ files:
 6. Review the draft release on GitHub, then publish
 
 CI has the signing certificates (`APPLE_CERTIFICATE`), notarization credentials (`APPLE_ID`, `APPLE_PASSWORD`, `APPLE_TEAM_ID`), and publish tokens that local machines don't have.
-

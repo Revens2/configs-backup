@@ -131,4 +131,3 @@ Pour un eval du skill qui teste une règle :
 1. Citer l'article CGI dans l'output attendu
 2. Si la règle vient uniquement de BOFiP, citer l'identifiant BOI
 3. Ne jamais citer un simulateur comme source d'une règle (il applique les règles, il ne les crée pas)
-

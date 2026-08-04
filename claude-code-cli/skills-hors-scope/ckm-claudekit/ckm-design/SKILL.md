@@ -300,4 +300,3 @@ pip install google-genai pillow
 
 **External sub-skills:** brand, design-system, ui-styling
 **Related Skills:** frontend-design, ui-ux-pro-max, ai-multimodal, chrome-devtools
-

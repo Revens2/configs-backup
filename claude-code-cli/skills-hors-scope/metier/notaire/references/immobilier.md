@@ -271,4 +271,3 @@ Rente mensuelle = Capital / Coefficient de conversion (tables de mortalité)
 | Garantie financière d'achèvement (GFA) | Obligatoire (banque ou assureur) |
 | Délai de rétractation | 10 jours à compter de la notification (art. L271-1 CCH) |
 | Frais de notaire | Réduits (taxe de publicité foncière à 0,715%) |
-

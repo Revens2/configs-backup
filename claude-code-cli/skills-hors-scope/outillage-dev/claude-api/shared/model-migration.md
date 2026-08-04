@@ -777,4 +777,3 @@ m.capabilities["effort"]["max"]["supported"]
 ```
 
 See `shared/models.md` for the full capability lookup pattern.
-

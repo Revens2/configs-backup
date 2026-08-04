@@ -48,4 +48,3 @@ if [ "${CAVEMAN_STATUSLINE_SAVINGS:-1}" != "0" ]; then
     [ -n "$SAVINGS" ] && printf ' \033[38;5;172m%s\033[0m' "$SAVINGS"
   fi
 fi
-

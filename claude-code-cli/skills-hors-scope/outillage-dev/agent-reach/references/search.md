@@ -31,4 +31,3 @@ mcporter call 'exa.get_code_context_exa(query: "code question", tokensNum: 3000)
 | Exa | agent-reach | 英文/技术/代码搜索 |
 | 智谱搜索 | my-mcp-tools | 中文搜索 |
 | GitHub 搜索 | agent-reach (dev.md) | 仓库/代码搜索 |
-

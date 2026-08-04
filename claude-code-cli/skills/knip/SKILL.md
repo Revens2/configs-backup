@@ -143,4 +143,3 @@ npx knip --reporter json
 - Watch for monorepo setups — may need `--workspace` flag
 - Some frameworks need plugins enabled in config
 - Knip does not handle unused imports/variables inside files — use ESLint or Biome for that
-

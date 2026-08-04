@@ -234,4 +234,3 @@ Helper text or error message
 | row height (compact) | 40px |
 | row height (default) | 48px |
 | row height (comfortable) | 56px |
-
