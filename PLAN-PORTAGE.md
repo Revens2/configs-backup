@@ -89,21 +89,57 @@ Visibilité réelle vérifiée par `gh repo view --json visibility` : **PUBLIC**
 
 ## PHASE B — Portage sur OpenCode
 
-- [ ] **B.1 Tester les 3 workers réparés** (`web-researcher`, `obsidian-context-retriever`, `triage-contexte`)
-      critère : chacun démarre, utilise au moins un outil, retourne un résultat **non vide** ; résultat consigné par worker
-      cible : orchestrateur
-- [ ] **B.2 Réparer tout worker en échec**
-      critère : B.1 repassé au vert sur le worker concerné
-      cible : orchestrateur
-- [ ] **B.3 Implémenter `/plan-run` au format OpenCode**
-      critère : `opencode agent list` (ou `opencode run`) le voit et il démarre sans erreur de config
-      cible : orchestrateur
-- [ ] **B.4 Persistance : chercher l'équivalent `PreCompact`**
-      critère : réponse **binaire avec preuve** (`opencode --help`, doc locale, répertoire de plugins). Si absent : fallback « l'agent réécrit `progress.md` après chaque tâche cochée », écrit noir sur blanc
-      cible : orchestrateur
-- [ ] **B.5 Mesure avant/après du contexte de démarrage OpenCode**
-      critère : deux chiffres relevés, méthode citée (`RECAPITULATIF.md` §10)
-      cible : orchestrateur
+- [~] **B.1 Tester les 3 workers réparés** — **BLOQUÉ, cause externe**
+      critère : chacun démarre, utilise un outil, retourne un résultat non vide
+      → **impossible aujourd'hui** : OpenCode n'a qu'un seul provider, `vps-ia`
+      (`http://100.99.75.104:4002/v1`), et cette machine est **hors ligne**
+      (`tailscale status` → « offline, last seen 25m ago » ; `tailscale ping` → 2× timeout).
+      `opencode auth list` → **0 credentials** : aucun provider de repli.
+      Ce n'est pas un défaut de configuration : le modèle est injoignable, point.
+      **Ce qui a pu être vérifié sans modèle** : `opencode agent list` démarre sans erreur et liste
+      les 3 workers en `subagent` — la réparation de la veille (`tools:` en objet) tient.
+      **Reste à faire, VPS revenu** : une tâche minimale réelle par worker.
+- [ ] **B.2 Réparer tout worker en échec** — sans objet tant que B.1 n'a pas tourné
+- [x] **B.3 `/plan-run` au format OpenCode** — livré en **commande**, pas en agent
+      `~/.config/opencode/command/plan-run.md` (répertoire `command/`, **au singulier**).
+      → **vérifié** : `opencode serve` + `GET /command` renvoie bien `plan-run` avec sa description.
+      Le format `Command` du SDK (`{name, description?, agent?, model?, template, subtask?}`) a été
+      lu dans `node_modules/@opencode-ai/sdk/dist/gen/types.gen.d.ts:1270`.
+- [x] **B.4 Persistance : équivalent `PreCompact` — RÉPONSE : OUI, il existe**
+      preuve : `node_modules/@opencode-ai/plugin/dist/index.d.ts`, interface `Hooks` —
+      `experimental.session.compacting` (l. 283, *« Called before session compaction starts »*,
+      `output.context: string[]` ajouté au prompt de compaction) et
+      `experimental.compaction.autocontinue` (l. 296, après compaction).
+      Plus `experimental.chat.system.transform` (l. 265) qui injecte à **chaque** requête.
+      → **le fallback « l'agent réécrit progress.md » n'a pas été nécessaire.**
+      Livré : `~/.config/opencode/plugins/plan-pointer.ts`, accroché aux deux hooks.
+      → **vérifié en exécution réelle** : `opencode run "ok"` avec `OPENCODE_PLAN_POINTER_TRACE`
+      produit `plugin.charge pointeur=oui` puis 4× `chat.system.transform pointeur=oui`.
+      → **vérifié au typage** : `npx tsc --strict --noEmit` sur `plugins/*.ts` → exit 0.
+      → **non vérifié** : `session.compacting` ne s'est pas déclenché — la session de test est trop
+      courte pour compacter. Même limite que côté Claude Code (A.2).
+- [x] **B.5 Mesure du contexte OpenCode** — méthode nouvelle, exacte
+      La méthode de la veille (`opencode stats`, delta `Avg Tokens/Session`) mélange usage et
+      démarrage. Remplacée par une **capture du prompt système réellement assemblé** via le hook
+      `experimental.chat.system.transform` : il s'exécute **avant** l'appel API, donc il mesure même
+      modèle injoignable. Sonde : `~/.config/opencode/plugins/zz-ctx-probe.ts`, inerte sans la
+      variable `OPENCODE_CTX_PROBE_OUT`.
+
+| Mesure OpenCode (cwd `C:\Users\Juliann`) | Caractères | ~tokens |
+|---|---:|---:|
+| Prompt système assemblé, **sans** les ajouts de la phase B | 28 348 | ~7 090 |
+| Prompt système assemblé, **avec** `command/plan-run.md` | **28 348** | ~7 090 |
+| Bloc pointeur ajouté par `plan-pointer` à chaque requête | +639 | ~+160 |
+| Bloc pointeur ajouté au prompt de compaction | +855 | ~+214 |
+
+**Coût réel de la phase B sur OpenCode : +639 caractères par requête, soit ~+2,3 %.**
+La commande `plan-run` elle-même coûte **0** : les commandes ne sont pas injectées dans le prompt
+système, seulement les *skills*. La conversion tokens est en caractères/4 — c'est le seul point
+approximatif, le comptage de caractères, lui, est exact.
+
+> Un premier relevé donnait un écart de 3 576 caractères. Il était faux : les deux exécutions
+> n'étaient pas parties du même répertoire, donc ni le même `AGENTS.md` ni le même bloc `<env>`.
+> Refait à `cwd` identique : delta **0**.
 
 ## PHASE C — Portage sur AGY
 
@@ -161,4 +197,20 @@ Variantes Claude Code relevées le 2026-08-04 :
 
 ## Erreurs (append-only — ne jamais purger)
 
-- *(vide à l'ouverture)*
+- 2026-08-04 B.1 : `vps-ia` (100.99.75.104) **hors ligne** — `tailscale status` « offline, last seen
+  25m ago », `tailscale ping` 2× timeout. Le pair est déclaré hors ligne par le coordinateur :
+  changer de compte Tailscale ou de clé SSH n'y changerait rien, et boucler risque un blacklistage.
+  → Ne pas rejouer avant que la machine soit revenue. `opencode auth list` = 0 credentials, donc
+  aucun modèle de repli local : les workers ne peuvent pas être testés autrement.
+- 2026-08-04 B.5 : première mesure différentielle faussée — les deux exécutions d'`opencode run`
+  ne partaient pas du même répertoire (l'une depuis `~/.config/opencode`), ce qui change le bloc
+  `<env>` et le `AGENTS.md` chargé. Delta annoncé 3 576 car, réel 0.
+  → Toujours fixer `cwd` explicitement avant les deux branches d'un différentiel.
+- 2026-08-04 A.2 : `state-save.mjs` alimenté par un `echo` de JSON depuis bash → les antislashs de
+  `"C:\Users\..."` sont mangés par les couches de quoting, `JSON.parse` échoue, le hook retombe
+  silencieusement sur `process.cwd()` et affiche `déclencheur : manuel`. Ce n'est pas un bug du hook.
+  → Passer les charges utiles de test **par un fichier**, jamais par `echo`.
+- 2026-08-04 (harnais de test) : `fs.existsSync('C:\\Users\\…')` renvoie `false` dans un
+  `node -e` lancé depuis bash, alors que la même vérification en `C:/Users/…` renvoie `true`.
+  Artefact de quoting, pas un défaut du code testé.
+  → Dans les harnais de test, écrire les chemins Windows avec des barres obliques.
