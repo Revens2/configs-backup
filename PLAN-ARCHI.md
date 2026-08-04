@@ -286,8 +286,25 @@ soit prévu.
 ## PHASE 7 — Mesure
 
 - [x] 7.1a Mesure **AVANT** — `MESURE-AVANT.md` (2026-08-04, avant toute modification)
-- [ ] 7.1b Fiabiliser le poste MCP par relevé réel (`/context`) au lieu de l'estimation
-- [ ] 7.2 Mesure **APRÈS** + écriture du delta dans le dépôt
+- [x] 7.1b **Relevé réel fait — il dément l'estimation.** Méthode : `claude -p --output-format json`,
+  lecture de `usage.cache_creation_input_tokens`, trois exécutions ne variant que par la config MCP.
+  - aucun MCP : **14 162 tok** · 3 serveurs locaux : **15 036 tok** · défaut : **40 051 tok**
+  - → 3 serveurs locaux (74 outils) = **874 tok**, soit **~12 tok/outil**, pas 200.
+    Claude Code 2.1.220 charge les outils MCP **en différé** (`ToolSearch`) : seuls les noms partent.
+  - → **connecteurs claude.ai = 25 015 tok, 62 % du démarrage.** Non différés.
+  - **Conséquence : les phases 2.2a et 2.2b n'ont pas rendu les ~24 200 tok annoncés** (ordre de
+    grandeur réel : quelques centaines). Ces retraits restent justifiés — serveur mort, clé révoquée,
+    0 appel en 18 jours — mais pas par l'argument tokens. La phase 2.3 (skills), elle, porte sur des
+    instructions non différées : son gain est réel.
+- [x] 7.2 Delta écrit dans `MESURE-AVANT.md`. **Non fait : mesure d'AGY et d'OpenCode** par une
+  méthode équivalente — leurs CLI n'exposent pas de compteur de contexte comparable.
+
+### Action la plus rentable du chantier, non exécutée
+
+Couper les connecteurs claude.ai (`Gmail`, `Microsoft 365` — qui ne s'authentifie même pas — et
+`MCP Obsidiann Juliann`, celui de S3) ferait passer le démarrage de **40 051 à ~15 036 tok (−62 %)**
+et supprimerait S3 au passage. Ils se gèrent dans l'interface claude.ai, ou se coupent en bloc par
+`disableClaudeAiConnectors`. **Décision utilisateur requise.**
 
 ---
 
