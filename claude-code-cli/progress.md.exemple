@@ -1,0 +1,48 @@
+# Mission : porter la boucle de plan sur fichier vers AGY et OpenCode
+_maj 2026-08-04 · arbitrage : (A) tokens · suivi détaillé : `configs-backup/PLAN-PORTAGE.md`_
+
+## Tâches
+
+- [~] **1. PHASE A — fermer la dette Claude Code**
+      critère : gemini.md aligné sur CLAUDE.md (sha256 égal, aucun composant retiré cité) · compaction réelle observée ou échec documenté · RECAPITULATIF.md corrigé (dépôt public) · S4 rappelé à l'utilisateur
+      cible : orchestrateur
+      reste : **une compaction réelle**. Le reste est fait et vérifié. Ne se provoque pas en ligne de commande — `/compact` côté utilisateur, ou session assez longue (`autoCompactEnabled: true`).
+- [~] **2. PHASE B — portage OpenCode**
+      critère : les 3 workers testés un par un et non vides · `/plan-run` au format OpenCode démarre · persistance tranchée avec preuve · contexte mesuré avant/après
+      cible : orchestrateur
+      reste : **B.1, les 3 workers** — bloqué, `vps-ia` (100.99.75.104) hors ligne et aucun provider de repli. Tout le reste est fait et vérifié.
+- [x] **3. PHASE C — portage AGY (mono-agent, pas de sous-agents)**
+      critère : Skill `/plan-run` visible dans AGY et déclenchée · pré-compaction tranchée avec preuve · `agy plugin enable/disable` vérifié avec delta mesuré
+      cible : orchestrateur
+      → Skill + hook `PreInvocation` livrés, `agy plugin validate` OK, hook tracé en exécution réelle, delta mesuré (+292 tok statiques, +161 tok/invocation).
+- [x] **4. PHASE D — homogénéisation**
+      critère : format unique consommé par les 3 runtimes · tableau natif/émulé/impossible · mesure finale comparée à MESURE-AVANT.md
+      cible : orchestrateur
+      → `configs-backup/PORTAGE-RUNTIMES.md`. Les 3 lecteurs vérifiés sur le même fichier de test.
+
+## Décisions
+
+- `progress.md` est la seule source d'état d'exécution ; jamais un todo en mémoire de session.
+- Aucun gain annoncé sans mesure avant/après, **sur des totaux** : Claude Code
+  `cache_creation + cache_read`, AGY `input_tokens + cache_read_tokens`. Lire la part non cachée
+  seule fait passer un cache chaud pour un gain — erreur commise trois fois sur ce chantier.
+- `.bak` horodaté avant toute modification, commit atomique par phase.
+- AGY n'a pas de sous-agents : sa boucle est mono-agent, ne pas tenter de contourner.
+- AGY n'a pas de pré-compaction : le relais est `PreInvocation`, qui réécrit le pointeur à chaque
+  tour au lieu de le sauvegarder avant la perte.
+
+## Erreurs (append-only — ne jamais purger)
+
+- 2026-08-04 : le « −60 % » sur Claude Code et le « −57 % » sur AGY sont **le même artefact de
+  cache**. Réfutés par mesure (`deniedMcpServers` vide 40 137 vs 2 connecteurs refusés 40 150 ;
+  `.agents/` absent 21 520 vs complet 21 519).
+  → Ne jamais annoncer un gain sur `cache_creation_input_tokens` ou `usage.input_tokens` seuls.
+- 2026-08-04 B.1 : `vps-ia` hors ligne (`tailscale status` → offline 25 min, `ping` 2× timeout).
+  → Ne pas boucler : le pair est déclaré hors ligne par le coordinateur, changer de compte ou de clé
+  n'y change rien.
+- 2026-08-04 B.5 : différentiel faussé parce que les deux exécutions ne partaient pas du même
+  répertoire. → Fixer `cwd` explicitement des deux côtés d'un différentiel.
+- 2026-08-04 A.2 : charge utile de hook passée par `echo` depuis bash → antislashs mangés,
+  `JSON.parse` échoue en silence. → Passer les payloads de test **par un fichier**.
+- 2026-08-04 (harnais) : `fs.existsSync('C:\\Users\\…')` faux dans un `node -e` lancé depuis bash,
+  vrai avec `C:/Users/…`. → Chemins Windows en barres obliques dans les harnais.
