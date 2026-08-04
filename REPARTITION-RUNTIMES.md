@@ -12,7 +12,11 @@ main, pas sur ce qu'on lui prête.
 | MCP par plugin activable | non | **oui** | non |
 | Retirer un sous-agent du contexte | non | — | **oui** (`task` deny) |
 | Nesting | 1 niveau | — | 2 niveaux |
-| Contexte de démarrage **mesuré** | **16 021 tok** | **21 530 tok** | **~14 800 tok** |
+| Contexte de démarrage **mesuré** | **16 021 tok** | **9 303 tok** | **~12 800 tok** |
+
+> Chiffres au 2026-08-04 après triage de `~/.agents/skills/` (16 skills sortis, −12 212 tok sur AGY,
+> −2 000 sur OpenCode). Avant ce triage : AGY 21 517, OpenCode ~14 800.
+> **AGY est bien le plus léger — mais seulement une fois `.agents/` dégraissé.**
 
 ### Correction : AGY n'est pas le runtime le plus léger
 

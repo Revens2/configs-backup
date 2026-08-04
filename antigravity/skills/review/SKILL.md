@@ -14,4 +14,3 @@ After the user chooses, run the matching review once:
 
 - Bugbot: follow the `/review-bugbot` instructions.
 - Security Review: follow the `/review-security` instructions.
-

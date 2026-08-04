@@ -14,13 +14,14 @@ Ce fichier est le point d'entrée. Les détails sont dans :
 
 ## 1. Le résultat en un tableau
 
-| Runtime | Contexte de démarrage **mesuré** | État |
-|---|---:|---|
-| **OpenCode** 1.18.3 | **~14 800 tok** | réparé (ne démarrait pas), le plus léger |
-| **Claude Code** 2.1.220 (CLI + Desktop) | **16 021 tok** | −24 030 tok sur la session |
-| **AGY** (Antigravity 1.1.10) | **21 530 tok** | MCP global vidé, confinés en plugins |
+| Runtime | Contexte de démarrage **mesuré** | Départ | Gain |
+|---|---:|---:|---:|
+| **AGY** (Antigravity 1.1.10) | **9 303 tok** | 21 517 | **−57 %** |
+| **OpenCode** 1.18.3 | **~12 800 tok** | ~14 800 | −14 % |
+| **Claude Code** 2.1.220 (CLI + Desktop) | **16 021 tok** | 40 051 | **−60 %** |
 
-Claude Code : **40 051 → 16 021 tok, −60 %**, mesuré, pas estimé.
+Tout est mesuré, plus rien n'est estimé. OpenCode a en outre été **réparé** : il ne démarrait pas,
+puis il répondait vide (voir §5).
 
 ---
 
@@ -163,10 +164,7 @@ Créés : `~/.claude/skills/plan-run/` · `~/.gemini/config/plugins/obsidian-kit
 2. **Bloc `obsidian` (4 skills)** — à déposer dans `<vault>/.claude/skills/`. `G:` n'a été monté à
    aucun moment de la session.
 3. **S4** — clé ref.tools à faire tourner.
-4. **`~/.agents/skills/` : 20 skills jamais inspectés**, lus par **AGY et OpenCode**, avec des
-   doublons de `caveman` et `graphify` (3 exemplaires de `caveman` au total côté OpenCode). C'est
-   l'équivalent de la phase 2.3 pour ces deux runtimes, **non fait**. Piste la plus rentable qui
-   reste.
+4. ~~`~/.agents/skills/`~~ — **fait**, voir §11.
 5. **Compaction réelle non testée** — le pointeur `progress.md` est validé par exécution directe du
    hook, pas par une compaction, qui ne se provoque pas sur commande.
 
@@ -198,3 +196,41 @@ opencode stats                               # delta Avg Tokens/Session x Sessio
 Isoler un poste : rejouer avec `--strict-mcp-config --mcp-config '{"mcpServers":{}}'` et faire la
 différence. C'est ainsi que les 25 015 tok des connecteurs claude.ai ont été trouvés — après six
 phases passées à optimiser un poste qui en pesait 874.
+
+Pour un poste sans drapeau dédié : le renommer et remesurer. C'est ce qui a chiffré `.agents/`
+(renommé en `.agents-off`, mesuré, restauré).
+
+---
+
+## 11. `~/.agents/skills/` — le plus gros levier, trouvé en dernier
+
+Racine de customisation **workspace** d'Antigravity pour `C:\Users\Juliann`, lue par **AGY et
+OpenCode**. Découverte par accident : les avertissements « duplicate skill name » du log OpenCode.
+
+Mesure différentielle sur AGY :
+
+| État | Contexte |
+|---|---:|
+| `.agents/` présent, 20 skills | 21 517 tok |
+| `.agents/` renommé (absent) | 9 305 tok |
+| **après triage, 4 skills gardés** | **9 303 tok** |
+
+**`.agents/` coûtait 12 212 tokens, soit 57 % du contexte d'AGY.** Les 16 skills sortis
+représentaient la totalité de ce coût ; les 4 conservés ne pèsent rien de mesurable.
+
+Conservés : `shell`, `review`, `babysit`, `loop`.
+Sortis vers `~/.agents-hors-scope/<bloc>/` (non lu, redéployable) :
+
+| Bloc | Skills |
+|---|---|
+| `doublons` | `caveman`, `graphify` — présents dans 2 autres racines chacun |
+| `meta-agy` | `create-hook`, `create-rule`, `create-skill`, `create-subagent`, `migrate-to-skills`, `statusline`, `update-cli-config`, `update-cursor-settings`, `sdk` |
+| `flux-dev` | `review-bugbot`, `review-security`, `split-to-prs`, `deploy` |
+| `ui` | `canvas` (84 Ko) |
+
+Effet sur OpenCode : **~14 800 → ~12 800 tok**. Plus faible qu'AGY parce qu'OpenCode ne charge que
+les descriptions, là où AGY en charge davantage.
+
+**Classement final : AGY 9 303 < OpenCode ~12 800 < Claude Code 16 021.**
+Troisième fois que ce classement s'inverse au cours du chantier — mais cette fois chaque chiffre est
+un relevé, pas une déduction.
