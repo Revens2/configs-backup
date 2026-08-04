@@ -83,8 +83,9 @@ Trois leviers à ne pas confondre :
 Le confinement par sous-agent n'existe pas sur Claude Code : `tools:` filtre une liste déjà
 chargée. Seul AGY confine réellement, par plugin.
 
-**Règle de mesure du contexte.** Le contexte réellement envoyé au modèle est
-`cache_creation_input_tokens` **+** `cache_read_input_tokens` du premier tour. Ne lire que
+**Règle de mesure du contexte.** Le contexte réellement envoyé au modèle est un **total** :
+`cache_creation_input_tokens` **+** `cache_read_input_tokens` du premier tour côté Claude Code,
+`usage.input_tokens` **+** `usage.cache_read_tokens` côté AGY. Ne lire que
 `cache_creation` fait passer un préfixe déjà mis en cache pour un gain : c'est ainsi qu'un
 « −60 % » a été annoncé à tort le 2026-08-04. Aucun gain n'est acquis tant qu'il n'est pas relevé
 sur ce total, à cache froid ou en comparant deux totaux.

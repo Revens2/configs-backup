@@ -18,8 +18,8 @@ Ce fichier est le point d'entrée. Les détails sont dans :
 
 | Runtime | Contexte de démarrage **mesuré** | Départ | Gain |
 |---|---:|---:|---:|
-| **AGY** (Antigravity 1.1.10) | **9 303 tok** | 21 517 | **−57 %** |
-| **OpenCode** 1.18.3 | **~12 800 tok** | ~14 800 | −14 % |
+| **AGY** (Antigravity 1.1.10) | **~21 520 tok** | ~21 517 | **aucun** |
+| **OpenCode** 1.18.3 | ~12 800 tok *(méthode abandonnée)* | ~14 800 | non établi |
 | **Claude Code** 2.1.220 (CLI + Desktop) | **~40 150 tok** | ~40 050 | **aucun** |
 
 > ⚠️ **Correction du 2026-08-04 (session de portage).** La ligne « Claude Code : 16 021 tok, −60 % »
@@ -38,9 +38,20 @@ Ce fichier est le point d'entrée. Les détails sont dans :
 > contexte.** Les 3 serveurs MCP locaux coûtent en revanche bien ~1 290 tok (ligne 2 − ligne 3),
 > cohérent avec les 874 tok relevés la veille. Voir §10 pour la méthode corrigée.
 
-Les gains AGY et OpenCode restent valides : ce sont des **différentiels sur la même métrique**
-(présence/absence de `.agents/`), pas des comparaisons de part cachée. OpenCode a en outre été
-**réparé** : il ne démarrait pas, puis il répondait vide (voir §5).
+> ⚠️ **Le gain AGY est tombé le même jour, pour la même raison.** J'ai d'abord écrit ici que les
+> mesures AGY tenaient parce qu'elles étaient différentielles. C'était faux : elles comparaient
+> elles aussi un relevé froid à un relevé chaud. Quatre exécutions **à configuration identique**
+> donnent `input_tokens` = 21 519 puis 9 302, 9 307, 9 304 — avec `cache_read_tokens` = 0 puis
+> 12 217 à chaque fois. **Total constant : ~21 520.** Le « 9 303 » du triage était le même chiffre
+> que le « 9 305 » du `.agents/` renommé parce que ni l'un ni l'autre ne mesurait `.agents/` :
+> les deux mesuraient un cache chaud. Différentiel refait sur les totaux — absent 21 520 · 1 skill
+> vide 21 524 · rules seuls 21 524 · 4 skills 21 522 · complet 21 519, soit **5 tokens d'écart
+> maximal**. Détail dans [`PLAN-PORTAGE.md`](PLAN-PORTAGE.md).
+
+**Aucun des trois runtimes n'a gagné de contexte dans ce chantier.** Ce qui reste acquis : deux bugs
+réparés sur OpenCode (voir §5), une clé révoquée et purgée, quatre serveurs MCP morts ou inutilisés
+retirés, 47 skills sortis du niveau utilisateur, et une boucle de plan sur fichier portée sur les
+trois runtimes. Rien de tout cela n'est un gain de tokens démontré.
 
 ---
 
@@ -102,7 +113,14 @@ trois.
 
 ---
 
-## 4. Six erreurs de ma part
+## 4. Sept erreurs de ma part
+
+0b. **Le « −57 % » sur AGY n'existe pas non plus.** Même faute, même jour, sur `usage.input_tokens`
+   au lieu de `input_tokens + cache_read_tokens`. Quatre exécutions à configuration identique :
+   21 519 (froid) puis 9 302 / 9 307 / 9 304 (chauds). `~/.agents/` absent ou complet : 1 token
+   d'écart. Le triage des 16 skills n'a rien rendu. **Et j'avais écrit, dans la correction de
+   l'erreur 0 ci-dessous, que les mesures AGY tenaient parce qu'elles étaient différentielles —
+   sans les avoir refaites.** Troisième fois que j'affirme un gain sans l'avoir mesuré.
 
 0. **Le « −60 % » sur Claude Code n'existe pas.** Mesure faite sur `cache_creation_input_tokens`
    seul, « avant » à cache froid et « après » à cache chaud : la soustraction ne mesurait que la
@@ -250,7 +268,7 @@ Pour un poste sans drapeau dédié : le renommer et remesurer. C'est ce qui a ch
 Racine de customisation **workspace** d'Antigravity pour `C:\Users\Juliann`, lue par **AGY et
 OpenCode**. Découverte par accident : les avertissements « duplicate skill name » du log OpenCode.
 
-Mesure différentielle sur AGY :
+Mesure différentielle sur AGY — **fausse, conservée pour mémoire** :
 
 | État | Contexte |
 |---|---:|
@@ -258,8 +276,15 @@ Mesure différentielle sur AGY :
 | `.agents/` renommé (absent) | 9 305 tok |
 | **après triage, 4 skills gardés** | **9 303 tok** |
 
-**`.agents/` coûtait 12 212 tokens, soit 57 % du contexte d'AGY.** Les 16 skills sortis
-représentaient la totalité de ce coût ; les 4 conservés ne pèsent rien de mesurable.
+> ⚠️ **RÉFUTÉ le 2026-08-04.** Ces trois chiffres ne mesurent pas `.agents/` : ils mesurent l'état du
+> cache. Le premier est un relevé froid, les deux autres des relevés chauds — et `usage.input_tokens`
+> exclut `cache_read_tokens`. Refait sur les **totaux** (`input + cache_read`), `.agents/` absent
+> donne 21 520 et `.agents/` complet 21 519 : **1 token d'écart**.
+>
+> **`.agents/` ne coûtait rien. Le triage des 16 skills n'a rien rendu.** Les 4 skills conservés ne
+> pèsent rien — les 16 sortis non plus. Détail et protocole dans [`PLAN-PORTAGE.md`](PLAN-PORTAGE.md).
+> Le triage reste défendable comme rangement (doublons réels, skills hors sujet), pas comme
+> optimisation.
 
 Conservés : `shell`, `review`, `babysit`, `loop`.
 Sortis vers `~/.agents-hors-scope/<bloc>/` (non lu, redéployable) :
@@ -274,7 +299,14 @@ Sortis vers `~/.agents-hors-scope/<bloc>/` (non lu, redéployable) :
 Effet sur OpenCode : **~14 800 → ~12 800 tok**. Plus faible qu'AGY parce qu'OpenCode ne charge que
 les descriptions, là où AGY en charge davantage.
 
-**Classement final : AGY 9 303 < OpenCode ~12 800 < Claude Code ~40 150.**
-*(Chiffre Claude Code corrigé le 2026-08-04 : 16 021 était la seule part non cachée du prompt, voir
-l'encadré de la §1.)* Quatrième fois que ce classement bouge au cours du chantier. L'ordre ne change
-pas, l'écart si : Claude Code est **quatre fois** plus lourd qu'AGY, pas une fois et demie.
+> ⚠️ Ces deux chiffres viennent d'un delta sur `opencode stats` (`Avg Tokens/Session × Sessions`),
+> qui mélange usage et démarrage et n'isole rien. Méthode abandonnée. Le contexte de démarrage
+> d'OpenCode se mesure désormais par capture du prompt système réellement assemblé :
+> **28 348 caractères**, voir [`PLAN-PORTAGE.md`](PLAN-PORTAGE.md) B.5.
+
+**Classement final, sur des totaux : AGY ~21 520 < Claude Code ~40 150.**
+OpenCode n'est pas comparable — son contexte n'a pu être mesuré qu'en caractères de prompt système
+(28 348), faute de modèle joignable pour obtenir un compteur de tokens.
+
+*(Les chiffres 9 303 et 16 021 des versions précédentes de ce tableau étaient la seule part non
+cachée du prompt. Voir les encadrés des §1 et §11.)*
