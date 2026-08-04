@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "mcpvault.cmd",
+      "args": [
+        "G:\\Mon Drive\\Obsidian Vault"
+      ]
+    }
+  }
+}

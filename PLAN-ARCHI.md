@@ -52,6 +52,11 @@ Structure : `antigravity/` (73 f), `claude-code-cli/` (1 442 f), `claude-code-de
 
 | S3 | Endpoint MCP Obsidian exposé publiquement via ngrok, **le secret est le chemin de l'URL** (`…ngrok-free.dev/mcp/<jeton>`), vault en lecture **et écriture** | Connecteur claude.ai « MCP Obsidiann Juliann », **configuré côté claude.ai** — absent des fichiers locaux et du dépôt | Non | **Risque assumé par l'utilisateur (2026-08-04). Ne pas y revenir.** Tunnel hors ligne au moment du relevé (HTTP 503). L'URL complète s'imprime à chaque `claude mcp list` → présente dans les transcripts locaux. |
 
+| S4 | Clé API **ref.tools** en clair **dans une query string** : `https://api.ref.tools/mcp?apiKey=ref-…` | `~/.cursor/mcp.json` (installation **Cursor**, distincte d'AGY) | Non — hors dépôt, vérifié | **Vivante** (`HTTP 405`, pas de rejet d'auth). **À révoquer / faire tourner côté ref.tools.** Une clé en query string fuit dans les logs de proxy et l'historique. |
+
+> S1 avait un **troisième** emplacement, découvert seulement en phase 5 :
+> `~/.gemini/config/mcp_config.json` (AGY). Supprimé le 2026-08-04. La clé était déjà révoquée.
+>
 > Valeurs complètes volontairement absentes de ce fichier : il est versionné.
 > Les retrouver si besoin : `git -C configs-backup show adb1957:antigravity/mcp_config.json` (S1),
 > `~/.mcp.json` ligne 59 (S2).
@@ -220,11 +225,31 @@ et des serveurs déclarés par projet.
   Séparés : la déclaration MCP (`~/.mcp.json` vs `claude_desktop_config.json`, **aucune
   synchronisation automatique** — toute modif est à porter deux fois) et les plugins.
 
-## PHASE 5 — AGY CLI
+## PHASE 5 — AGY CLI — **exécutée le 2026-08-04, avec correction du postulat**
 
-- [ ] 5.1 Agent orchestrateur qui instancie ses propres workers
-- [ ] 5.2 Confiner chaque MCP à son worker dans `mcp_config.json`
-- [ ] 5.3 Documenter la répartition AGY (orchestration multi-niveaux) vs Claude Code (implémentation fine)
+- [x] 5.1 **Postulat de la mission faux.** « AGY gère nativement les sous-agents dynamiques et le
+  nesting » ne tient pas pour ce build : les types de customisation d'Antigravity sont **Rules,
+  Skills, Plugins, Hooks, MCP Servers** — **pas de sous-agents** (source : skill intégré
+  `agy-customizations`). `agy agents` renvoie vide même après dépôt d'un fichier d'agent aux deux
+  emplacements candidats. `antigravity/subagents/` du dépôt et le skill `create-subagent` (qui
+  documente `.cursor/agents/`) sont des résidus de lignée Cursor.
+  Livré à la place : plugin **`orchestrateur-kit`** (`~/.gemini/config/plugins/orchestrateur-kit/`)
+  portant une **règle** de conduite de travail long — plan sur disque, critère bruit/conclusion,
+  vérification avant de cocher — activable par `agy plugin enable orchestrateur-kit`.
+- [x] 5.2 **Confinement MCP par plugin — le seul réel de tout le parc.**
+  Correction d'une erreur de ma mesure initiale : j'avais annoncé « AGY : 0 MCP » en ne regardant que
+  `~/.antigravitycli/mcp/` (vide). La vraie racine est `~/.gemini/config/`, qui contenait bien un
+  `mcp_config.json` avec `anytype`, `obsidian` et `kicad-gui-bridge`.
+  - `anytype` **supprimé** : serveur mort, et il contenait **la clé S1 en clair** — troisième
+    emplacement de ce secret, non repéré aux phases 1 et 2. Sauvegarde
+    `mcp_config.json.bak.20260804-010257`.
+  - `obsidian` **déplacé** dans le plugin `obsidian-kit`, donc inactif par défaut.
+  - `kicad-gui-bridge` laissé, déjà `"disabled": true`.
+  - Global restant : **aucun serveur actif**. AGY démarre nu.
+- [x] 5.3 [`REPARTITION-RUNTIMES.md`](REPARTITION-RUNTIMES.md) — capacités réelles comparées et règle
+  de décision. Résumé : **Claude Code** est le seul à avoir des sous-agents (implémentation fine et
+  délégation) · **AGY** est le seul à confiner un MCP (volume, contexte minuscule) · **OpenCode** est
+  le seul à pouvoir retirer un sous-agent du contexte et à nester sur 2 niveaux.
 
 ## PHASE 6 — OpenCode
 
