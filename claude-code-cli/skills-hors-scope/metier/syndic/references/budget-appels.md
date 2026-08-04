@@ -125,4 +125,3 @@ Si négatif → le copropriétaire a un avoir.
 2. **Charges relatives aux services collectifs et équipements communs** → réparties selon l'utilité objective pour chaque lot (ex: ascenseur, chauffage)
 
 La répartition est fixée dans le règlement de copropriété. Toute modification nécessite l'unanimité (art. 11 loi 1965), sauf si elle résulte de travaux votés.
-

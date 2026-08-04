@@ -236,4 +236,3 @@ client.beta.sessions.update(
 )
 ```
 
-

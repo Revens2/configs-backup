@@ -165,4 +165,3 @@ Checklist réception :
 - [ ] Format de lecture : Factur-X (PDF/A-3 + XML), UBL ou CII
 
 Voir [setup-facturation.md](setup-facturation.md) pour la configuration et [plateformes-agreees.md](plateformes-agreees.md) pour le choix d'une PA.
-

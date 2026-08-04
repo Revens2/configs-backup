@@ -293,4 +293,3 @@ new Chart(document.getElementById('revenueChart'), {
 | `--primitive-gradient-primary` | Title gradients |
 | `--typography-font-heading` | Headlines |
 | `--typography-font-body` | Body text |
-

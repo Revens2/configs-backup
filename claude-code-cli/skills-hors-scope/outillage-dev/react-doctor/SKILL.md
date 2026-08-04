@@ -39,4 +39,3 @@ npx -y react-doctor@latest . --verbose
 - **75+**: Great
 - **50-74**: Needs work
 - **0-49**: Critical
-

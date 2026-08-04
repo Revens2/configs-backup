@@ -288,4 +288,3 @@ Recouvrement : URSSAF, pas DGFIP. Avis distinct de l'avis IR.
 - Droit de reprise : LPF (Livre des Procédures Fiscales)
 - PUMA / cotisation subsidiaire maladie : art. L. 380-2 CSS
 - BOFiP : BOI-INT (conventions internationales), BOI-IR-LIQ
-

@@ -137,4 +137,3 @@ node scripts/upload-qonto-attachments.js --upload
 ```
 
 Les deux étant idempotentes, une exécution planifiée ne dupliquera jamais les factures ni les pièces jointes.
-

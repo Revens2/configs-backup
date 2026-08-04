@@ -15,4 +15,3 @@ pytest-mock>=3.12.0
 #
 # shadcn/ui CLI is installed per-project:
 #   npx shadcn-ui@latest init
-

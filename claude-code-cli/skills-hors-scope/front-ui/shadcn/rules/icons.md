@@ -99,4 +99,3 @@ function StatusBadge({ icon: Icon }: { icon: React.ComponentType }) {
 
 <StatusBadge icon={CheckIcon} />
 ```
-

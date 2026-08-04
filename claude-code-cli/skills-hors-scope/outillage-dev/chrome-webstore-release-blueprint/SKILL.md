@@ -261,4 +261,3 @@ Run this with the user:
 - Never auto-publish every push without version comparison.
 - Keep setup instructions explicit and user-confirmed at each manual step.
 - Prefer repeatable helper scripts over ad-hoc one-off commands.
-

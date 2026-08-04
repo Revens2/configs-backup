@@ -143,4 +143,3 @@ Les 4 premiers postes représentent généralement 40 à 65% du budget :
 4. Honoraires syndic (disparaît en bénévole)
 
 Le reste (eau, électricité, espaces verts, contrats maintenance) mérite une revue mais les leviers sont plus limités.
-

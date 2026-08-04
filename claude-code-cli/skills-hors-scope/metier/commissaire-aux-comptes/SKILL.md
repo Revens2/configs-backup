@@ -271,4 +271,3 @@ Le fichier `data/sources.json` liste toutes les sources avec dates de dernière 
 |---------|---------|
 | [references/normes-nep.md](references/normes-nep.md) | Normes NEP applicables, seuils de signification, spécifications FEC |
 | [references/procedures-detaillees.md](references/procedures-detaillees.md) | Procédures détaillées par phase d'audit |
-

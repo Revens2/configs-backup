@@ -419,4 +419,3 @@ for _, block := range resp.Content {
 ```
 
 Other edit types: `BetaClearToolUses20250919EditParam`, `BetaClearThinking20251015EditParam`.
-

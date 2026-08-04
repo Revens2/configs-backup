@@ -96,4 +96,3 @@ const response = await client.beta.files.download(
 const content = Buffer.from(await response.arrayBuffer());
 await fs.promises.writeFile("output.txt", content);
 ```
-

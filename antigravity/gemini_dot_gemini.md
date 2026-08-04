@@ -102,4 +102,3 @@ Dès que l'utilisateur fait une demande concernant son vault Obsidian, ses notes
 - **Agent Principal Léger** : L'agent principal délègue systématiquement l'exécution MCP aux sous-agents dédiés au lieu d'embarquer les dizaines de schémas de tools MCP dans sa propre boucle de contexte.
 
 
-

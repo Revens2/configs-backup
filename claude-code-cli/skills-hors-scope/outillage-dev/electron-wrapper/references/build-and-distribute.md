@@ -465,4 +465,3 @@ Run with `cd electron && npm run icons`.
 8. The auto-updater checks `latest.yml`/`latest-mac.yml` from GitHub Releases
 
 electron-updater uses the `publish.provider: github` config in `electron-builder.yml` to find releases. The `latest*.yml` files (uploaded as release artifacts) tell the updater the current version and download URLs.
-

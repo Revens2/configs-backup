@@ -163,4 +163,3 @@ for question in questions:
 # 3. Clean up when done
 client.beta.files.delete(uploaded.id)
 ```
-

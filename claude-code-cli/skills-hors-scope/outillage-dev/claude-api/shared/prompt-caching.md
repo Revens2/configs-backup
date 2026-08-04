@@ -169,4 +169,3 @@ Fix: place an intermediate breakpoint every ~15 blocks in long turns, or put the
 A cache entry becomes readable only after the first response **begins streaming**. N parallel requests with identical prefixes all pay full price — none can read what the others are still writing.
 
 For fan-out patterns: send 1 request, await the first streamed token (not the full response), then fire the remaining N−1. They'll read the cache the first one just wrote.
-

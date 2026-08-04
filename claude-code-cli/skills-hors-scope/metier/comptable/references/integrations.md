@@ -53,4 +53,3 @@ Avec les connecteurs Qonto + Stripe, le rapprochement bancaire peut être largem
 2. **Croiser les payouts Stripe avec les crédits Qonto** : chaque payout Stripe doit correspondre à un crédit Qonto, même montant et date proche (J+2 à J+7)
 3. **Identifier les écarts** : transactions Qonto sans correspondance Stripe = dépenses directes. Payouts Stripe sans crédit Qonto = payout en transit ou erreur.
 4. **Valider le solde** : solde Qonto au 31/12 = solde du compte 512 dans le journal
-

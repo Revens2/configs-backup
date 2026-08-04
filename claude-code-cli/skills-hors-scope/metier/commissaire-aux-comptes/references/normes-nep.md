@@ -120,4 +120,3 @@ Vérification 7 : col.9 (PieceRef) non vide
 
 - Durée de conservation du dossier de travail : 10 ans (art. R. 823-10 C. com.)
 - Le FEC doit être conservé 6 exercices + année en cours
-

@@ -196,4 +196,3 @@ When adapting this for a new project, update these project-specific values:
 - [ ] Repository URL in `electron/package.json`
 - [ ] Bun version in `download-bun.ts`
 - [ ] Icon assets in `electron/assets/`
-

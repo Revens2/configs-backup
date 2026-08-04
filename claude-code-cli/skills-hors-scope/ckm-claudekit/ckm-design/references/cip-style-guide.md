@@ -66,4 +66,3 @@
 | Red | Energy, passion | Food, Sports |
 | Black | Sophistication | Luxury, Fashion |
 | White | Clean, minimal | Tech, Healthcare |
-

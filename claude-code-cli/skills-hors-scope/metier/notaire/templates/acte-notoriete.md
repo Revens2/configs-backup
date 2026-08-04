@@ -184,4 +184,3 @@ Fait et passé à {{notaire.ville}}, en l'étude du notaire soussigné.
 
 ⚠️ **CE DOCUMENT EST UN PROJET DE TRAVAIL.**
 Il ne constitue pas un acte authentique. Seul un notaire en exercice peut dresser un acte de notoriété (art. 730-1 C. civ.).
-

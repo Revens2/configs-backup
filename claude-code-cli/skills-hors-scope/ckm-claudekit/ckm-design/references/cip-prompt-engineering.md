@@ -82,4 +82,3 @@ photorealistic, professional photography, high quality, 8k resolution, detailed,
 ```
 blurry, low quality, distorted text, misspelled, amateur, clipart, cartoon, illustration, watermark
 ```
-

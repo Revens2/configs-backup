@@ -440,4 +440,3 @@ client.beta().sessions().resources().update(repoResourceId, ResourceUpdateParams
     .authorizationToken("ghp_your_new_github_token")
     .build());
 ```
-

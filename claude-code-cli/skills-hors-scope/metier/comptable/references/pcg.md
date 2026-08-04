@@ -88,4 +88,3 @@
 - **775** Produits des cessions d'éléments d'actif
 - **781** Reprises sur amortissements et provisions
 - **791** Transferts de charges d'exploitation
-

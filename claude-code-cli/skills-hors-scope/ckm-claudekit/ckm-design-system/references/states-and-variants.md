@@ -239,4 +239,3 @@ When multiple states apply, priority (highest to lowest):
 <input aria-invalid="true" aria-describedby="error-msg">
 <span id="error-msg" role="alert">Error message</span>
 ```
-

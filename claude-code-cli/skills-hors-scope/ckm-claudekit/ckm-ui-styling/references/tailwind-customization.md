@@ -481,4 +481,3 @@ export default {
 6. **Test dark mode**: Ensure custom colors work in both themes
 7. **Document custom utilities**: Add comments explaining custom classes
 8. **Semantic naming**: Use descriptive names (primary not blue)
-

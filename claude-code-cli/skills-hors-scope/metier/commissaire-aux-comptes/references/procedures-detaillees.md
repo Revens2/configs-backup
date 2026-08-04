@@ -201,4 +201,3 @@ Vérifier :
 - [ ] Pas de contradiction entre les différentes pièces
 - [ ] Les notes annexes reflètent fidèlement les opérations
 - [ ] L'approbation des comptes est correctement formulée
-

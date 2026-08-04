@@ -147,4 +147,3 @@ Le carnet d'entretien doit être tenu à jour par le syndic à chaque événemen
 - TVA à 5,5% pour les travaux d'amélioration énergétique
 - TVA à 10% pour les travaux d'entretien et de rénovation
 - TVA à 20% pour les constructions neuves et extensions
-

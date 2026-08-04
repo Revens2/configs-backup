@@ -473,4 +473,3 @@ contextBridge.exposeInMainWorld("electronAPI", electronAPI);
 - **`ipcRenderer.invoke()`** for renderer → main (request/response)
 - **`ipcRenderer.on()`** for main → renderer (push events)
 - Never expose `ipcRenderer` directly — always wrap in specific methods
-

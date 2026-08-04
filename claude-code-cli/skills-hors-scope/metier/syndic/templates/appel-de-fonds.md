@@ -59,4 +59,3 @@ Le syndic,
 ---
 
 *En cas de question, contacter : {{contact_email}} / {{contact_telephone}}*
-

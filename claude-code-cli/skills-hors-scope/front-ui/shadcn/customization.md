@@ -207,4 +207,3 @@ npx shadcn@latest add button --diff button.tsx # see the diff for a specific fil
 ```
 
 See [Updating Components in SKILL.md](./SKILL.md#updating-components) for the full smart merge workflow.
-
