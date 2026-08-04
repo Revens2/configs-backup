@@ -251,11 +251,37 @@ et des serveurs déclarés par projet.
   délégation) · **AGY** est le seul à confiner un MCP (volume, contexte minuscule) · **OpenCode** est
   le seul à pouvoir retirer un sous-agent du contexte et à nester sur 2 niveaux.
 
-## PHASE 6 — OpenCode
+## PHASE 6 — OpenCode — **exécutée le 2026-08-04**
 
-- [ ] 6.1 Règles de permission `task` en `deny` (retire le sous-agent de la description de l'outil Task)
-- [ ] 6.2 Aligner les 3 workers sur les définitions Claude Code, corriger les noms d'outils MCP
-- [ ] 6.3 Nesting 2 niveaux max
+> **Constat de départ : OpenCode ne démarrait pas.**
+> `opencode agent list` → `Error: Configuration is invalid at agents/web-researcher.md — Expected
+> object | undefined, got "mcp__notebooklm__…" tools`.
+> Les 3 workers avaient été copiés depuis Claude Code avec `tools:` en **chaîne** ; OpenCode attend un
+> **objet** `outil: booléen`. **Ils n'avaient donc jamais fonctionné** — la « divergence de noms
+> d'outils MCP » de l'énoncé était en réalité une config cassée.
+
+- [x] 6.1 Règles `permission.task` en `deny` sur `general` et `explore`. Vérifié : les règles sont
+  parsées et appliquées à l'ensemble des agents
+  (`{"permission":"task","pattern":"general","action":"deny"}`). Sur `deny`, le sous-agent est retiré
+  de la description de l'outil Task — **seul levier du parc qui retire vraiment un sous-agent du
+  contexte**. Les 3 workers spécialisés couvrent le besoin ; `general` et `explore` font doublon avec
+  eux et avec l'orchestrateur.
+- [x] 6.2 Les 3 workers réécrits au format OpenCode : `mode: subagent` + `tools:` en objet, outils en
+  minuscules (`read`, `grep`, `glob`, `bash`, `webfetch`, `websearch`, `write`, `edit` — liste
+  autoritative extraite du binaire). Tous les `mcp__*` retirés : **aucun serveur MCP n'est déclaré
+  dans `opencode.jsonc`**, ces outils n'existaient pas. Sauvegardes `.bak.20260804-010257`.
+  Vérifié : `opencode agent list` démarre et liste les 10 agents.
+- [x] 6.3 Nesting 2 niveaux — **déjà garanti par défaut, rien à ajouter.** Le binaire injecte
+  `{permission:"task", pattern:"*", action:"deny"}` dans tout sous-agent qui ne déclare pas lui-même
+  la permission `task`. Nos 3 workers ne la déclarent pas : ils ne peuvent pas engendrer de
+  sous-agents. Profondeur maximale = primaire → sous-agent.
+
+Effet mesuré : 19 287 → **18 975 o** de config (~4 822 → **~4 744 tok**), plus le retrait de 2
+sous-agents de la description de l'outil Task (non chiffrable statiquement).
+
+**Effet de bord favorable :** `opencode agent list` révèle qu'OpenCode lit aussi `~/.claude/skills/`
+(une règle `external_directory` par skill). La phase 2.3 a donc allégé OpenCode aussi, sans que ce
+soit prévu.
 
 ## PHASE 7 — Mesure
 
