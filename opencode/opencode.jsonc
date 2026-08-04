@@ -1,5 +1,15 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  // Sur `deny`, le sous-agent est retiré de la description de l'outil Task :
+  // il ne coûte plus rien en contexte. OpenCode est le seul runtime du parc
+  // à offrir ce levier. Les 3 workers spécialisés couvrent le besoin réel ;
+  // `general` et `explore` font doublon avec eux et avec l'orchestrateur.
+  "permission": {
+    "task": {
+      "general": "deny",
+      "explore": "deny"
+    }
+  },
   "model": "vps-ia/Qwen 3.6 35b MoE",
   "provider": {
     "vps-ia": {
@@ -20,4 +30,3 @@
     }
   }
 }
-
