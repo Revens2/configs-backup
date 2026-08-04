@@ -68,6 +68,26 @@ diffère.
 | **Activation/désactivation à chaud d'un bundle** | plugins | **natif** — renommage `plugin.json` ↔ `plugin.json.disabled` | — |
 | **Mesure du contexte de démarrage** | `claude -p --output-format json`, `cache_creation + cache_read` | `agy -p --output-format json`, `input_tokens + cache_read_tokens` | **aucun compteur de tokens** — capture du prompt système par hook, mesure en caractères |
 
+### Deux pièges d'OpenCode, découverts en testant
+
+- **`opencode run --agent <sous-agent>` ne fait pas ce qu'on croit.** Il avertit
+  `is a subagent, not a primary agent. Falling back to default agent` et exécute la tâche avec
+  l'agent par défaut. Un sous-agent ne s'invoque **que** par l'outil `task`, depuis un agent
+  primaire. Pour le tester en ligne de commande, demander explicitement la délégation.
+- **En headless, une permission `ask` suspend le sous-agent jusqu'au timeout.** Il n'y a personne
+  pour répondre. Un worker dont le terrain de travail est hors du projet a besoin d'une règle
+  `external_directory: allow` **scopée à son répertoire**, dans son propre frontmatter :
+
+  ```yaml
+  permission:
+    external_directory:
+      "G:/Mon Drive/**": allow
+  ```
+
+  La forme carte-de-motifs n'apparaît pas dans le type généré du SDK, mais le runtime l'accepte —
+  `opencode agent list` restitue les règles. Penser au **répertoire parent** : sans lui, le worker
+  bute dès qu'il remonte d'un cran pour vérifier l'existence de sa cible.
+
 ### Les cases « impossible », en clair
 
 - **Ne jamais demander de sous-agents à AGY.** Il n'en a pas. Le `subagents/` du dépôt de backup et
@@ -120,10 +140,9 @@ portée et vérifiée sur les trois.
 
 ### Non mesuré, et pourquoi
 
-- **Les 3 workers OpenCode n'ont jamais tourné.** Le seul provider configuré est `vps-ia`
-  (`100.99.75.104:4002`), machine hors ligne, et `opencode auth list` ne déclare aucun autre
-  identifiant. Leur configuration est valide (`opencode agent list` démarre et les liste), leur
-  exécution reste à faire.
+- ~~Les 3 workers OpenCode n'ont jamais tourné.~~ **Fait le 2026-08-04**, VPS rallumé. Les trois
+  démarrent, utilisent leurs outils et rendent un résultat non vide. `obsidian-context-retriever`
+  était cassé et a été réparé — détail en [`PLAN-PORTAGE.md`](PLAN-PORTAGE.md) B.2.
 - **Le confinement MCP d'AGY.** `obsidian-kit` porte `mcpvault.cmd "G:\Mon Drive\Obsidian Vault"` ;
   `G:` n'est pas monté, le serveur ne démarre pas, ses outils ne sont jamais chargés. Activer ou
   désactiver le kit change le contexte de 3 tokens — ce qui ne mesure rien. La thèse « AGY est le

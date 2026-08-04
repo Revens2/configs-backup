@@ -89,17 +89,50 @@ Visibilité réelle vérifiée par `gh repo view --json visibility` : **PUBLIC**
 
 ## PHASE B — Portage sur OpenCode
 
-- [~] **B.1 Tester les 3 workers réparés** — **BLOQUÉ, cause externe**
+- [x] **B.1 Les 3 workers testés sur une tâche réelle** — VPS rallumé par l'utilisateur, gateway
+      `:4002` vérifiée (`GET /v1/models` → `qwen-3.6-35b-moe`, `ornith-1.0-35b-moe`).
       critère : chacun démarre, utilise un outil, retourne un résultat non vide
-      → **impossible aujourd'hui** : OpenCode n'a qu'un seul provider, `vps-ia`
-      (`http://100.99.75.104:4002/v1`), et cette machine est **hors ligne**
-      (`tailscale status` → « offline, last seen 25m ago » ; `tailscale ping` → 2× timeout).
-      `opencode auth list` → **0 credentials** : aucun provider de repli.
-      Ce n'est pas un défaut de configuration : le modèle est injoignable, point.
-      **Ce qui a pu être vérifié sans modèle** : `opencode agent list` démarre sans erreur et liste
-      les 3 workers en `subagent` — la réparation de la veille (`tools:` en objet) tient.
-      **Reste à faire, VPS revenu** : une tâche minimale réelle par worker.
-- [ ] **B.2 Réparer tout worker en échec** — sans objet tant que B.1 n'a pas tourné
+
+| Worker | Tâche | Résultat |
+|---|---|---|
+| `triage-contexte` | trouver dans `PORTAGE-RUNTIMES.md` la ligne du contexte AGY | **OK** — « ligne 102 » + contenu exact. **Vérifié** : `sed -n '102p'` donne bien cette ligne. |
+| `web-researcher` | version stable d'OpenCode + source | **OK** — v1.18.12 + URL du dépôt. Sourcé, non vide. *(Le contenu de la réponse n'est pas vérifié — le critère porte sur l'exécution.)* |
+| `obsidian-context-retriever` | le vault est-il accessible, et si oui l'IP/user SSH de `vps-ia` | **ÉCHEC puis OK** — voir B.2 |
+
+      **Découverte au passage** : `opencode run --agent <sous-agent>` **ne marche pas**.
+      `! agent "triage-contexte" is a subagent, not a primary agent. Falling back to default agent`.
+      Un sous-agent ne s'invoque que par l'outil `task` depuis un agent primaire. Les tests ont donc
+      été faits en demandant à `build` de déléguer — ce qui vérifie aussi le câblage de `task`.
+- [x] **B.2 `obsidian-context-retriever` réparé** — il était cassé de deux façons
+      **Symptôme** : le sous-agent démarrait, l'outil `task` renvoyait `✓`, mais **son retour était
+      vide** — l'orchestrateur écrivait « le sous-agent n'a pas renvoyé le résultat » et refaisait
+      le travail lui-même. Exactement le mode d'échec que le critère « résultat non vide » vise.
+      **Cause 1 — il appelait des outils qui n'existent plus.** Son prompt lui prescrivait
+      `search-by-title`, `search-vault`, `read-note`, `semantic-search` : les outils du MCP
+      `obsidian`, retiré la veille. Aucun MCP n'est déclaré dans `opencode.jsonc`. Il ne savait pas
+      non plus **où est le vault** — le chemin n'apparaissait nulle part dans son prompt.
+      → Réécrit sur `glob`/`grep`/`read` contre `G:\Mon Drive\Obsidian Vault`, avec l'ordre
+      explicite de répondre « vault inaccessible » plutôt que de rester muet.
+      Les deux autres workers ne portaient aucun résidu MCP (vérifié par `grep`).
+      **Cause 2 — la permission `external_directory` le bloquait.** Le vault est hors du projet :
+      la règle par défaut est `ask`, et en mode headless une demande de permission n'a personne pour
+      y répondre — le worker restait suspendu jusqu'au timeout (2 exécutions perdues ainsi).
+      → Règle ciblée dans le frontmatter du worker, **pour lui seul** :
+      ```yaml
+      permission:
+        external_directory:
+          "G:/Mon Drive/**": allow
+          "G:/Mon Drive/Obsidian Vault/**": allow
+      ```
+      La forme « carte de motifs » n'est pas dans le type généré du SDK
+      (`external_directory?: "ask" | "allow" | "deny"`), mais **le runtime l'accepte** : vérifié,
+      `opencode agent list` restitue les deux règles avec `action: allow`.
+      Le motif parent `G:/Mon Drive/**` est nécessaire — sans lui, le worker butait en remontant
+      d'un cran pour vérifier l'existence du vault.
+      **Vérifié après réparation** : retour non vide, correct et au format demandé —
+      *« Vault inaccessible : `G:\Mon Drive\Obsidian Vault\` n'existe pas (glob sans résultat). »*
+      `G:` n'est toujours pas monté ; le worker le dit au lieu de se taire ou d'inventer.
+      Sauvegarde : `obsidian-context-retriever.md.bak.20260804-125500`.
 - [x] **B.3 `/plan-run` au format OpenCode** — livré en **commande**, pas en agent
       `~/.config/opencode/command/plan-run.md` (répertoire `command/`, **au singulier**).
       → **vérifié** : `opencode serve` + `GET /command` renvoie bien `plan-run` avec sa description.
