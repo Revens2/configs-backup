@@ -70,4 +70,3 @@ Un fichier par année. Classé par mois, du plus ancien au plus récent dans cha
 Format : `- **YYYY-MM-DD** : [description courte de l'action]`
 
 Si le fichier `journal/YYYY.md` n'existe pas, le créer avec le header `# Journal de gestion — YYYY`.
-

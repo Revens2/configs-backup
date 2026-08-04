@@ -132,4 +132,3 @@ Depuis l'ordonnance du 30 octobre 2019 :
 - **Vote par correspondance** : possible via un formulaire conforme au modèle réglementaire
 - **Visioconférence** : possible si l'AG le décide (art. 17-1A loi 1965)
 - Le formulaire de vote doit être joint à la convocation
-

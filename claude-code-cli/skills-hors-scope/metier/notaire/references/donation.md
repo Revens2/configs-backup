@@ -228,4 +228,3 @@ En plus des droits de donation classiques, les donations d'immeubles sont soumis
 | 2735 | Déclaration de don manuel ou don familial |
 | 2734 | Révélation de don manuel |
 | 2725 | Déclaration IFI (si le patrimoine du donataire dépasse le seuil après donation) |
-

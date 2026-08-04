@@ -233,4 +233,3 @@ Fait à {{lieu_signature}}, le {{date_signature}}, en autant d'originaux que né
 ⚠️ **CE DOCUMENT EST UN PROJET DE TRAVAIL.**
 Il ne constitue pas un acte authentique. Si la SCI est constituée par apport d'immeuble, un acte notarié est obligatoire.
 Les associés sont invités à faire vérifier ce document par un notaire ou un avocat avant signature.
-

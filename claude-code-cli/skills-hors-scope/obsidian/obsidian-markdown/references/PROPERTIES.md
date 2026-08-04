@@ -59,4 +59,3 @@ tags:
   - nested/tag2
 ---
 ```
-

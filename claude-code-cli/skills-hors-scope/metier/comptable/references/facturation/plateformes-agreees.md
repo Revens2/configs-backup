@@ -107,4 +107,3 @@ https://www.impots.gouv.fr/je-consulte-la-liste-des-plateformes-agreees
 La liste distingue :
 1. **Immatriculées définitivement** : tests d'interopérabilité réussis
 2. **En attente** : dossier complet, tests en cours
-

@@ -343,4 +343,3 @@ Acquéreur → Notaire (séquestre) → Ventilation :
 - Accord unanime des indivisaires requis (sauf bien < 2/3 de l'indivision avec autorisation judiciaire)
 - Ou vente judiciaire (art. 815-5-1 C. civ.) à la demande d'un indivisaire détenant au moins 2/3
 - Droit de préemption des coindivisaires (art. 815-14 C. civ.)
-

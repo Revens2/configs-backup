@@ -100,4 +100,3 @@ function stub() {
 
 if (dbReady()) passthrough();
 else stub();
-

@@ -186,4 +186,3 @@ Et après lecture, les Futurs Époux ont signé avec le notaire.
 
 ⚠️ **CE DOCUMENT EST UN PROJET DE TRAVAIL.**
 Il ne constitue pas un acte authentique. Seul un notaire en exercice peut recevoir un contrat de mariage.
-

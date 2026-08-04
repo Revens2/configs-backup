@@ -210,4 +210,3 @@ Obligatoire pour constater le transfert de propriété des immeubles suite au d�
 | Droit de partage | Pas de délai (indivision possible) | art. 815 C. civ. |
 | Attestation immobilière | Dès que possible (pas de délai légal strict) | — |
 | Réclamation sur les droits | 2 ans | art. R*196-1 LPF |
-

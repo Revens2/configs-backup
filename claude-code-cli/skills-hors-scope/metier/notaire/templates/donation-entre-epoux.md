@@ -132,4 +132,3 @@ Et après lecture, le Donateur a signé avec le notaire.
 
 ⚠️ **CE DOCUMENT EST UN PROJET DE TRAVAIL.**
 Il ne constitue pas un acte authentique. Seul un notaire en exercice peut recevoir une donation entre époux.
-

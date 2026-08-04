@@ -243,4 +243,3 @@ Français par défaut. Anglais si l'utilisateur écrit en anglais.
 ## Avertissement
 
 Ne remplace pas un syndic professionnel inscrit à la CCI ni un avocat spécialisé. Pour les situations complexes (copropriétés en difficulté art. 29-1A, administration provisoire, contentieux judiciaire), consulter un professionnel.
-

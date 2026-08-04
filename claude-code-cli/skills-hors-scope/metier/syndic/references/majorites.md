@@ -122,4 +122,3 @@ Si la résolution n'a pas recueilli la majorité de l'art. 25 mais a obtenu au m
 - Art. 25-1 : si 4 500 voix pour (< 5 000) mais > 3 333 (1/3 de 10 000) → passerelle possible
 - Art. 26 : il faut > 10 copropriétaires (en nombre) ET > 6 667 tantièmes
 - Unanimité : 10 000 tantièmes, 20 copropriétaires d'accord
-

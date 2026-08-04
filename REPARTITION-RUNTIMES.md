@@ -12,7 +12,7 @@ main, pas sur ce qu'on lui prête.
 | MCP par plugin activable | non | **oui** | non |
 | Retirer un sous-agent du contexte | non | — | **oui** (`task` deny) |
 | Nesting | 1 niveau | — | 2 niveaux |
-| Contexte de démarrage **mesuré** | **16 021 tok** | **21 530 tok** | non mesuré |
+| Contexte de démarrage **mesuré** | **16 021 tok** | **21 530 tok** | **~14 800 tok** |
 
 ### Correction : AGY n'est pas le runtime le plus léger
 
@@ -26,8 +26,18 @@ Claude Code.
 21 530. L'argument « AGY est le runtime le plus léger » tombe. Ce qui reste vrai d'AGY, c'est le
 confinement MCP par plugin ; ce n'est pas un argument de contexte de départ.
 
-OpenCode n'a pas pu être mesuré : son modèle est hébergé sur `100.99.75.104:4002`, injoignable au
-moment du relevé (Tailscale inactif).
+### OpenCode : mesuré après réparation d'un second bug
+
+Première tentative : réponses vides. Cause trouvée par `GET :4002/v1/models` — la gateway expose le
+modèle sous l'id **`qwen-3.6-35b-moe`**, alors que `opencode.jsonc` demandait `Qwen 3.6 35b MoE`,
+identifiant qui n'existe que sur `:8000` (llama.cpp direct, sans le sanitizer de tool-calls). La clé
+d'un modèle dans la config **est** l'id envoyé à l'API : elle ne correspondait à rien, d'où le
+silence. Corrigé, OpenCode répond.
+
+Mesure obtenue par delta sur `opencode stats` : 6 sessions × 489,2 K → 8 sessions × 369,2 K, soit
+**~14 800 tokens** pour la session minimale. Cohérent avec la médiane affichée (16,1 K).
+
+**Classement final : OpenCode ~14 800 < Claude Code 16 021 < AGY 21 530.**
 
 ### Correction d'un postulat de la mission
 

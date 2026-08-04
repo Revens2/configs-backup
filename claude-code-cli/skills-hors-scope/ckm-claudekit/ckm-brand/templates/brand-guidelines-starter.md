@@ -273,4 +273,3 @@ Always prepend to image generation prompts:
 | Version | Date | Changes |
 |---------|------|---------|
 | 1.0 | {DATE} | Initial guidelines |
-

@@ -205,4 +205,3 @@ Et après lecture, les parties ont signé avec le notaire.
 
 ⚠️ **CE DOCUMENT EST UN PROJET DE TRAVAIL.**
 Il ne constitue pas un acte authentique. Seul un notaire en exercice peut recevoir une donation entre vifs portant sur un bien immobilier.
-

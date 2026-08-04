@@ -173,4 +173,3 @@ def search_all(query, max_results=2):
         if result.get("results"):
             all_results[domain] = result["results"]
     return all_results
-

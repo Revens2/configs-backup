@@ -285,4 +285,3 @@ Le fichier `data/sources.json` liste toutes les sources avec dates de dernière 
 |---------|---------|
 | [references/textes-fiscaux.md](references/textes-fiscaux.md) | Textes CGI, BOFiP, jurisprudence applicable |
 | [references/penalites-bareme.md](references/penalites-bareme.md) | Barèmes des pénalités et intérêts de retard |
-

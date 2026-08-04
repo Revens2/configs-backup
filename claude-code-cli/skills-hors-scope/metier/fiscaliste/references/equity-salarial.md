@@ -163,4 +163,3 @@ Vesting massif, cession d'entreprise, indemnité de départ → à activer.
 - PEE : art. L. 3332-1 et s. Code du travail
 - PER : art. 163 quatervicies CGI
 - BOFiP : BOI-RSA-ES (actionnariat salarié)
-

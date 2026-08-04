@@ -105,4 +105,3 @@ Un syndic pro avec 200 copropriétés consacre en moyenne 15 minutes par mois à
 **Majorité requise** : article 25 (majorité de tous les copropriétaires)
 **Seuil** : {{seuil}} tantièmes sur {{total}} (>50%)
 **Passerelle** : si le seuil n'est pas atteint mais qu'au moins 1/3 des voix est obtenu, second vote immédiat à la majorité simple (art. 25-1)
-

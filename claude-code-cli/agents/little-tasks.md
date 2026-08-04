@@ -46,4 +46,3 @@ Une seule ligne, rien d'autre :
 En cas d'échec :
 
 `[little-tasks] Échec : <raison en une phrase>.`
-

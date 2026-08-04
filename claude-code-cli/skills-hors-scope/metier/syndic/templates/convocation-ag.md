@@ -73,4 +73,3 @@ Le syndic,
 ---
 
 *Copropriété immatriculée au registre national sous le n{{immatriculation}}*
-

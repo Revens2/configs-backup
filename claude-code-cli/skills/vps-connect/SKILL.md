@@ -99,4 +99,3 @@ All keys stored in `$env:USERPROFILE\` (e.g., `C:\Users\Juliann\`):
 ## Script reference
 See `scripts/ensure-tailscale.ps1` for Tailscale recovery logic.  
 See `references/vps-registry.md` for parsed VPS registry extracted from memory.
-

@@ -56,4 +56,3 @@
   --callout-icon: lucide-alert-circle;
 }
 ```
-

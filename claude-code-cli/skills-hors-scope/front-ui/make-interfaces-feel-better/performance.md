@@ -86,4 +86,3 @@ This particularly helps when an element is changing `scale`, `rotation`, or movi
 ### When to Skip
 
 Modern browsers are already good at optimizing on their own. Only add `will-change` when you notice first-frame stutter — Safari in particular benefits from it. Don't add it preemptively to every animated element; each extra compositing layer costs memory.
-

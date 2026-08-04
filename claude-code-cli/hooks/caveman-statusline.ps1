@@ -59,4 +59,3 @@ if ($env:CAVEMAN_STATUSLINE_SAVINGS -ne "0") {
         } catch {}
     }
 }
-

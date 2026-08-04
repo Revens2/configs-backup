@@ -433,4 +433,3 @@ $client->beta->sessions->resources->update(
     authorizationToken: 'ghp_your_new_github_token',
 );
 ```
-

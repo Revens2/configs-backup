@@ -95,4 +95,3 @@ Le présent procès-verbal est établi et signé par les membres du bureau.
 ---
 
 *La feuille de présence, certifiée exacte par le président de séance, est annexée au présent procès-verbal.*
-

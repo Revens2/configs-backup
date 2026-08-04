@@ -78,4 +78,3 @@
 
 *Fiche mise à jour le {{date_maj}} par {{syndic_nom}}.*
 *Cette fiche est mise à la disposition de tout copropriétaire qui en fait la demande.*
-

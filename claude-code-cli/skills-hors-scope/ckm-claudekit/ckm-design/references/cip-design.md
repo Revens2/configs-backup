@@ -119,4 +119,3 @@ python3 ~/.claude/skills/design/scripts/cip/render-html.py --brand "TopGroup" --
 export GEMINI_API_KEY="your-key"
 pip install google-genai pillow
 ```
-

@@ -108,4 +108,3 @@ This is a parsed registry of all VPS instances extracted from your memory. Used 
 - Check Tailscale account is on `drop.ecom28` tailnet
 - May need: `tailscale switch juliann.ploquin@gmail.com`
 - Default account (main tailnet) can't see `100.76.252.77`
-

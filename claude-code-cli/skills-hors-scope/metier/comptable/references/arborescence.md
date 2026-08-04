@@ -104,4 +104,3 @@ Ne pas modifier manuellement. Régénérés à chaque exécution des scripts.
 3. **Le dossier `output/` peut être vidé et régénéré** à tout moment avec les scripts.
 4. **Pas de secrets dans les fichiers**. Les clés API sont dans `.env`, pas dans les noms de fichiers ni les données.
 5. **Tout en minuscules, tirets pour séparer les mots**. Pas d'espaces, pas de caractères spéciaux dans les noms de fichiers.
-

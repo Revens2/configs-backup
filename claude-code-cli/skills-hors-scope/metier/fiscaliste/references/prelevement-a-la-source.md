@@ -116,4 +116,3 @@ Fraction imposable soumise au PAS au taux en vigueur. Peut faire exploser le pr�
 - Acompte crédit d'impôt : art. 1665 bis CGI
 - Pénalité modulation abusive : art. 1729 G CGI
 - BOFiP : BOI-IR-PAS
-

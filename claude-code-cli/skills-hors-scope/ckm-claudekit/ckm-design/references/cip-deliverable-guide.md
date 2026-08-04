@@ -93,4 +93,3 @@
 - Quality over quantity
 - Useful items preferred
 - Brand colors prominent
-

@@ -68,4 +68,3 @@ Where the list has a block ID:
 tag:#project status:done
 ```
 ````
-

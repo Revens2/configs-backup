@@ -137,4 +137,3 @@ Mutation — Lot {{n}} — Vendeur : {{vendeur}} → Acquéreur : {{acquereur}}
 - [ ] Compte copropriétaire transféré
 - [ ] Acquéreur informé (modalités paiement, prochain appel)
 ```
-

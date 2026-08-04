@@ -96,4 +96,3 @@ if __name__ == "__main__":
     fields_json = sys.argv[2]
     output_pdf = sys.argv[3]
     fill_pdf_fields(input_pdf, fields_json, output_pdf)
-
