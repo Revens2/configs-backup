@@ -235,15 +235,19 @@ Coût dynamique en plus, quand un `progress.md` existe : **+161 tok par invocati
 
 ## PHASE D — Homogénéisation
 
-- [ ] **D.1 Format unique de `progress.md`** (intitulé · critère vérifiable · cible · statut · erreurs append-only)
-      critère : un même `progress.md` est consommé par les 3 runtimes sans adaptation
-      cible : orchestrateur
-- [ ] **D.2 Tableau porté nativement / émulé / impossible, par runtime**
-      critère : les cases « impossible » sont explicites et justifiées
-      cible : orchestrateur
-- [ ] **D.3 Mesure finale des 3 runtimes**, comparée à `MESURE-AVANT.md`
-      critère : 3 chiffres relevés, méthode citée
-      cible : orchestrateur
+- [x] **D.1 Format unique de `progress.md`** — [`PORTAGE-RUNTIMES.md`](PORTAGE-RUNTIMES.md) §1
+      → **vérifié par exécution** : les trois lecteurs (`state-lib.mjs` planPointer,
+      `plan-pointer.ts`, `plan-pointer-hook.mjs`) lancés sur le **même** fichier de test
+      (3 tâches, 1ʳᵉ cochée, 2ᵉ en cours) renvoient tous `1/3 cochées`, la tâche 2 **avec son
+      critère et sa cible**, et la tâche 3 en suivante. Seul l'habillage du message diffère.
+- [x] **D.2 Tableau natif / émulé / impossible** — [`PORTAGE-RUNTIMES.md`](PORTAGE-RUNTIMES.md) §2
+      Trois « impossible » explicités : pas de sous-agents sur AGY · pas de confinement par
+      sous-agent sur Claude Code · pas de pré-compaction sur AGY.
+- [x] **D.3 Mesure finale** — [`PORTAGE-RUNTIMES.md`](PORTAGE-RUNTIMES.md) §4
+      Claude Code **~40 150 tok** · AGY **~21 520 tok** · OpenCode **28 348 car** de prompt système.
+      **La comparaison avec `MESURE-AVANT.md` est impossible** et c'est dit comme tel : ce document
+      estimait par taille de fichiers (AGY à ~2 000 tok, réel ~21 520 — facteur dix), et le seul
+      relevé réel « avant » date d'après les phases 1 à 6 du chantier précédent.
 
 ---
 
@@ -255,8 +259,8 @@ Lire `cache_creation` seul fait passer un préfixe caché pour un gain — c'est
 | Runtime | Référence antérieure | Relevé du 2026-08-04 | Méthode |
 |---|---:|---:|---|
 | Claude Code | 16 021 tok *(faux — cache_creation seul)* | **40 150 tok** | `claude -p "ok" --output-format json`, 1ᵉʳ événement `assistant`, `cc + cr` |
-| AGY | 9 303 tok | *non mesuré* | `agy -p "ok" --output-format json` |
-| OpenCode | ~12 800 tok | *non mesuré* | `opencode stats` |
+| AGY | 9 303 tok *(faux — input_tokens seul)* | **~21 520 tok** | `agy -p "ok" --output-format json`, `input_tokens + cache_read_tokens` |
+| OpenCode | ~12 800 tok *(méthode abandonnée)* | **28 348 car** de prompt système | capture par `experimental.chat.system.transform` — pas de compteur de tokens disponible |
 
 Variantes Claude Code relevées le 2026-08-04 :
 
