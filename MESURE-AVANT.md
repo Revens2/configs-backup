@@ -141,10 +141,61 @@ Détail des postes travaillés :
 - 47 skills : aucun perdu. Déplacés dans `~/.claude/skills-hors-scope/<bloc>/`, redéployables dans un
   projet en une commande (`claude-code-cli/SKILLS-HORS-SCOPE.md`).
 
-## Reste à faire pour la Phase 7
+---
 
-Fiabiliser le poste MCP par un relevé réel (`/context`) au lieu de l'estimation à 200 tok/outil, et
-mesurer AGY et OpenCode après leurs phases respectives (5 et 6), non encore exécutées.
+# Phase 7.1b — RELEVÉ RÉEL, et démenti de l'estimation
+
+Méthode : `claude -p "…" --output-format json` depuis `C:\Users\Juliann`, lecture de
+`usage.cache_creation_input_tokens` du premier tour — c'est le contexte réellement envoyé au modèle.
+Trois exécutions, seule la configuration MCP varie.
+
+| Configuration | Commande | Contexte réel |
+|---|---|---:|
+| Aucun MCP | `--strict-mcp-config --mcp-config '{"mcpServers":{}}'` | **14 162 tok** |
+| 3 serveurs locaux seuls | `--strict-mcp-config --mcp-config ~/.mcp.json` | **15 036 tok** |
+| Configuration par défaut | *(rien)* | **40 051 tok** |
+
+Décomposition qui en découle :
+
+| Poste | Coût réel | Part |
+|---|---:|---:|
+| Base Claude Code + instructions + skills + agents | 14 162 | 35 % |
+| **3 serveurs MCP locaux** (74 outils) | **874** | **2 %** |
+| **Connecteurs claude.ai** (Gmail, Microsoft 365, MCP Obsidian ngrok) | **25 015** | **62 %** |
+| **TOTAL** | **40 051** | |
+
+## Ce que ça démolit
+
+**Mon estimation à ~200 tok/outil était fausse d'un facteur ~17.** Les 74 outils des 3 serveurs
+locaux coûtent 874 tokens, soit **~12 tok/outil** — parce que Claude Code 2.1.220 charge les outils
+MCP en **différé** (mécanisme `ToolSearch` / `toolSearchEnabled`, repéré dans le binaire) : seuls les
+noms sont envoyés, les schémas complets sont récupérés à la demande.
+
+Conséquence directe : **le poste MCP local n'a jamais été le problème.** Les phases 2.2a et 2.2b —
+retrait d'`anytype`, `canva`, `notebooklm`, `obsidian` — n'ont pas rendu les ~24 200 tokens annoncés.
+L'ordre de grandeur réel est de quelques centaines de tokens. Ces retraits restent justifiés
+(serveur mort, clé révoquée, 0 appel en 18 jours), mais **pas** par l'argument tokens.
+
+En revanche la phase 2.3 (skills : 6 057 → 905 tok) porte sur des instructions envoyées en clair dans
+le prompt système, non différées : ce gain-là est réel et se lit dans les 14 162 tokens de base.
+
+## Le vrai levier, non exploité
+
+**Les connecteurs claude.ai pèsent 25 015 tokens, 62 % du contexte de démarrage.** Ils ne sont pas
+différés. Ils ne sont dans aucun fichier local — ils se gèrent dans l'interface claude.ai, ou se
+coupent en bloc par `disableClaudeAiConnectors` dans les settings.
+
+Trois connecteurs pour ce prix : `Gmail`, `Microsoft 365` (qui demande une authentification et ne
+fonctionne donc même pas), et `MCP Obsidiann Juliann` — celui de S3, l'endpoint ngrok public.
+
+Les couper ferait passer le démarrage de **40 051 à ~15 036 tokens (−62 %)**, et supprimerait S3 par
+la même occasion. C'est, de loin, l'action la plus rentable de tout ce chantier — et elle n'a pas été
+faite, faute d'avoir mesuré avant d'optimiser.
+
+## Reste à faire
+
+- Mesurer AGY et OpenCode par une méthode équivalente (leurs CLI n'exposent pas le même compteur).
+- Refaire ce relevé après une éventuelle coupure des connecteurs claude.ai.
 
 **Incertitude assumée :** le poste MCP est une estimation. Pour le fiabiliser il faut lancer chaque
 runtime avec un prompt trivial et relever le compteur de contexte réel (`/context` côté CLI).
