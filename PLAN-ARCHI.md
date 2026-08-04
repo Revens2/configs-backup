@@ -299,12 +299,26 @@ soit prévu.
 - [x] 7.2 Delta écrit dans `MESURE-AVANT.md`. **Non fait : mesure d'AGY et d'OpenCode** par une
   méthode équivalente — leurs CLI n'exposent pas de compteur de contexte comparable.
 
-### Action la plus rentable du chantier, non exécutée
+### Action la plus rentable du chantier — **exécutée le 2026-08-04**
 
-Couper les connecteurs claude.ai (`Gmail`, `Microsoft 365` — qui ne s'authentifie même pas — et
-`MCP Obsidiann Juliann`, celui de S3) ferait passer le démarrage de **40 051 à ~15 036 tok (−62 %)**
-et supprimerait S3 au passage. Ils se gèrent dans l'interface claude.ai, ou se coupent en bloc par
-`disableClaudeAiConnectors`. **Décision utilisateur requise.**
+Arbitrage utilisateur : couper `Microsoft 365` et `MCP Obsidiann Juliann`, garder `Gmail`.
+
+`disableClaudeAiConnectors` étant tout-ou-rien, le levier retenu est **`deniedMcpServers`** dans
+`~/.claude/settings.json` — il fusionne depuis toutes les sources et **mord aussi sur les connecteurs
+claude.ai**, comportement non documenté, établi par la mesure.
+
+| | Contexte réel |
+|---|---:|
+| Avant coupure | 40 051 tok |
+| **Après** | **16 021 tok** |
+| **Gain** | **−24 030 tok (−60 %)** |
+
+Les deux connecteurs coupés pesaient 24 030 tok à eux seuls ; Gmail, conservé, ~985.
+Sauvegarde `settings.json.bak.20260804-phase7`.
+
+**Effet sur S3 :** le connecteur ngrok du vault n'est plus chargé dans le contexte. Il reste
+**déclaré et joignable** côté claude.ai — l'endpoint public existe toujours. S3 est neutralisé pour
+Claude Code, pas supprimé à la source.
 
 ---
 
