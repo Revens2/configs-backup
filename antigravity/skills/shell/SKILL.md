@@ -22,4 +22,3 @@ Use this skill only when the user explicitly invokes `/shell`.
 
 - Run the command first.
 - Then briefly report the exit status and any important stdout or stderr.
-
