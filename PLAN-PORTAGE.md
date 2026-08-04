@@ -143,18 +143,95 @@ approximatif, le comptage de caractères, lui, est exact.
 
 ## PHASE C — Portage sur AGY
 
-- [ ] **C.1 Acter la boucle mono-agent** (AGY n'a pas de sous-agents — postulat déjà démenti en Phase 5)
-      critère : la Skill ne contient aucune instruction de délégation
-      cible : orchestrateur
-- [ ] **C.2 Implémenter `/plan-run` en Skill AGY**
-      critère : la skill apparaît dans le listing d'AGY et se déclenche sur un `progress.md` de test
-      cible : orchestrateur
-- [ ] **C.3 Persistance : AGY expose-t-il un événement de pré-compaction ?**
-      critère : réponse **binaire avec preuve** (`agy hooks`, doc locale, config des hooks existants)
-      cible : orchestrateur
-- [ ] **C.4 Vérifier `agy plugin enable/disable` sur `obsidian-kit` et `orchestrateur-kit`**
-      critère : bascule effective **et** delta de contexte mesuré dans les deux sens
-      cible : orchestrateur
+- [x] **C.1 Boucle mono-agent actée**
+      La Skill livrée ne contient aucune instruction de délégation ; elle dit explicitement
+      « ne cherche pas à déléguer, il n'y a personne », et remplace le critère bruit/conclusion par
+      sa version mono-agent : **écrire la sortie brute dans un fichier, ne relire que l'extrait**.
+- [x] **C.2 `/plan-run` en Skill AGY**
+      `~/.gemini/config/plugins/orchestrateur-kit/skills/plan-run/SKILL.md`
+      → **vérifié** : `agy plugin validate ~/.gemini/config/plugins/orchestrateur-kit` →
+      `[ok]  ✔ skills : 1 processed  ✔ hooks : 1 processed`.
+- [x] **C.3 Pré-compaction AGY — RÉPONSE : NON, aucun événement**
+      preuve : `~/.gemini/antigravity-cli/builtin/skills/agy-customizations/docs/hooks.md`,
+      § « Supported Event Types » — la liste **complète** est `PreToolUse`, `PostToolUse`,
+      `PreInvocation`, `PostInvocation`, `Stop`. Rien sur la compaction.
+      Il n'existe pas non plus de sous-commande `agy hooks` : `agy --help` liste
+      `agent(s)`, `changelog`, `help`, `install`, `models`, `plugin(s)`, `update`. Les hooks se
+      déclarent dans un `hooks.json` déposé à une racine de customisation, ou dans un plugin.
+      **Relais retenu, meilleur que le fallback prévu** : `PreInvocation`, qui accepte un
+      `ephemeralMessage` injecté **avant chaque appel au modèle**. Au lieu de sauvegarder l'état
+      avant la perte, on le réécrit à chaque tour — une compaction ne peut pas faire perdre la ligne
+      en cours. Le message est éphémère, il ne s'accumule pas dans l'historique.
+      Livré : `plugins/orchestrateur-kit/hooks.json` + `plan-pointer-hook.mjs`.
+      → **vérifié en exécution réelle** : `agy -p "ok"` avec `AGY_PLAN_POINTER_TRACE` écrit
+      `PreInvocation racines=C:\Users\Juliann pointeur=oui`. Le pointeur mesure **643 car (~161 tok)**.
+      → **effet de bord constaté** : le pointeur fonctionne assez bien pour que le modèle tente
+      aussitôt de lire `progress.md` — ce que le mode headless refuse faute de règle
+      `permissions.allow: read_file`. En session interactive, c'est le comportement voulu.
+- [x] **C.4 `agy plugin enable/disable` — fonctionne, y compris sur les plugins auto-découverts**
+      → **`agy plugin list` ment** : il affiche « No imported plugins » alors que les deux kits de
+      `~/.gemini/config/plugins/` sont bien chargés. Il ne liste que les plugins *importés*
+      (`agy plugin import/install`), pas ceux découverts dans une racine de customisation.
+      → **la bascule est réelle**, prouvée par le déclenchement du hook et non par ce listing :
+      après `disable`, aucune trace ; après `enable`, trace présente.
+      → **mécanisme trouvé** : aucun `plugins.json` n'est écrit. `agy plugin disable <nom>` **renomme
+      le manifeste** `plugin.json` → `plugin.json.disabled` dans le répertoire du plugin ; `enable`
+      fait l'inverse. C'est donc versionnable, inspectable, et réversible à la main.
+      État laissé en fin de mission : `orchestrateur-kit` **activé**, `obsidian-kit` **désactivé**.
+      → **les plugins ne sont pas exclusifs** : les deux kits actifs en même temps, le hook
+      d'`orchestrateur-kit` se déclenche quand même.
+
+### Mesures AGY — et deuxième artefact de cache, identique au premier
+
+**Métrique corrigée pour AGY : `usage.input_tokens` + `usage.cache_read_tokens`.** Le total est
+stable quel que soit l'état du cache ; `input_tokens` seul ne l'est pas.
+
+Preuve, quatre exécutions consécutives, **configuration strictement identique** :
+
+| Exécution | `input_tokens` | `cache_read_tokens` | **TOTAL** |
+|---|---:|---:|---:|
+| 1ʳᵉ (cache froid) | 21 519 | 0 | **21 519** |
+| 2ᵉ | 9 302 | 12 217 | **21 519** |
+| 3ᵉ | 9 307 | 12 217 | **21 524** |
+| 4ᵉ | 9 304 | 12 217 | **21 521** |
+
+`input_tokens` passe de 21 519 à 9 303 **sans qu'aucun fichier ne change**. C'est exactement le
+chiffre annoncé comme « gain du triage de `~/.agents/skills/` » dans `RECAPITULATIF.md` §11.
+
+Différentiel `.agents/`, refait sur les totaux :
+
+| État de `~/.agents/` | **TOTAL** |
+|---|---:|
+| absent | 21 520 |
+| 1 skill vide | 21 524 |
+| `rules/` seul | 21 524 |
+| `skills/` seuls (4) | 21 522 |
+| complet (rules + 4 skills) | 21 519 |
+
+**Écart maximal : 5 tokens.** `~/.agents/` ne coûte rien. Le « −57 % sur AGY » et les « 12 212
+tokens rendus » de `RECAPITULATIF.md` §11 sont **le même artefact de cache** que le « −60 % » de
+Claude Code : un relevé froid comparé à un relevé chaud. Le triage des 16 skills vers
+`~/.agents-hors-scope/` n'a rien gagné.
+
+Delta réel des plugins, mesuré sur les totaux, `cwd` fixe, sans `progress.md` (pour que le hook
+n'injecte rien et que seule la charge statique compte) :
+
+| État | TOTAL (2 exécutions) | Delta |
+|---|---:|---:|
+| `orchestrateur-kit` désactivé | 21 487 · 21 491 | — |
+| `orchestrateur-kit` activé | 21 783 · 21 779 | **+292 tok** |
+| + `obsidian-kit` activé | 21 785 | **+3 tok** |
+
+Coût dynamique en plus, quand un `progress.md` existe : **+161 tok par invocation** (le pointeur).
+
+> **`obsidian-kit` : coût non isolable.** Son serveur MCP est `mcpvault.cmd "G:\Mon Drive\Obsidian
+> Vault"`, et `G:` n'est pas monté sur cette machine. Le serveur ne démarre pas, ses outils ne sont
+> jamais chargés — les +3 tok mesurés ne disent donc **rien** du coût réel d'un MCP confiné par
+> plugin. La thèse « AGY est le seul du parc à confiner un MCP » reste **non vérifiée par la mesure**.
+
+> **Une exécution aberrante non expliquée** : un relevé isolé à 21 030 (au lieu de ~21 780 attendu)
+> dans la série `obsidian-kit`. Non reproduit sur les 5 exécutions suivantes. Consigné plutôt
+> qu'écarté.
 
 ## PHASE D — Homogénéisation
 
