@@ -135,9 +135,29 @@ Visibilité réelle vérifiée par `gh repo view --json visibility` : **PUBLIC**
       Sauvegarde : `obsidian-context-retriever.md.bak.20260804-125500`.
 - [x] **B.3 `/plan-run` au format OpenCode** — livré en **commande**, pas en agent
       `~/.config/opencode/command/plan-run.md` (répertoire `command/`, **au singulier**).
-      → **vérifié** : `opencode serve` + `GET /command` renvoie bien `plan-run` avec sa description.
+      → **enregistrée** : `opencode serve` + `GET /command` renvoie `plan-run` avec sa description.
       Le format `Command` du SDK (`{name, description?, agent?, model?, template, subtask?}`) a été
       lu dans `node_modules/@opencode-ai/sdk/dist/gen/types.gen.d.ts:1270`.
+      → **boucle vérifiée de bout en bout**, VPS rallumé. `progress.md` de test à 2 tâches, chacune
+      avec un critère mécaniquement vérifiable, dans un répertoire vide :
+
+| | Attendu | Obtenu |
+|---|---|---|
+| tâche 1 | `preuve.txt` contient `BOUCLE` | `BOUCLE` ✔ |
+| tâche 2 | `preuve2.txt` contient un entier | `11` ✔ |
+| `progress.md` | les 2 tâches cochées `[x]` | cochées ✔ |
+| section `Décisions` | alimentée | *« Plan exécuté en 1 tour, tâches courtes → orchestrateur direct. »* ✔ |
+
+      La boucle lire → exécuter → vérifier → cocher tourne donc réellement, et l'arbitrage
+      bruit/conclusion du skill est appliqué et consigné.
+      → **défaut trouvé : `opencode run --command plan-run` se bloque au démarrage.** Le journal
+      s'arrête sur `init` — aucune session créée, aucun appel au modèle, stdout vide, mort au
+      timeout. Deux contournements qui marchent : la TUI, et la route API
+      `POST /session/{id}/command` avec `{"command":"plan-run","arguments":"…"}` — c'est par elle
+      que le test ci-dessus a été fait.
+      → **et `opencode run "/plan-run …"` n'expande pas la commande** : le modèle a lu le `/plan-run`
+      comme du texte et l'a confondu avec le skill `loop`, répondant qu'il lançait une boucle « toutes
+      les 5 minutes ». Rien n'a été exécuté. Ne pas invoquer une commande OpenCode par le message.
 - [x] **B.4 Persistance : équivalent `PreCompact` — RÉPONSE : OUI, il existe**
       preuve : `node_modules/@opencode-ai/plugin/dist/index.d.ts`, interface `Hooks` —
       `experimental.session.compacting` (l. 283, *« Called before session compaction starts »*,
