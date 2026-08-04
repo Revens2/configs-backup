@@ -26,3 +26,7 @@ file-history/
 paste-cache/
 telemetry/
 daemon/
+
+# Dream workspace scratch & quarantined report
+dream-report.md
+.turns.md
