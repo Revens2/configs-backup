@@ -134,8 +134,22 @@ export function planPointer(cwd) {
     if (!fs.existsSync(file)) return null;
     const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/);
     const done = lines.filter((l) => /^\s*[-*]\s*\[x\]/i.test(l)).length;
-    const todo = lines.filter((l) => /^\s*[-*]\s*\[[ ~]\]/.test(l));
-    return { file, done, total: done + todo.length, next: todo.slice(0, 3) };
+
+    // Une tâche = sa ligne cochable + ses lignes de continuation indentées
+    // (`critère :`, `cible :`). La première non cochée est reprise en entier :
+    // sans son critère d'acceptation, la reprise à froid ne sait pas quand s'arrêter.
+    const todo = [];
+    for (let i = 0; i < lines.length; i++) {
+      if (!/^\s*[-*]\s*\[[ ~]\]/.test(lines[i])) continue;
+      const block = [lines[i].trim()];
+      for (let j = i + 1; j < lines.length; j++) {
+        if (/^\s*[-*]\s*\[[ x~]\]/i.test(lines[j]) || !/^\s+\S/.test(lines[j])) break;
+        block.push(lines[j].trim());
+      }
+      todo.push(block);
+    }
+    const next = todo.slice(0, 3).map((b, i) => (i === 0 ? b : [b[0]]));
+    return { file, done, total: done + todo.length, next };
   } catch {
     return null;
   }
@@ -153,8 +167,13 @@ export function renderState({ cwd, trigger, scan, stamp }) {
     L.push('Relire ce fichier avant toute action ; ne pas se fier au résumé ci-dessous.');
     if (plan.next.length) {
       L.push('');
-      L.push('Prochaines tâches non cochées :');
-      plan.next.forEach((t) => L.push(t.trim()));
+      L.push('Tâche en cours, à reprendre en premier (avec son critère d’acceptation) :');
+      plan.next[0].forEach((l, i) => L.push(i === 0 ? l : `  ${l}`));
+      if (plan.next.length > 1) {
+        L.push('');
+        L.push('Ensuite :');
+        plan.next.slice(1).forEach((b) => L.push(b[0]));
+      }
     }
     L.push('');
   }

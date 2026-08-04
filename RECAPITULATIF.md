@@ -1,7 +1,9 @@
 # Récapitulatif complet — chantier « orchestrateur nu / workers spécialisés »
 
 Session du **2026-08-04**, machine Windows 11, 4 runtimes.
-Dépôt : `github.com/Revens2/configs-backup` (privé) — **17 commits, poussés**.
+Dépôt : `github.com/Revens2/configs-backup` — **public** (vérifié le 2026-08-04 :
+`gh repo view --json visibility` → `PUBLIC`). Ce fichier l'a longtemps décrit comme privé ; c'était
+faux, et la correction change la lecture de S1 (§6).
 
 Ce fichier est le point d'entrée. Les détails sont dans :
 [`PLAN-ARCHI.md`](PLAN-ARCHI.md) (avancement, dette, journal d'erreurs) ·
@@ -18,10 +20,27 @@ Ce fichier est le point d'entrée. Les détails sont dans :
 |---|---:|---:|---:|
 | **AGY** (Antigravity 1.1.10) | **9 303 tok** | 21 517 | **−57 %** |
 | **OpenCode** 1.18.3 | **~12 800 tok** | ~14 800 | −14 % |
-| **Claude Code** 2.1.220 (CLI + Desktop) | **16 021 tok** | 40 051 | **−60 %** |
+| **Claude Code** 2.1.220 (CLI + Desktop) | **~40 150 tok** | ~40 050 | **aucun** |
 
-Tout est mesuré, plus rien n'est estimé. OpenCode a en outre été **réparé** : il ne démarrait pas,
-puis il répondait vide (voir §5).
+> ⚠️ **Correction du 2026-08-04 (session de portage).** La ligne « Claude Code : 16 021 tok, −60 % »
+> était **fausse**. Elle ne lisait que `cache_creation_input_tokens`, en ignorant
+> `cache_read_input_tokens` : les 24 030 tokens prétendument « coupés » étaient simplement passés en
+> cache, toujours envoyés au modèle. Contre-mesure décisive, trois relevés du même jour, total
+> `cache_creation + cache_read` du premier tour :
+>
+> | Configuration | Total réel |
+> |---|---:|
+> | `deniedMcpServers: []` (tous les connecteurs actifs) | **40 137 tok** |
+> | défaut (2 connecteurs refusés) | **40 150 tok** |
+> | `--strict-mcp-config --mcp-config '{"mcpServers":{}}'` | **38 863 tok** |
+>
+> Écart entre les deux premières : **13 tokens**, soit du bruit. **`deniedMcpServers` ne réduit pas le
+> contexte.** Les 3 serveurs MCP locaux coûtent en revanche bien ~1 290 tok (ligne 2 − ligne 3),
+> cohérent avec les 874 tok relevés la veille. Voir §10 pour la méthode corrigée.
+
+Les gains AGY et OpenCode restent valides : ce sont des **différentiels sur la même métrique**
+(présence/absence de `.agents/`), pas des comparaisons de part cachée. OpenCode a en outre été
+**réparé** : il ne démarrait pas, puis il répondait vide (voir §5).
 
 ---
 
@@ -83,7 +102,16 @@ trois.
 
 ---
 
-## 4. Cinq erreurs de ma part
+## 4. Six erreurs de ma part
+
+0. **Le « −60 % » sur Claude Code n'existe pas.** Mesure faite sur `cache_creation_input_tokens`
+   seul, « avant » à cache froid et « après » à cache chaud : la soustraction ne mesurait que la
+   température du cache. Contre-mesure du 2026-08-04 : `deniedMcpServers` vide → 40 137 tok,
+   `deniedMcpServers` avec 2 connecteurs refusés → 40 150 tok. **13 tokens d'écart.** L'action
+   présentée comme « la plus rentable du chantier » n'a rien rendu. C'est la même faute que
+   l'erreur 1 ci-dessous — annoncer un gain avant de savoir le mesurer — commise une seconde fois,
+   après l'avoir écrite noir sur blanc comme leçon.
+
 
 1. **Estimation du coût MCP à ~200 tok/outil.** Réel : **~12 tok/outil** — Claude Code 2.1.220 charge
    les outils MCP **en différé** (`ToolSearch`), seuls les noms partent. Facteur 17. J'ai annoncé
@@ -120,7 +148,7 @@ trois.
 
 | # | Quoi | Où | État |
 |---|---|---|---|
-| S1 | Clé Anytype (ancienne) | historique git `adb1957` · `~/.mcp.json` · **`~/.gemini/config/mcp_config.json`** | **Révoquée** (HTTP 401 vérifié). Purgée des fichiers vivants. Reste dans l'historique git, inerte. |
+| S1 | Clé Anytype (ancienne) | historique git `adb1957` · `~/.mcp.json` · **`~/.gemini/config/mcp_config.json`** | **Révoquée** (HTTP 401 vérifié). Purgée des fichiers vivants. **Reste lisible en clair dans le commit `adb1957` d'un dépôt public** — inerte parce que révoquée, pas parce qu'elle serait cachée. |
 | S2 | Clé Anytype (courante) | `~/.mcp.json` · `claude_desktop_config.json` | **Révoquée** (HTTP 401 vérifié). Blocs supprimés. |
 | S3 | Vault Obsidian exposé par ngrok, secret = chemin d'URL, accès **lecture et écriture** | connecteur claude.ai | Risque **assumé** par l'utilisateur. Depuis la phase 7 il n'est plus chargé dans le contexte, mais **l'endpoint public existe toujours**. |
 | S4 | Clé **ref.tools** en **query string** | `~/.cursor/mcp.json` (installation Cursor) | **Vivante** (HTTP 405, pas de rejet d'auth). Hors dépôt. **À faire tourner — action utilisateur.** |
@@ -188,10 +216,25 @@ des runtimes Claude Code.** `tools:` ne fait que filtrer une liste déjà charg�
 ## 10. Comment on mesure, pour ne plus estimer
 
 ```bash
-claude -p "ok" --output-format json          # usage.cache_creation_input_tokens
+claude -p "ok" --output-format json          # cache_creation + cache_read du 1er tour
 agy -p "ok" --output-format json             # usage.input_tokens
 opencode stats                               # delta Avg Tokens/Session x Sessions
 ```
+
+**Règle corrigée le 2026-08-04 — la plus importante de ce fichier.** Le contexte réellement envoyé au
+modèle est **`cache_creation_input_tokens` + `cache_read_input_tokens`** du premier événement
+`assistant`. La sortie `--output-format json` est un **tableau d'événements**, pas un objet : lire le
+premier tour, pas l'agrégat final.
+
+Ne regarder que `cache_creation` fait passer **un préfixe déjà mis en cache pour un gain**. C'est
+l'erreur qui a produit le « −60 % » de la §1 : le relevé « avant » était à cache froid
+(`cache_read = 0`, donc `cache_creation` = tout), le relevé « après » à cache chaud
+(`cache_creation ≈ 16 000`, `cache_read ≈ 24 000`). La soustraction des deux ne mesurait que la
+température du cache.
+
+Corollaire : un différentiel n'est fiable que si les deux relevés sont **dans le même état de
+cache**, ou si l'on compare des **totaux**. Les mesures AGY (`.agents/` présent vs absent) tiennent
+parce qu'elles remplissent cette condition ; la mesure Claude Code ne la remplissait pas.
 
 Isoler un poste : rejouer avec `--strict-mcp-config --mcp-config '{"mcpServers":{}}'` et faire la
 différence. C'est ainsi que les 25 015 tok des connecteurs claude.ai ont été trouvés — après six
@@ -231,6 +274,7 @@ Sortis vers `~/.agents-hors-scope/<bloc>/` (non lu, redéployable) :
 Effet sur OpenCode : **~14 800 → ~12 800 tok**. Plus faible qu'AGY parce qu'OpenCode ne charge que
 les descriptions, là où AGY en charge davantage.
 
-**Classement final : AGY 9 303 < OpenCode ~12 800 < Claude Code 16 021.**
-Troisième fois que ce classement s'inverse au cours du chantier — mais cette fois chaque chiffre est
-un relevé, pas une déduction.
+**Classement final : AGY 9 303 < OpenCode ~12 800 < Claude Code ~40 150.**
+*(Chiffre Claude Code corrigé le 2026-08-04 : 16 021 était la seule part non cachée du prompt, voir
+l'encadré de la §1.)* Quatrième fois que ce classement bouge au cours du chantier. L'ordre ne change
+pas, l'écart si : Claude Code est **quatre fois** plus lourd qu'AGY, pas une fois et demie.
