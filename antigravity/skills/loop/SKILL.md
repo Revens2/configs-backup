@@ -71,4 +71,3 @@ Wake notifications include an output file path, not a submitted prompt. Put the 
 - Avoid noisy commands inside the loop.
 - Do not create duplicate fixed loops or dynamic sleepers.
 - If the user asks to stop, kill any tracked loop/sleeper PID, then await the shell task so its completion notification is consumed and does not wake the agent later. Do not schedule another dynamic wake.
-
