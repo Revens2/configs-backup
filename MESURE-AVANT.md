@@ -210,6 +210,11 @@ settings et mord aussi sur les connecteurs claude.ai, ce que rien ne documentait
 | **Après coupure** | **16 021 tok** |
 | **Gain** | **−24 030 tok (−60 %)** |
 
+> ⚠️ **CE TABLEAU EST FAUX — réfuté le 2026-08-04, voir la section « Contre-mesure » en fin de
+> fichier.** Les 16 021 tok ne sont que `cache_creation_input_tokens` ; les 24 030 « gagnés » sont
+> passés en `cache_read_input_tokens` et continuent d'être envoyés au modèle. Le contexte réel n'a
+> pas bougé. Le tableau est conservé tel quel : le purger ferait rejouer l'erreur.
+
 Décomposition finale :
 
 | Poste | Coût |
@@ -238,3 +243,55 @@ méthodes et n'aurait pas de sens.
 **Incertitude assumée :** le poste MCP est une estimation. Pour le fiabiliser il faut lancer chaque
 runtime avec un prompt trivial et relever le compteur de contexte réel (`/context` côté CLI).
 À faire avant de valider Phase 7 « après ».
+
+---
+
+# Contre-mesure du 2026-08-04 (session de portage) — le gain de 60 % n'existe pas
+
+## Ce qui a été mesuré
+
+Trois exécutions de `claude -p "ok" --output-format json` depuis `C:\Users\Juliann`, le même jour, à
+quelques minutes d'intervalle, ne variant que par la configuration. Métrique corrigée : **total du
+premier tour = `cache_creation_input_tokens` + `cache_read_input_tokens`**.
+
+| Configuration | `cache_creation` | `cache_read` | **TOTAL réel** |
+|---|---:|---:|---:|
+| `--settings '{"deniedMcpServers":[]}'` — tous les connecteurs actifs | 15 861 | 24 276 | **40 137** |
+| défaut — `deniedMcpServers: ["Microsoft 365","MCP Obsidiann Juliann"]` | 15 874 | 24 276 | **40 150** |
+| `--strict-mcp-config --mcp-config '{"mcpServers":{}}'` | 14 587 | 24 276 | **38 863** |
+
+## Ce que ça établit
+
+1. **`deniedMcpServers` ne réduit pas le contexte.** Refuser deux connecteurs ou n'en refuser aucun
+   donne le même total à **13 tokens près** — du bruit. Le « −24 030 tok / −60 % » annoncé la veille
+   était un artefact : le relevé « avant » était à cache froid (`cache_read = 0`), le relevé
+   « après » à cache chaud. On comparait deux états de cache, pas deux contextes.
+2. **`cache_read` est constant à 24 276 dans les trois variantes.** Ce bloc est identique quelle que
+   soit la config MCP : il ne dépend ni des serveurs locaux, ni de `deniedMcpServers`.
+3. **Les 3 serveurs MCP locaux coûtent ~1 287 tok** (40 150 − 38 863), cohérent avec les 874 tok
+   relevés la veille et avec le chargement différé (`ToolSearch`) : quelques centaines à ~1 300
+   tokens, pas des dizaines de milliers.
+4. **Le contexte de démarrage réel de Claude Code est ~40 150 tok**, et non 16 021.
+
+## Méthode à appliquer désormais
+
+`--output-format json` renvoie un **tableau d'événements**. Prendre le **premier** événement
+`assistant` et sommer `cache_creation_input_tokens + cache_read_input_tokens`. Ne jamais comparer un
+relevé froid à un relevé chaud. Un différentiel n'est valide que sur des totaux, ou à état de cache
+identique.
+
+Les mesures AGY (`.agents/` présent 21 517 → absent 9 305 → après triage 9 303) remplissent cette
+condition : ce sont des totaux sur la même métrique. Elles restent valides.
+
+## Ce qui reste vrai du chantier de la veille
+
+- Le triage de `~/.agents/skills/` : **−57 % sur AGY**, différentiel valide.
+- La phase 2.3 (63 → 15 skills utilisateur) : instructions envoyées en clair, non différées.
+- Les retraits MCP restent justifiés — serveur mort, clé révoquée, 0 appel en 18 jours — mais leur
+  gain en tokens est de l'ordre du millier, pas de la dizaine de milliers.
+
+## Ce qui n'a pas été retesté
+
+L'effet de `deniedMcpServers` sur le **Desktop** (interface claude.ai) n'a pas été remesuré : la
+contre-mesure porte sur le CLI headless. Le réglage est laissé en place — il bloque l'exécution, ce
+qui reste un effet utile — mais il ne doit plus être présenté comme un levier de contexte.

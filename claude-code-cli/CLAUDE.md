@@ -21,7 +21,7 @@ auto (`~/.claude/projects/*/memory/`) et dans le vault Obsidian, consultés à l
 Décider et exécuter sans confirmation intermédiaire quand l'intention est claire — ne jamais
 me faire répéter. En cas d'ambiguïté réelle, poser une question précise avec options plutôt
 qu'avancer à tâtons. Tout processus qui exige une interaction visuelle (login navigateur,
-`notebooklm login`) doit s'ouvrir dans une fenêtre GUI au premier plan (`Start-Process`),
+authentification d'un CLI tiers) doit s'ouvrir dans une fenêtre GUI au premier plan (`Start-Process`),
 jamais en tâche d'arrière-plan muette.
 
 ## Délégation aux sous-agents
@@ -36,7 +36,6 @@ d'un sous-agent ne m'est pas visible → toujours relayer l'essentiel avant de c
 | Question sur mon vault Obsidian, ou action technique dont le contexte manque (déploiement, config VPS, refactoring, audit, intégration) | `obsidian-context-retriever` |
 | Fichier statique volumineux sur disque (log, dump, NDJSON > ~1 000 lignes ou > ~500 Ko) | `triage-contexte` |
 | Tâche brute, répétitive, lourde en tokens mais faible en raisonnement | `little-tasks` |
-| Gestion Anytype (objets, types, relations, collections) | `anytype-manager` |
 | Administration Linux, Docker, PM2, durcissement, sauvegardes | `vps-sysadmin` |
 
 Précisions :
@@ -44,7 +43,9 @@ Précisions :
 - **`obsidian-context-retriever`** — interdiction de deviner la stack, la topologie VPS,
   les ports ou les scripts de build ; interdiction de me demander une info qui existe déjà
   dans le vault. Le déclencher même si la mémoire native semble déjà répondre : le vault
-  peut être plus complet ou plus à jour.
+  peut être plus complet ou plus à jour. Depuis le 2026-08-04 il travaille le vault
+  **par le système de fichiers** (`G:\Mon Drive\Obsidian Vault`) plus `semantic-search` :
+  le MCP `obsidian` a été retiré.
 - **`triage-contexte`** — seul responsable du triage de logs. Au-delà de 500 Ko il délègue
   le filtrage brut à `agy` (`cat <fichier> | agy "STRICT: ..." > <sortie>`) puis ne lit que
   l'extrait.
@@ -63,12 +64,30 @@ sorties de commandes terminal (RTK s'en charge).
 L'agent principal **n'exécute jamais** ces outils : il instancie le sous-agent dédié et ne
 traite que la synthèse.
 
-- `mcp__obsidian__*`, `mcp__obsidian-semantic__*` → `obsidian-context-retriever`
-- `mcp__anytype__*` → `anytype-manager`
-- `mcp__notebooklm__*` → `web-researcher`
+- `mcp__obsidian-semantic__*` → `obsidian-context-retriever`
 
-Le confinement passe par les définitions de sous-agents, **pas** par `permissions.deny` :
-`deny` est global à la session et neutraliserait aussi les sous-agents.
+Serveurs retirés le 2026-08-04 : `anytype` (mort, clé révoquée), `canva`, `notebooklm`,
+`obsidian`. Racine `~/.mcp.json` : `codegraph`, `github`, `obsidian-semantic`. Un serveur
+dont on a besoin ponctuellement se déclare dans le `.mcp.json` **du projet**, pas ici.
+
+Trois leviers à ne pas confondre :
+
+- `permissions.deny` — bloque l'**exécution**. Le serveur reste connecté et ses schémas
+  restent chargés : **aucun gain de contexte**.
+- `deniedMcpServers` (settings) — empêche l'**exécution** côté connecteurs claude.ai.
+  **Aucun gain de contexte mesuré** : le 2026-08-04, un relevé avec `deniedMcpServers` vide et un
+  relevé avec 2 connecteurs refusés donnent le même total (40 137 vs 40 150 tok). Le gain de
+  −24 030 tok annoncé la veille était un artefact de cache — voir la règle de mesure ci-dessous.
+- Portée projet (`.mcp.json`) — la bonne façon de n'avoir un serveur que là où il sert.
+
+Le confinement par sous-agent n'existe pas sur Claude Code : `tools:` filtre une liste déjà
+chargée. Seul AGY confine réellement, par plugin.
+
+**Règle de mesure du contexte.** Le contexte réellement envoyé au modèle est
+`cache_creation_input_tokens` **+** `cache_read_input_tokens` du premier tour. Ne lire que
+`cache_creation` fait passer un préfixe déjà mis en cache pour un gain : c'est ainsi qu'un
+« −60 % » a été annoncé à tort le 2026-08-04. Aucun gain n'est acquis tant qu'il n'est pas relevé
+sur ce total, à cache froid ou en comparant deux totaux.
 
 ## RTK — compression des sorties terminal
 
