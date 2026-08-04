@@ -192,10 +192,48 @@ Les couper ferait passer le démarrage de **40 051 à ~15 036 tokens (−62 %)**
 la même occasion. C'est, de loin, l'action la plus rentable de tout ce chantier — et elle n'a pas été
 faite, faute d'avoir mesuré avant d'optimiser.
 
+## Coupure sélective des connecteurs — exécutée et mesurée
+
+Arbitrage : couper `Microsoft 365` et `MCP Obsidiann Juliann`, **garder `Gmail`**.
+
+`disableClaudeAiConnectors` est tout-ou-rien : inutilisable ici. Le levier qui marche est
+**`deniedMcpServers`** dans `~/.claude/settings.json` — il fusionne depuis toutes les sources de
+settings et mord aussi sur les connecteurs claude.ai, ce que rien ne documentait :
+
+```json
+"deniedMcpServers": ["Microsoft 365", "MCP Obsidiann Juliann"]
+```
+
+| | Contexte réel |
+|---|---:|
+| Avant coupure | 40 051 tok |
+| **Après coupure** | **16 021 tok** |
+| **Gain** | **−24 030 tok (−60 %)** |
+
+Décomposition finale :
+
+| Poste | Coût |
+|---|---:|
+| Base Claude Code + instructions + skills + agents | 14 162 |
+| 3 serveurs MCP locaux (74 outils, différés) | 874 |
+| Connecteur `Gmail` (conservé) | ~985 |
+| **TOTAL** | **16 021** |
+
+Les deux connecteurs coupés pesaient donc à eux seuls **24 030 tokens**, contre ~985 pour Gmail.
+
+Note : `claude mcp list` continue de les afficher comme connectés — la commande liste ce qui est
+*déclaré*, pas ce qui est *chargé dans le contexte*. C'est le compteur de tokens qui fait foi.
+
+## Limite de cette mesure
+
+Le chiffre « avant chantier » en unités réelles **n'existe pas** : le premier relevé réel a été fait
+après les phases 1 à 6. Les 40 051 tok ci-dessus sont un *après-phases-1-à-6, avant-coupure*, pas un
+état initial. Toute comparaison avec les ~50 400 tok estimés en tête de ce document mélangerait deux
+méthodes et n'aurait pas de sens.
+
 ## Reste à faire
 
 - Mesurer AGY et OpenCode par une méthode équivalente (leurs CLI n'exposent pas le même compteur).
-- Refaire ce relevé après une éventuelle coupure des connecteurs claude.ai.
 
 **Incertitude assumée :** le poste MCP est une estimation. Pour le fiabiliser il faut lancer chaque
 runtime avec un prompt trivial et relever le compteur de contexte réel (`/context` côté CLI).
