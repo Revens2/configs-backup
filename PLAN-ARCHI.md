@@ -28,7 +28,8 @@ Statut : `[ ]` à faire · `[~]` en cours · `[x]` fait (commité + runtime dém
 
 ### Dépôt de backup
 
-`C:\Users\Juliann\configs-backup` → `github.com/Revens2/configs-backup` (**privé**).
+`C:\Users\Juliann\configs-backup` → `github.com/Revens2/configs-backup` (**public** — relevé initial
+erroné, corrigé le 2026-08-04 par `gh repo view --json visibility`).
 État à l'ouverture : **propre** (aucune modification non commitée). HEAD = `41c32b3`.
 Structure : `antigravity/` (73 f), `claude-code-cli/` (1 442 f), `claude-code-desktop/` (8 f), `opencode/` (10 f).
 
