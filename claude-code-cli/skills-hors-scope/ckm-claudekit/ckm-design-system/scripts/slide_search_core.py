@@ -451,4 +451,3 @@ def search_with_context(query, slide_position=1, total_slides=9, previous_emotio
         "context": context,
         "base_results": base_results,
     }
-

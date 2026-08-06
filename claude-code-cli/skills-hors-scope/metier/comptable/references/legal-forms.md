@@ -343,4 +343,3 @@ Affectation bénéfice:
 - Total bilan ≤ 4 M€
 - CA HT ≤ 8 M€
 - Salariés ≤ 50
-

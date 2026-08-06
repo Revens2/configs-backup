@@ -40,4 +40,3 @@ Activate the `design` skill and specify slides task, e.g. "create a pitch deck".
 4. Apply copywriting formulas from `references/slides-copywriting-formulas.md`
 5. Use HTML template from `references/slides-html-template.md`
 6. Apply strategy from `references/slides-strategies.md`
-

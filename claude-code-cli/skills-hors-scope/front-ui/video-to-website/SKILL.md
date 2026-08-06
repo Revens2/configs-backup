@@ -380,4 +380,3 @@ All types use stagger (0.1-0.15s) and ease `power3.out` (except scale-up: `power
 - **Lenis conflicts**: Ensure `lenis.on("scroll", ScrollTrigger.update)` is connected
 - **Counters not animating**: Verify `data-value` attribute exists and snap settings match decimal places
 - **Memory issues on mobile**: Reduce frames to <150, resize to 1280px wide
-

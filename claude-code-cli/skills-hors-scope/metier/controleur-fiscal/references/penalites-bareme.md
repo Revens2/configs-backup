@@ -128,4 +128,3 @@ IS rappelé : X x 15%
 | Taux conversion | Faible | Écart de quelques % | Utiliser taux BCE mensuel |
 | Amortissements | Faible | Réintégration excédent | Vérifier calcul exact |
 | TVA franchise | Très faible | Rappel TVA si seuil dépassé | Monitorer CA annualisé |
-

@@ -36,4 +36,3 @@ Journal: [AC/VE/BA/OD]
 🟠 ATTENTION: [Risque modéré, à traiter]
 🟡 INFO: [Point de vigilance]
 ```
-

@@ -117,4 +117,3 @@ Pour 6 ans minimum (délai de reprise) :
 - Sursis échange crypto-crypto : art. 150 VH bis-I-2 CGI
 - BOFiP PV crypto : BOI-RPPM-PVBMC-30
 - BOFiP BNC staking/mining : BOI-BNC-CHAMP-10-10-20-40
-

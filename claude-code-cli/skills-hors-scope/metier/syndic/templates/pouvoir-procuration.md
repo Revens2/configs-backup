@@ -55,4 +55,3 @@ pour me représenter à l'Assemblée Générale {{type}} du syndicat des copropr
 ---
 
 *À remettre au mandataire ou à envoyer au syndic avant l'AG.*
-

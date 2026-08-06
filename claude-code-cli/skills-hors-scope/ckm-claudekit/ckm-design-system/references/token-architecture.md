@@ -222,4 +222,3 @@ Token JSON format (W3C Design Tokens Community Group):
   }
 }
 ```
-

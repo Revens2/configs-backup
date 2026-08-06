@@ -264,4 +264,3 @@ class TestShadcnInstaller:
         assert success is True
         assert "button" in message
         assert "card" in message
-

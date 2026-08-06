@@ -249,4 +249,3 @@ npx shadcn@latest add button card input
 ```
 
 Components will automatically use your design system tokens.
-

@@ -216,4 +216,3 @@ Règle : tout fournisseur > 5% du budget et non mis en concurrence depuis 3 ans 
 
 Économies identifiées : {{total}} EUR/an
 ```
-

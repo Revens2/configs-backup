@@ -133,4 +133,3 @@ Règles complètes (retrait avant/après 5 ans PEA, abattements AV par tranche d
 - Différenciation revenus du patrimoine vs produits de placement : art. L. 136-6 et L. 136-7 CSS
 - LFSS 2026 (hausse CSG) : loi n° 2025-1403 du 30/12/2025, art. 12 (modifie L. 136-8 CSS)
 - BOFiP : BOI-RPPM-RCM (dividendes/RCM) et BOI-RPPM-PVBMI (PV mobilières)
-

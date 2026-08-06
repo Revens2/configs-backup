@@ -289,4 +289,3 @@ Prélèvement le 5 ou le 20 de chaque mois (au choix).
 - [ ] Approbation comptes
 - [ ] Dépôt greffe
 - [ ] DAS2
-

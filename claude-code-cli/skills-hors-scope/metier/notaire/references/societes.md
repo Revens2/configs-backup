@@ -200,4 +200,3 @@ Droits = (Prix de cession - Abattement) × Taux
 | **Droits totaux (2 enfants)** | **~4 388 EUR** |
 
 Sans SCI ni démembrement : droits sur 500 000 EUR en pleine propriété seraient beaucoup plus élevés.
-

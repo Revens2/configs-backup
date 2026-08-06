@@ -183,4 +183,3 @@ For non-standard uses:
 2. Include context (medium, audience)
 3. Wait for brand team approval
 4. Document approved exceptions
-

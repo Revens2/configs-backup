@@ -146,4 +146,3 @@ entièrement écrit, daté et signé de ma main.
 
 ⚠️ **CE DOCUMENT EST UN MODÈLE DE RÉDACTION.**
 Il ne constitue pas un acte authentique. Pour garantir la validité et la découverte du testament, il est fortement recommandé de le déposer chez un notaire.
-

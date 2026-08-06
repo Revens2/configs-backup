@@ -45,4 +45,3 @@ Le syndic,
 ---
 
 *Ce courrier est un simple rappel. En l'absence de régularisation, une mise en demeure formelle sera adressée par lettre recommandée.*
-

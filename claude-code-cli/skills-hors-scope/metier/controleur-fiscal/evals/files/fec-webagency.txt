@@ -57,4 +57,3 @@ BQ|Banque|028|20251215|5121|Banque Qonto|||QTO-020|20251215|Payout Stripe déc|1
 BQ|Banque|028|20251215|411|Clients|||QTO-020|20251215|Payout Stripe déc|0.00|11700.00|||20251215||
 OD|Opérations diverses|029|20251231|6811|Dotations amort. immobilisations|||OD-001|20251231|Amort. MacBook Pro 2025|350.00|0.00|||20251231||
 OD|Opérations diverses|029|20251231|2818|Amort. matériel informatique|||OD-001|20251231|Amort. MacBook Pro 2025|0.00|350.00|||20251231||
-

@@ -309,4 +309,3 @@ Ces points sont systématiquement vérifiés par les utilisateurs exigeants — 
 - Les situations complexes (non-résidents, revenus étrangers, régimes spéciaux DOM-TOM, contentieux) peuvent déroger aux règles générales et nécessitent un avocat fiscaliste.
 - Ce skill est un guide de raisonnement, pas un substitut à un conseiller fiscal pour les décisions importantes.
 - Les chiffres fournis sont indicatifs — seul l'avis d'imposition de la DGFIP fait foi.
-

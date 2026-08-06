@@ -294,4 +294,3 @@ Au **réel**, l'amortissement du bien (hors terrain, sur ~25-30 ans) rend souven
 - Plus-values mobilières : art. 150-0 A CGI
 - Crypto : art. 150 VH bis CGI
 - BOFiP général : BOI-IR
-

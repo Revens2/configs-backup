@@ -151,4 +151,3 @@ Quand le client émet la facture pour le compte du fournisseur. Mention obligato
 ### Facture en devise étrangère
 
 Le montant de TVA doit être converti en euros au taux de change du jour de l'opération.
-

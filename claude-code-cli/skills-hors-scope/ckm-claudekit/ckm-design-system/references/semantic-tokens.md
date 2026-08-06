@@ -213,4 +213,3 @@ Semantic tokens enable instant theme switching:
 // Toggle dark mode
 document.documentElement.classList.toggle('dark');
 ```
-

@@ -341,4 +341,3 @@ curl "https://apidf-preprod.cerema.fr/dvf_opendata/mutations/?code_insee=XXXXX&p
 - On ne peut pas renoncer "au profit de" quelqu'un
 - La renonciation profite à tous les héritiers du même ordre
 - Pour transmettre sa part à un héritier spécifique : accepter puis donner (attention aux droits)
-

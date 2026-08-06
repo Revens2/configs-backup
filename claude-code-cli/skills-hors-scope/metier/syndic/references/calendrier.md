@@ -123,4 +123,3 @@ Si l'exercice va du 1er juillet au 30 juin (fréquent) :
 - Appels T1 = juillet, T2 = octobre, T3 = janvier, T4 = avril
 
 Adapter le calendrier en décalant de 6 mois.
-

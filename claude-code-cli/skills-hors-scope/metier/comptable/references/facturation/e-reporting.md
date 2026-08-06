@@ -97,4 +97,3 @@ Pour les utilisateurs de Stripe : certaines PA proposent des connecteurs Stripe 
 ## Sanctions
 
 Amende de **250 EUR par transmission manquante** en e-reporting, plafonnée à 15 000 EUR par année civile.
-

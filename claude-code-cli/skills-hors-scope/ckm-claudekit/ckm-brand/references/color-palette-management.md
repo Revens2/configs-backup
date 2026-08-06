@@ -184,4 +184,3 @@ Text: #0F172A
 - [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
 - [Tailwind Color Reference](https://tailwindcss.com/docs/customizing-colors)
 - [Color Hunt](https://colorhunt.co) - Curated palettes
-

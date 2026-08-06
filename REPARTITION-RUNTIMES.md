@@ -12,7 +12,36 @@ main, pas sur ce qu'on lui prête.
 | MCP par plugin activable | non | **oui** | non |
 | Retirer un sous-agent du contexte | non | — | **oui** (`task` deny) |
 | Nesting | 1 niveau | — | 2 niveaux |
-| Contexte de démarrage | ~20 700 tok | ~2 000 tok | ~4 800 tok |
+| Contexte de démarrage **mesuré** | **16 021 tok** | **9 303 tok** | **~12 800 tok** |
+
+> Chiffres au 2026-08-04 après triage de `~/.agents/skills/` (16 skills sortis, −12 212 tok sur AGY,
+> −2 000 sur OpenCode). Avant ce triage : AGY 21 517, OpenCode ~14 800.
+> **AGY est bien le plus léger — mais seulement une fois `.agents/` dégraissé.**
+
+### Correction : AGY n'est pas le runtime le plus léger
+
+Les chiffres ci-dessus sont des relevés réels, pas des estimations tirées des tailles de fichiers.
+`agy -p … --output-format json` renvoie `usage.input_tokens = 21 530`. Ma première estimation
+(~2 000 tok, déduite de `GEMINI.md` + `settings.json`) était fausse d'un facteur 10 : elle ignorait
+le prompt système d'Antigravity et ses outils intégrés, exactement l'erreur que j'avais commise sur
+Claude Code.
+
+**Après coupure des connecteurs claude.ai, Claude Code démarre plus léger qu'AGY** — 16 021 contre
+21 530. L'argument « AGY est le runtime le plus léger » tombe. Ce qui reste vrai d'AGY, c'est le
+confinement MCP par plugin ; ce n'est pas un argument de contexte de départ.
+
+### OpenCode : mesuré après réparation d'un second bug
+
+Première tentative : réponses vides. Cause trouvée par `GET :4002/v1/models` — la gateway expose le
+modèle sous l'id **`qwen-3.6-35b-moe`**, alors que `opencode.jsonc` demandait `Qwen 3.6 35b MoE`,
+identifiant qui n'existe que sur `:8000` (llama.cpp direct, sans le sanitizer de tool-calls). La clé
+d'un modèle dans la config **est** l'id envoyé à l'API : elle ne correspondait à rien, d'où le
+silence. Corrigé, OpenCode répond.
+
+Mesure obtenue par delta sur `opencode stats` : 6 sessions × 489,2 K → 8 sessions × 369,2 K, soit
+**~14 800 tokens** pour la session minimale. Cohérent avec la médiane affichée (16,1 K).
+
+**Classement final : OpenCode ~14 800 < Claude Code 16 021 < AGY 21 530.**
 
 ### Correction d'un postulat de la mission
 
@@ -36,8 +65,8 @@ C'est le seul à avoir des sous-agents. Il porte les 5 workers et le skill `/pla
 MCP racine réduit à `codegraph`, `github`, `obsidian-semantic` ; les autres se déclarent dans le
 `.mcp.json` du projet qui en a besoin.
 
-**AGY — travail à fort volume et sessions où le contexte doit rester minuscule.**
-~2 000 tok au démarrage, aucun MCP global actif. Les serveurs de domaine sont packagés en plugins
+**AGY — quand il faut un MCP de domaine sans le payer partout.**
+21 530 tok au démarrage, aucun MCP global actif. Les serveurs de domaine sont packagés en plugins
 **désactivés par défaut** :
 
 ```bash
@@ -59,5 +88,6 @@ runtime naturel pour ce qui est volumineux mais peu exigeant en raisonnement.
 
 1. Besoin de déléguer à un spécialiste → **Claude Code**.
 2. Besoin d'un MCP de domaine sans le payer partout → **AGY**, plugin activé le temps du besoin.
-3. Besoin d'imbriquer des agents, ou volume énorme sur modèle local → **OpenCode**.
-4. Sinon → Claude Code, qui reste le mieux outillé.
+3. Besoin d'imbriquer des agents, ou volume énorme sur modèle local → **OpenCode**
+   (nécessite Tailscale actif et le VPS `100.99.75.104` en ligne).
+4. Sinon → Claude Code : le mieux outillé **et**, depuis la coupure des connecteurs, le plus léger.

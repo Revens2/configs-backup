@@ -297,4 +297,3 @@ Si le donataire divorce après la donation :
 
 ⚠️ **CE DOCUMENT EST UN GUIDE DE TRAVAIL.**
 Il ne constitue pas un conseil juridique personnalisé. Chaque situation patrimoniale est unique. Consulter un notaire pour toute donation, en particulier si elle porte sur un bien immobilier, si elle implique un démembrement, ou si le donateur a des héritiers réservataires.
-

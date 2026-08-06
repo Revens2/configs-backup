@@ -172,4 +172,3 @@ Un Factur-X peut être validé avec :
 - Les schémas XSD officiels CII
 - Les règles Schematron EN 16931
 - Les outils en ligne de l'AIFE (Agence pour l'Informatique Financière de l'État)
-

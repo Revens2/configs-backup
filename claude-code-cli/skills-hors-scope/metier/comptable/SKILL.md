@@ -314,4 +314,3 @@ Répondre en français par défaut. Passer en anglais si l'utilisateur écrit en
 ## Avertissement
 
 Ce skill ne remplace pas un expert-comptable inscrit à l'Ordre. Pour les situations complexes, litiges, montages à risque, ou montages TVA intra-UE / régimes spéciaux, consulter un professionnel.
-

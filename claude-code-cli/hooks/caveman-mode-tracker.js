@@ -131,4 +131,3 @@ process.stdin.on('end', () => {
     // Silent fail
   }
 });
-

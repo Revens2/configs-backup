@@ -144,4 +144,3 @@ Vérifications annuelles :
 - Adéquation de la valeur assurée
 - Franchises et exclusions
 - Mise en concurrence (au moins tous les 3 ans, bonne pratique)
-

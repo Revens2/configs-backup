@@ -265,5 +265,9 @@
       }
     }
   },
-  "defaultMode": "bypassPermissions"
+  "defaultMode": "bypassPermissions",
+  "deniedMcpServers": [
+    "Microsoft 365",
+    "MCP Obsidiann Juliann"
+  ]
 }

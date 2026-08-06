@@ -121,4 +121,3 @@ Majoration de 0,5 part pour les contribuables vivant seuls et élevant des enfan
 - Décote : art. 197-4° CGI
 - Parent isolé : art. 194-II CGI
 - BOFiP : BOI-IR-LIQ-10-20-20 et BOI-IR-LIQ-20-20-30
-

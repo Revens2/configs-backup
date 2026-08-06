@@ -323,4 +323,3 @@ Versée à l'OPCO.
 |---------|-----------------|
 | 31/12 | 2ème jour ouvré après 1er mai |
 | Autre date | 3 mois après clôture |
-

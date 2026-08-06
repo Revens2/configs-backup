@@ -676,4 +676,3 @@ notebooklm language --help     # Language settings
 **Re-authenticate:** `notebooklm login`
 **Check version:** `notebooklm --version`
 **Refresh a CLI-managed install:** `notebooklm skill install`
-
