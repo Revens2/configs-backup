@@ -330,4 +330,3 @@ session = client.beta.sessions.create(
 ```
 
 See `shared/managed-agents-tools.md` §Vaults for creating vaults and adding credentials.
-

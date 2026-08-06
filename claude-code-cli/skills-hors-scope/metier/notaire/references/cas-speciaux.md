@@ -58,4 +58,3 @@
 
 - Si le défunt était **usufruitier** : l'usufruit s'éteint, le nu-propriétaire récupère la pleine propriété **sans droits supplémentaires** et **sans déclaration**
 - Si le défunt était **nu-propriétaire** : la nue-propriété entre dans la succession et doit être déclarée
-

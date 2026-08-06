@@ -33,4 +33,3 @@ Structure stricte du Markdown :
      `[System.IO.File]::WriteAllText("G:\Mon Drive\Obsidian Vault\raw\assets\<Nom_Du_Fichier>", @"<Contenu_Du_Rapport>"@)`
      (assure-toi d'échapper correctement les caractères spéciaux s'il y en a).
 7. **Confirmation** : Confirme à l'utilisateur que le fichier a bien été écrit avec succès en affichant son chemin d'accès absolu et son nom final.
-

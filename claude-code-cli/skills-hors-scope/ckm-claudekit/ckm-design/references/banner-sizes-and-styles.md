@@ -116,4 +116,3 @@ Use these search queries on Pinterest for art direction references:
 - `creative banner layout [industry]` (e.g., "creative banner layout tech startup")
 - `[style] graphic design 2026` (e.g., "gradient graphic design 2026")
 - `banner ad design [product type]` (e.g., "banner ad design saas")
-

@@ -213,4 +213,3 @@ Upload and manage files for use as session resources, and download files the age
 | Delete           | `DELETE` | `/v1/files/{id}`                      | `client.beta.files.delete(id)` |
 
 The `scope_id` filter on List scopes the results to files written to `/mnt/session/outputs/` by that session. Without the filter, you get all files uploaded to your account.
-

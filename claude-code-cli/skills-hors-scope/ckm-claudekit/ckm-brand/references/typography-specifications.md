@@ -212,4 +212,3 @@ theme: {
 - Avoid justified text (use left-align)
 - Ensure adequate line spacing
 - Don't use thin weights (<400) at small sizes
-

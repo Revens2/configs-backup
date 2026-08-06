@@ -318,4 +318,3 @@ Apply canvas design for:
 - Exhibition materials
 - Coffee table books
 - Design philosophy demonstrations
-

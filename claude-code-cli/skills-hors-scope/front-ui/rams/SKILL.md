@@ -103,4 +103,3 @@ Score: XX/100
 4. Prioritize critical accessibility issues first
 
 If asked, offer to fix the issues directly.
-

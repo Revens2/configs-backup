@@ -430,4 +430,3 @@ BetaRequestDocumentBlock doc = BetaRequestDocumentBlock.builder()
 ```
 
 Other methods: `.list()`, `.delete(String fileId)`, `.download(String fileId)`, `.retrieveMetadata(String fileId)`.
-

@@ -99,4 +99,3 @@ En cas de contrôle, l'administration peut demander :
 - Les pièces justificatives
 
 Les factures électroniques doivent être restituables dans leur format d'origine. Un PDF imprimé puis scanné n'est pas recevable si l'original est un Factur-X.
-

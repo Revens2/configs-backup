@@ -6,7 +6,7 @@ With `config.type: "self_hosted"`, the **agent loop stays on Anthropic's orchest
 
 ```
 1. Create environment:      config: {type: "self_hosted"}        → env_...
-2. Generate environment key (Console, on the environment page)   → sk-ant-REDACTED...  as ANTHROPIC_ENVIRONMENT_KEY
+2. Generate environment key (Console, on the environment page)   → sk-ant-oat01-...  as ANTHROPIC_ENVIRONMENT_KEY
 3. Run a worker:            EnvironmentWorker.run()  or  ant beta:worker poll
 4. Sessions reference       environment_id=env_... exactly as for cloud
 ```
@@ -81,7 +81,7 @@ await new EnvironmentWorker({
 The `ant` CLI ships a worker with the fixed built-in toolset (`bash`, `read`, `write`, `edit`, `glob`, `grep`). Install per the Anthropic CLI docs (see `shared/live-sources.md` → Anthropic CLI), then:
 
 ```sh
-export ANTHROPIC_ENVIRONMENT_KEY=sk-ant-REDACTED...
+export ANTHROPIC_ENVIRONMENT_KEY=sk-ant-oat01-...
 ant beta:worker poll --environment-id env_... --workdir /workspace
 ```
 
@@ -165,10 +165,9 @@ These are **control-plane** calls — authenticate with `x-api-key` (not the env
 
 | Credential | Format | Scope |
 |---|---|---|
-| `ANTHROPIC_ENVIRONMENT_KEY` | `sk-ant-REDACTED...` | One environment's work queue. Generate in Console ("Generate environment key"). Pass as `auth_token=` / `authToken` on the client **and** as `environment_key=` / `environmentKey` on `EnvironmentWorker`. Store in a secrets manager; rotate on exposure. |
+| `ANTHROPIC_ENVIRONMENT_KEY` | `sk-ant-oat01-...` | One environment's work queue. Generate in Console ("Generate environment key"). Pass as `auth_token=` / `authToken` on the client **and** as `environment_key=` / `environmentKey` on `EnvironmentWorker`. Store in a secrets manager; rotate on exposure. |
 | `ANTHROPIC_WEBHOOK_SIGNING_KEY` | `whsec_...` | Webhook signature verification (if using webhook-driven wake). The SDK reads this env var automatically for `client.beta.webhooks.unwrap()`. |
 
 ## Security — what you own
 
 Container hardening; egress restriction (there is no default); `ANTHROPIC_ENVIRONMENT_KEY` custody and rotation; one workspace + environment per trust boundary when running untrusted code; least-privilege for the tool process; log retention and redaction. **Anthropic cannot**: fast-revoke a leaked environment key, verify your image or supply chain, sandbox tool execution inside your container, or enforce retention after tool output reaches your infrastructure. See the Self-Hosted Sandboxes Security page in `shared/live-sources.md` for the full checklist.
-

@@ -82,4 +82,3 @@ python .claude/skills/design-system/scripts/search-slides.py "urgency cta" -d co
 | Drive action | AIDA, CTA |
 | Tell story | BAB, Story Arc |
 | Present data | Proof Stack |
-

@@ -90,4 +90,3 @@ Options: `--style`, `--industry`, `--prompt`
 export GEMINI_API_KEY="your-key"
 pip install google-genai
 ```
-

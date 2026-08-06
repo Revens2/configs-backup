@@ -79,4 +79,3 @@ GET https://www.registre-coproprietes.gouv.fr/api/public/annuaire/coproannuaired
 - Licence Etalab
 
 **Déclaration/mise à jour** : https://www.registre-coproprietes.gouv.fr (authentification requise, dans les 2 mois suivant l'AG).
-

@@ -272,4 +272,3 @@ function readHistory(filePath) {
 }
 
 module.exports = { getDefaultMode, getConfigDir, getConfigPath, VALID_MODES, safeWriteFlag, readFlag, appendFlag, readHistory };
-

@@ -166,4 +166,3 @@ Le vérificateur peut accepter :
 
 - **Délai de reprise** : 3 ans (art. L. 169 LPF)
 - **Délai étendu** : 10 ans en cas de découverte d'activité occulte
-

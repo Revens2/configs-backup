@@ -107,4 +107,3 @@ Icon + text in unified design.
 - [ ] Works in single color
 - [ ] Maintains clarity in black/white
 - [ ] No tiny details that disappear when scaled
-

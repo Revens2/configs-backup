@@ -254,4 +254,3 @@ Interactive elements should have a minimum hit area of 44×44px (WCAG) or at lea
 ### Collision Rule
 
 If the extended hit area overlaps another interactive element, shrink the pseudo-element — but make it as large as possible without colliding. Two interactive elements should never have overlapping hit areas.
-

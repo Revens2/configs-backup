@@ -11,4 +11,3 @@ Jeu de foyers typiques pour illustrer les cas principaux couverts par le skill. 
 | [foyer-expatrie-non-resident.json](foyer-expatrie-non-resident.json) | Non-résident (Portugal) | Taux minimum non-résident, retenue à la source, convention fiscale |
 
 Le fichier [`foyer.example.json`](../foyer.example.json) à la racine reste le **template canonique** à copier (structure complète commentée). Ces exemples sont des **scénarios concrets** simplifiés pour évaluer le skill ou démonstration.
-

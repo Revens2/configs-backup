@@ -1,0 +1,11 @@
+{
+  "plan-pointer": {
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "node plan-pointer-hook.mjs",
+        "timeout": 10
+      }
+    ]
+  }
+}

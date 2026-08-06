@@ -141,4 +141,3 @@ Valeur des parts × fraction immobilière. Possible décote pour illiquidité.
 - Plafonnement : art. 979 CGI
 - Barème : art. 977 CGI
 - BOFiP : BOI-PAT-IFI
-

@@ -126,4 +126,3 @@ Le président du tribunal judiciaire peut être saisi si le syndicat est en diff
 ### Administration provisoire (art. 29-1 loi 1965)
 
 Le tribunal peut désigner un administrateur provisoire qui se substitue au syndic et, le cas échéant, à l'AG pour prendre les mesures nécessaires au rétablissement du fonctionnement normal de la copropriété.
-

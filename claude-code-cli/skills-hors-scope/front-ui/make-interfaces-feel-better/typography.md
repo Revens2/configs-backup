@@ -133,4 +133,3 @@ Some fonts (like Inter) change the visual appearance of numerals with this prope
    Default:  1234  → proportional, "1" is narrow
    Tabular:  1234  → all digits equal width, "1" centered */
 ```
-

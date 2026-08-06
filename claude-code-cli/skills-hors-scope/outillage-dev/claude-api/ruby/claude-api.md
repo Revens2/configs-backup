@@ -111,4 +111,3 @@ message = client.messages.create(
 For 1-hour TTL: `cache_control: { type: "ephemeral", ttl: "1h" }`. There's also a top-level `cache_control:` on `messages.create` that auto-places on the last cacheable block.
 
 Verify hits via `message.usage.cache_creation_input_tokens` / `message.usage.cache_read_input_tokens`.
-

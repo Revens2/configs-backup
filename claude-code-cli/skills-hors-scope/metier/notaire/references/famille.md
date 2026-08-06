@@ -199,4 +199,3 @@ Référence complète : mariage, PACS, régimes matrimoniaux, testament, divorce
 - Mineur de 16 ans minimum
 - Décision du juge des tutelles à la demande des parents ou du conseil de famille
 - Le notaire peut être consulté pour les actes patrimoniaux liés
-

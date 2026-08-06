@@ -94,4 +94,3 @@ Neutrals (3-4)
 - [ ] Correct fonts
 - [ ] Appropriate hierarchy
 - [ ] Readable size
-

@@ -63,4 +63,3 @@ if __name__ == "__main__":
         messages = get_bounding_box_messages(f)
     for msg in messages:
         print(msg)
-
