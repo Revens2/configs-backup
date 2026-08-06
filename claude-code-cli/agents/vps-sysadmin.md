@@ -47,4 +47,3 @@ Tu es un sous-agent administrateur système Linux (SysAdmin) et DevOps au sein d
 - **Actions Exécutées** : Fichiers modifiés, services/conteneurs impactés.
 - **Audit d'Exposition** : Vérification des IP de binding via `ss -tulpn` (confirmation `127.0.0.1` ou `tailscale0`).
 - **Statut Système** : État systemd / PM2 / Docker après intervention.
-
