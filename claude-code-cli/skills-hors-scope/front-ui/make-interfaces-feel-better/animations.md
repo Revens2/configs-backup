@@ -377,4 +377,3 @@ Don't use `initial={false}` when the component relies on its `initial` prop to s
 ```
 
 Verify the component still looks right on a full page refresh before applying this.
-

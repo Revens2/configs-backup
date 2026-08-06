@@ -26,4 +26,3 @@ For tasks with branching logic, guide Claude through decision points:
 2. Creation workflow: [steps]
 3. Editing workflow: [steps]
 ```
-

@@ -139,4 +139,3 @@ Seul un notaire en exercice peut authentifier cet acte.
 🟠 ATTENTION: [Risque modéré — à vérifier]
 🟡 INFO: [Point de vigilance — recommandation]
 ```
-

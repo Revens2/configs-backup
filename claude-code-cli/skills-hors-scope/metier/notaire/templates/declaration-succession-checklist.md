@@ -224,4 +224,3 @@ Actif brut                    {{actif.total}} EUR
 ⚠️ **CE DOCUMENT EST UN PROJET DE TRAVAIL.**
 Il ne constitue pas une déclaration de succession officielle.
 La déclaration doit être établie par un notaire et déposée au service des impôts des entreprises (SIE) du domicile du défunt.
-

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Logs & temporary files
 *.log
 *.tmp
@@ -5,6 +6,12 @@
 *.swp
 .DS_Store
 Thumbs.db
+=======
+dream-report.md
+.turns.md
+dream-run.log
+dream-run.log.1
+>>>>>>> 2cb188f (dream: gitignore transcript scratch and run log [setup, 2026-08-04])
 
 # Caches and session dumps
 cache/
@@ -26,3 +33,7 @@ file-history/
 paste-cache/
 telemetry/
 daemon/
+
+# Dream workspace scratch & quarantined report
+dream-report.md
+.turns.md

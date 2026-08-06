@@ -130,4 +130,3 @@ Le non-respect des obligations de facturation électronique expose à :
 - **Amende de 15 EUR par facture** non émise au format électronique (plafond 15 000 EUR par année civile)
 - **Amende de 250 EUR par transmission** manquante en e-reporting (plafond 15 000 EUR par année civile)
 - Sanctions fiscales classiques en cas de défaut de facturation (50% du montant de la transaction, art. 1737 du CGI)
-

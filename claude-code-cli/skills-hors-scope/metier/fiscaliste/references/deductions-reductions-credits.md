@@ -169,4 +169,3 @@ Les deux jouent sur des couches différentes du calcul.
 - Pinel : art. 199 novovicies CGI
 - FCPI : art. 199 terdecies-0 A CGI
 - BOFiP : BOI-IR-RICI
-

@@ -97,4 +97,3 @@ logger.warn("Rate limit reached", { endpoint: "/api/data" });
 logger.error("Payment failed", { orderId: "order_123" });
 logger.fatal("Connection pool exhausted", { activeConnections: 100 });
 ```
-

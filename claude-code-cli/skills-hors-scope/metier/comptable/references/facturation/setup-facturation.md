@@ -118,4 +118,3 @@ Configuration facturation :
 ## Si company.json n'existe pas
 
 Renvoyer vers le setup guidé général ([../setup.md](../setup.md)), puis revenir ici pour les champs facturation.
-

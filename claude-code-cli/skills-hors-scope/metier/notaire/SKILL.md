@@ -267,4 +267,3 @@ Ce skill fournit une assistance à la préparation d'actes notariés et au conse
 Le notaire est un officier public dont la signature confère l'authenticité aux actes. Les projets d'actes générés par ce skill sont des documents de travail qui doivent être soumis à un notaire pour validation, finalisation et authentification.
 
 Pour les situations complexes (successions contentieuses, montages patrimoniaux, fiscalité internationale, liquidations de communauté), toujours consulter un notaire.
-

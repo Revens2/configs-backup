@@ -92,4 +92,3 @@
 | Email templates | Quarterly |
 | Sales materials | Quarterly |
 | Full brand audit | Annually |
-

@@ -212,4 +212,3 @@ Component-specific tokens referencing semantic layer.
   color: var(--button-secondary-fg);
 }
 ```
-

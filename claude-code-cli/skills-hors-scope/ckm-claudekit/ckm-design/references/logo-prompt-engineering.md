@@ -156,4 +156,3 @@ Style direction: [new style keywords]
 3. **Text issues** - AI struggles with text; generate mark separately
 4. **Wrong aspect** - Specify "1:1 square" or "horizontal"
 5. **Realistic style** - Add "illustration, vector-style, not photorealistic"
-

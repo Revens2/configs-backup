@@ -588,4 +588,3 @@ response = client.messages.create(
     }]
 )
 ```
-

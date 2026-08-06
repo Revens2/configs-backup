@@ -634,4 +634,3 @@ Lightpanda does not support `--extension`, `--profile`, `--state`, or `--allow-f
 ./templates/authenticated-session.sh https://app.example.com/login
 ./templates/capture-workflow.sh https://example.com ./output
 ```
-

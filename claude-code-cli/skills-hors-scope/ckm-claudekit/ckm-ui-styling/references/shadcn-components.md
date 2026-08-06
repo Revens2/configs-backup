@@ -422,4 +422,3 @@ import { Badge } from "@/components/ui/badge"
 <Badge variant="destructive">Destructive</Badge>
 <Badge variant="outline">Outline</Badge>
 ```
-

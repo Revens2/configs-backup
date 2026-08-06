@@ -68,4 +68,3 @@ Le syndic,
 ---
 
 *Copie : Conseil syndical*
-

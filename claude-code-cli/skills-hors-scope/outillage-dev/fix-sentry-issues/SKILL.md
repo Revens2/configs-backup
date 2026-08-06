@@ -70,4 +70,3 @@ One branch per issue. `git checkout main && git pull && git checkout -b fix/<des
 - **Implement** — Fix the root cause, not the symptom. If the fix is primarily a log level change, STOP: did you investigate why it fails, or just suppress?
 - **Verify** — Tests pass, lint passes, fix handles actual failing inputs.
 - **PR** — Include **Root cause** (upstream reason) and **Fix** (what changed and why it prevents the failure). Resolve in Sentry only after merge.
-

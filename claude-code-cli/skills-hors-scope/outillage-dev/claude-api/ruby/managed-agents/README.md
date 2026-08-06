@@ -387,4 +387,3 @@ client.beta.sessions.resources.update(
   authorization_token: "ghp_your_new_github_token"
 )
 ```
-

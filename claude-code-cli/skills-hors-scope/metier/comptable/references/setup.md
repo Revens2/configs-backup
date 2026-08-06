@@ -145,4 +145,3 @@ Société configurée :
 > **Quelque chose à corriger ?** Sinon je génère le fichier `company.json`.
 
 Générer `company.json`, puis passer au workflow normal (vérification des échéances).
-

@@ -27,4 +27,3 @@ mcporter call 'linkedin-scraper.search_jobs(keyword: "software engineer", limit:
 ```bash
 curl -s "https://r.jina.ai/https://linkedin.com/in/username"
 ```
-

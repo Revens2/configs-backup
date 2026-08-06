@@ -302,4 +302,3 @@ resources/server/
 ```
 
 The `resources/` directories contain large binaries and build artifacts that should not be committed.
-

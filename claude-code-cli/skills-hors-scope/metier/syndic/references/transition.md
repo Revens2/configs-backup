@@ -347,4 +347,3 @@ Si le syndic sortant ne transmet pas les archives dans le délai de 3 mois :
 - Le président signe les actes et représente le syndicat
 - Pas de rémunération (sauf vote AG)
 - Soumis au contrat type de syndic
-

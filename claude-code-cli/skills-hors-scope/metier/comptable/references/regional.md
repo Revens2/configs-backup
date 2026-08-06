@@ -303,4 +303,3 @@ Pour les opérations complexes impliquant ces territoires:
 3. Faire valider par un expert-comptable connaissant le droit local
 
 ⚠️ **Ce document est un résumé.** Les régimes fiscaux ultramarins et locaux sont complexes et évolutifs. Toujours vérifier les dispositions en vigueur.
-

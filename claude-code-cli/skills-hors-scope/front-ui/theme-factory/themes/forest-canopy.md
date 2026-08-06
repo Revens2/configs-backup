@@ -17,4 +17,3 @@ A natural and grounded theme featuring earth tones inspired by dense forest envi
 ## Best Used For
 
 Environmental presentations, sustainability reports, outdoor brands, wellness content, organic products.
-

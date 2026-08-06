@@ -321,4 +321,3 @@ TVA non déductible si la facture ne comporte pas les mentions obligatoires.
 | Acompte 1 | 15-24 juillet |
 | Acompte 2 | 15-24 décembre |
 | CA12 annuelle | 2ème jour ouvré après le 1er mai |
-

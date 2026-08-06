@@ -213,4 +213,3 @@ def get_cip_brief(brand_name, industry_query, style_query=None):
         "materials": style.get("Materials", ""),
         "finishes": style.get("Finishes", "")
     }
-

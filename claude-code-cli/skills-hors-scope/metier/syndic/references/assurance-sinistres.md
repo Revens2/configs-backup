@@ -142,4 +142,3 @@ Tous les 3 ans minimum. Préparer un comparatif :
 | Plafond RC | | | |
 | Valeur reconstruction | | | |
 | Assistance 24h | | | |
-

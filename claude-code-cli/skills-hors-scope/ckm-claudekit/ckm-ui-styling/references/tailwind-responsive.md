@@ -380,4 +380,3 @@ Use 2-3 breakpoints per element for maintainability:
 - [ ] Check text readability at all sizes
 - [ ] Verify navigation works on mobile
 - [ ] Test with browser zoom
-

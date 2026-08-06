@@ -416,4 +416,3 @@ Pour les revenus en devise étrangère (USD, GBP, etc.) :
 - La validation des montants de la liasse fiscale
 - La signature et le dépôt effectif (Infogreffe, impots.gouv.fr)
 - Le télépaiement de l'IS
-

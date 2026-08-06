@@ -179,4 +179,3 @@ Fait à {{lieu_signature}}, le {{date_signature}}, en {{nb_exemplaires}} exempla
 ⚠️ **CE DOCUMENT EST UN PROJET DE TRAVAIL.**
 Il ne constitue pas un acte authentique. Seul un notaire en exercice peut instrumenter la vente.
 Les parties sont invitées à faire vérifier ce document par leur notaire avant signature.
-
