@@ -54,3 +54,18 @@ Ils se gèrent **dans l'interface claude.ai**, pas sur le disque. Levier local r
 3. `anthropic-skills` (Desktop) double `docx`, `pdf`, `pptx`, `xlsx`, `caveman`, `skill-creator`.
    Ces skills ont été sortis du scope utilisateur en phase 2.3 : côté Desktop ils restent servis par
    le plugin, côté CLI ils sont dans `~/.claude/skills-hors-scope/`. **Asymétrie assumée et connue.**
+
+## Sous-agents : rien de spécifique à Desktop
+
+Claude Desktop n'a **pas** de répertoire d'agents propre. `claude-code-desktop/` ne contient que
+des JSON (`claude_desktop_config.json`, `config.json`, `Preferences`, `window-state.json`,
+`cowork-enabled-cli-ops.json`) : aucun format de sous-agent Markdown n'y est chargé.
+
+Les sous-agents sont définis une seule fois dans `~/.claude/agents/` et servis aux deux runtimes.
+Ajouter un `claude-code-desktop/agents/` serait inventer un schéma qui n'existe pas — à ne pas
+faire. C'est le cas de `github-code-review` (2026-08-12) : déployé en CLI, OpenCode et Antigravity,
+rien côté Desktop, volontairement.
+
+`code-review-graph` expose bien un serveur MCP (`serve --repo <path>`), qui pourrait un jour être
+déclaré dans `mcpServers` des deux fichiers de config. Non fait : ce serait une intégration MCP,
+pas un sous-agent, et elle devrait alors être posée **en double** (règle ci-dessus).

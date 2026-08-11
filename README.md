@@ -11,7 +11,7 @@ configs-backup/
 ├── antigravity/             # Configurations Antigravity CLI
 │   ├── skills/              # Skills personnalisés & builtin (babysit, graphify, deploy, etc.)
 │   ├── hooks/               # Configurations des hooks Antigravity
-│   ├── subagents/           # Prompts & définitions des sous-agents
+│   ├── agents/              # Prompts & définitions des sous-agents (planificateur, github-code-review)
 │   ├── gemini.md            # Regles d'instructions globales GEMINI.md
 │   ├── config.json          # Configuration principale Antigravity
 │   ├── mcp_config.json      # Serveurs & outils MCP
@@ -19,7 +19,7 @@ configs-backup/
 │   ├── plugins/             # Plugins configurés
 │   └── sidecars/            # Configurations sidecars
 ├── claude-code-cli/         # Configurations Claude Code CLI
-│   ├── agents/              # Sous-agents CLI
+│   ├── agents/              # Sous-agents CLI (dont github-code-review)
 │   ├── commands/            # Custom slash commands CLI
 │   ├── hooks/               # Hooks d'événement CLI
 │   ├── rules/               # Règles d'instructions persistent
@@ -36,7 +36,7 @@ configs-backup/
 │   ├── window-state.json    # Layout & état de fenêtre Desktop
 │   └── cowork-enabled-cli-ops.json # Permissions inter-processus Desktop
 ├── opencode/                # Configurations Open Code
-│   ├── agents/              # Subagents Open Code (triage, web-researcher, obsidian)
+│   ├── agents/              # Subagents Open Code (triage, web-researcher, obsidian, github-code-review)
 │   ├── plugins/             # Plugins TypeScript (rtk.ts)
 │   ├── skills/              # Skills Open Code (caveman)
 │   ├── opencode.jsonc       # Options principales Open Code
