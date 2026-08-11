@@ -125,3 +125,11 @@ ne jamais supprimer une entrée, sous peine de rejouer le même échec)_
 ## Erreurs rencontrées
 
 - `Permission to use Bash ... has been denied` — commande combinant `mkdir -p` et `rm -rf` sur le scratchpad. Cause : le `rm -rf` déclenche le refus. Parade : cloner sans pré-nettoyage. Non rejoué.
+
+### Clôture — 2026-08-12
+- [x] `~\.claude\CLAUDE.md` et `C:\Users\Juliann\CLAUDE.md` synchronisés depuis le dépôt. **Piège rencontré** : les fichiers vivants sont en **LF**, ceux du dépôt en **CRLF** — un `cp` brut aurait réécrit 289 lignes pour rien. Conversion LF appliquée à la copie ; diff final = **8 ajouts, 0 suppression**, marqueurs `CODEGRAPH_START/END` intacts. Même correction appliquée rétroactivement à `~\.gemini\GEMINI.md`, `~\gemini.md` et `~\.config\opencode\AGENTS.md`, passés en CRLF à tort au tour précédent.
+- [x] Sauvegardes `.bak.20260812-001` prises avant écrasement.
+- [x] `git push origin main` → `c929ed3..ffd431c`.
+- [x] Agent confirmé **chargé par le harness** : `github-code-review` apparaît dans les types de sous-agents disponibles.
+
+**Mission close.** Aucune tâche restante.
