@@ -1,6 +1,7 @@
 ---
 name: planificateur
 description: Subagent d'exploration, de cartographie de la codebase, de conception de stratégie technique et de génération du fichier plan.md et progress.md. À utiliser au démarrage d'une tâche complexe, refactoring ou nouvelle fonctionnalité.
+model: claude-opus-5
 ---
 
 # SYSTEM PROMPT — SUBAGENT DE PLANIFICATION

@@ -57,12 +57,39 @@ When a plugin is discovered and enabled:
     *   **Rules** in `plugins/<name>/rules/` are merged into the active rule
         set.
 
-## Enabling Plugins
+## Registering Plugins
 
 Plugins can be discovered automatically if placed in standard customization
-roots, or they can be explicitly registered and enabled using `plugins.json`.
+roots, or they can be explicitly registered using `plugins.json`.
 
 *   See the [JSON Configurations Guide](./json_configs.md) for details on how to
     use `plugins.json` to enable specific plugins or inherit them from shared
     paths.
 
+## Turning Plugins On and Off
+
+Most discovered plugins are **enabled by default**; a plugin can ship switched
+off by declaring `"disabled": true` in its `plugin.json`, and some built-in ones
+do. Whether a plugin is active is recorded in your `config.json`, under a
+`plugins` map keyed by the plugin's **directory** name:
+
+```json
+{
+  "plugins": {
+    "my-plugin": { "enabled": false }
+  }
+}
+```
+
+You can change the setting from the plugin section of the settings UI, or from
+the CLI's `plugin enable` / `plugin disable` subcommands, both of which write
+this entry.
+
+`config.json` wins wherever it has an entry, so your choice always beats what
+the plugin declares. A plugin with no entry falls back to its `plugin.json`
+declaration, which is how a plugin that ships disabled stays off until you turn
+it on. Antigravity never records your preference inside the plugin itself, so
+your choice survives reinstalling or updating the plugin.
+
+A disabled plugin still appears in the plugin list so you can turn it back on,
+but none of its bundled customizations are loaded.

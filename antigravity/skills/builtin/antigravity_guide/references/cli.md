@@ -39,4 +39,3 @@ authoritative, up-to-date information.
 The CLI is configured via **`~/.gemini/antigravity-cli/settings.json`**. For the
 full list of settings keys, types, and defaults, fetch the live docs:
 `https://antigravity.google/docs/cli/reference`
-

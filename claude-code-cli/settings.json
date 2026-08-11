@@ -1,6 +1,15 @@
 {
   "permissions": {
     "allow": [
+      "mcp__codegraph",
+      "mcp__github",
+      "Bash(rtk *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(ls *)",
+      "Bash(codegraph *)",
+      "Bash(graphify *)",
       "mcp__codegraph__codegraph_query",
       "mcp__codegraph__codegraph_search",
       "mcp__codegraph__codegraph_deep_query",
@@ -48,13 +57,21 @@
       "mcp__codegraph__codegraph_find_uninitialized",
       "mcp__codegraph__codegraph_reaching_defs"
     ],
-    "deny": [],
-    "defaultMode": "default"
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(curl * | sh)",
+      "Bash(curl * | bash)",
+      "Bash(* | bash)",
+      "Bash(* | sh)",
+      "Read(./.credentials.json)",
+      "Read(**/.env)",
+      "Read(**/id_rsa*)",
+      "Read(**/*.ssh)"
+    ],
+    "defaultMode": "acceptEdits"
   },
-  "model": "haiku",
+  "model": "opus",
   "skillOverrides": {
-    "template-skill": "off",
-    "notebooklm-py": "off",
     "brand-guidelines": "off",
     "canvas-design": "off",
     "ckm-banner-design": "off",
@@ -63,51 +80,32 @@
     "ckm-design-system": "off",
     "ckm-slides": "off",
     "ckm-ui-styling": "off",
-    "frontend-design": "off",
-    "make-interfaces-feel-better": "off",
-    "theme-factory": "off",
     "commissaire-aux-comptes": "off",
     "comptable": "off",
     "controleur-fiscal": "off",
     "fiscaliste": "off",
+    "frontend-design": "off",
+    "make-interfaces-feel-better": "off",
     "notaire": "off",
-    "syndic": "off"
+    "notebooklm-py": "off",
+    "syndic": "off",
+    "template-skill": "off",
+    "theme-factory": "off"
   },
+  "deniedMcpServers": [],
   "hooks": {
-    "SessionStart": [
+    "PostToolUse": [
       {
+        "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
-            "command": "node C:/Users/Juliann/.claude/sync-mcp.js"
-          },
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/auto-graph-setup.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "startup|resume|compact",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node C:/Users/Juliann/.claude/hooks/state-restore.mjs"
+            "command": "bash C:/Users/Juliann/.claude/hooks/post-tool-use.sh"
           }
         ]
       }
     ],
     "PreCompact": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node C:/Users/Juliann/.claude/hooks/state-save.mjs"
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
       {
         "hooks": [
           {
@@ -123,16 +121,58 @@
         "hooks": [
           {
             "type": "command",
+            "command": "node C:/Users/Juliann/.claude/hooks/guard-no-kill-agents.js"
+          },
+          {
+            "type": "command",
             "command": "rtk hook claude"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/Juliann/.claude/hooks/state-save.mjs"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/Juliann/.claude/sync-mcp.js"
+          },
+          {
+            "type": "command",
+            "command": "bash C:/Users/Juliann/.claude/hooks/auto-graph-setup.sh"
+          },
+          {
+            "type": "command",
+            "command": "node C:/Users/Juliann/.claude/hooks/caveman-activate.js"
           }
         ]
       },
       {
-        "matcher": "PowerShell",
+        "matcher": "startup|resume|compact",
         "hooks": [
           {
             "type": "command",
-            "command": "rtk hook claude"
+            "command": "node C:/Users/Juliann/.claude/hooks/state-restore.mjs"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node C:/Users/Juliann/.claude/hooks/caveman-mode-tracker.js"
           }
         ]
       }
@@ -144,9 +184,6 @@
     "command": "\"C:\\Program Files\\nodejs\\node.exe\" \"C:\\Users\\Juliann\\AppData\\Local\\Programs\\multi-terms\\resources\\app.asar\\statusline-recorder.js\"",
     "padding": 0
   },
-  "enabledPlugins": {
-    "frontend-design@claude-plugins-official": true
-  },
   "effortLevel": "low",
   "autoUpdatesChannel": "latest",
   "skipDangerousModePermissionPrompt": true,
@@ -154,120 +191,11 @@
   "verbose": true,
   "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
-  "hooks_disabled": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/post-tool-use.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/post-tool-failure.sh"
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/pre-compact.sh"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write|Read|Grep|Glob|Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/pre-tool-use.sh"
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/session-end.sh"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/session-start.sh"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/stop.sh"
-          }
-        ]
-      }
-    ],
-    "SubagentStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/subagent-start.sh"
-          }
-        ]
-      }
-    ],
-    "TaskCompleted": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/task-completed.sh"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/prompt-submit.sh"
-          }
-        ]
-      }
-    ]
-  },
   "agents": {
     "overrides": {
       "browser_agent": {
         "enabled": true
       }
     }
-  },
-  "defaultMode": "bypassPermissions",
-  "deniedMcpServers": [
-    "Microsoft 365",
-    "MCP Obsidiann Juliann"
-  ]
+  }
 }

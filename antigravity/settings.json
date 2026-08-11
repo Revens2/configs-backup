@@ -1,15 +1,10 @@
 {
-  "hooks": {
-    "BeforeTool": [
-      {
-        "matcher": "run_shell_command",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "C:\\Users\\Juliann\\.gemini\\hooks\\rtk-hook-gemini.sh"
-          }
-        ]
-      }
-    ]
-  }
+  "enableTelemetry": false,
+  "model": "Gemini 3.6 Flash (High)",
+  "trustedWorkspaces": [
+    "C:\\Users\\Juliann",
+    "C:\\Users\\Juliann\\Downloads",
+    "G:\\Mon Drive\\VPS ETUDE",
+    "C:\\Tools"
+  ]
 }

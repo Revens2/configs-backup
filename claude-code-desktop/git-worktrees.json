@@ -52,11 +52,42 @@
 		"watchy-refonte-optimisation-f4c49c": {
 			"name": "watchy-refonte-optimisation-f4c49c",
 			"path": "C:\\Users\\Juliann\\Desktop\\Watchy\\.claude\\worktrees\\watchy-refonte-optimisation-f4c49c",
-			"leasedBy": "local_7f6c7188-f29c-4dde-abb6-216220361ebd",
+			"leasedBy": null,
 			"baseRepo": "C:\\Users\\Juliann\\Desktop\\Watchy",
 			"branch": "claude/watchy-refonte-optimisation-f4c49c",
 			"sourceBranch": "main",
-			"createdAt": 1785704668269
+			"createdAt": 1786204747183,
+			"pooledAt": 1786293412042
+		},
+		"suspicious-pascal-673137": {
+			"name": "suspicious-pascal-673137",
+			"path": "C:\\Users\\Juliann\\Desktop\\Watchy\\.claude\\worktrees\\suspicious-pascal-673137",
+			"leasedBy": "local_16fd898c-74f1-44a3-9e20-f32f3daad7f0",
+			"baseRepo": "C:\\Users\\Juliann\\Desktop\\Watchy",
+			"branch": "claude/suspicious-pascal-673137",
+			"sourceBranch": "main",
+			"createdAt": 1786110919689
+		}
+	},
+	"untrackedDirGc": {
+		"sightings": {},
+		"roots": {
+			"C:\\Users\\Juliann\\Desktop\\maxi_mistère\\.claude\\worktrees": 1786474834860,
+			"C:\\Users\\Juliann\\Desktop\\Watchy\\.claude\\worktrees": 1786474834860
+		},
+		"cwds": {
+			"C:\\Users\\Juliann\\Desktop\\maxi_mistère": 1786474834860,
+			"C:\\Users\\Juliann\\Desktop\\rgrg": 1786474834860,
+			"C:\\Users\\Juliann": 1786474834860,
+			"C:\\Users\\Juliann\\Desktop\\maxi_mistère\\.claude\\worktrees\\mystifying-clarke-48366d": 1786474834860,
+			"C:\\Users\\Juliann\\Desktop\\Watchy\\.claude\\worktrees\\watchy-refonte-optimisation-f4c49c": 1786474834860,
+			"C:\\Users\\Juliann\\Desktop\\maxi_mistère\\.claude\\worktrees\\rapport-problemes-6465e6": 1786474834860,
+			"C:\\Users\\Juliann\\Desktop\\maxi_mistère\\.claude\\worktrees\\numworks-reverse-engineering-8d5e22": 1786474834860,
+			"C:\\Users\\Juliann\\Desktop\\maxi_mistère\\.claude\\worktrees\\claude-md-graphify-auto-install-d6da76": 1786474834860,
+			"C:\\Users\\Juliann\\Desktop\\maxi_mistère\\.claude\\worktrees\\notebooklm-web-search-agent-4bb389": 1786474834860,
+			"G:\\Mon Drive\\VPS ETUDE": 1786474834860,
+			"C:\\Users\\Juliann\\Desktop\\Watchy\\.claude\\worktrees\\suspicious-pascal-673137": 1786474834860,
+			"C:\\Users\\Juliann\\Desktop\\Watchy": 1786474834860
 		}
 	}
 }
