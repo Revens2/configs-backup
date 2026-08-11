@@ -40,6 +40,7 @@ d'un sous-agent ne m'est pas visible → toujours relayer l'essentiel avant de c
 | Tâche brute, répétitive, lourde en tokens mais faible en raisonnement | `little-tasks` |
 | Administration Linux, Docker, PM2, durcissement, sauvegardes | `vps-sysadmin` |
 | Démarrage d'une tâche complexe, refactoring, nouvelle fonctionnalité ou étude d'architecture | `planificateur` |
+| Branche Git, Pull Request, pipeline CI/CD, revue de code (`git diff`, `gh pr ...`, workflow modifié) | `github-code-review` |
 
 
 Précisions :
@@ -53,6 +54,12 @@ Précisions :
 - **`triage-contexte`** — seul responsable du triage de logs. Au-delà de 500 Ko il délègue
   le filtrage brut à `agy` (`cat <fichier> | agy "STRICT: ..." > <sortie>`) puis ne lit que
   l'extrait.
+- **`github-code-review`** — revue adossée au graphe d'impact `code-review-graph`
+  (venv dédié `C:\Tools\crg-venv`, appelé par chemin absolu avec `PYTHONUTF8=1`). Il calcule
+  le rayon d'impact d'un diff, écrit un rapport à 5 sections dans le `progress.md` **du dépôt
+  analysé**, et ne poste jamais de commentaire de PR sans accord explicite dans le fil.
+  Il ne modifie pas le code relu ; `git push`, `gh pr merge` et `code-review-graph install`
+  lui sont interdits.
 - **`little-tasks`** — périmètre : conversion de formats (JSON↔YAML, cURL→`.env.example`,
   table MD↔JSON), mocks/fixtures (JSON, SQL, CSV), documentation passive (JSDoc, README sur
   code existant), scaffolding (`mkdir -p`/`touch`). Il délègue à `agy` et redirige vers un
@@ -195,6 +202,7 @@ selon `availableModels`, alors qu'un ID est stable.
 | `obsidian-context-retriever` | **`claude-sonnet-5`** | Gemini 3.6 Flash | Recherche sémantique + rédaction d'un brief. Volume modéré, jugement limité. |
 | `triage-contexte` | **`claude-sonnet-5`** | Gemini 3.6 Flash | Filtrage de gros volumes. Tâche mécanique, mais sonnet évite les contresens sur du log mal structuré. |
 | `little-tasks` | **`claude-sonnet-5`** | Gemini 3.6 Flash | Il ne rédige rien lui-même : il formule une commande `agy` et renvoie un chemin. |
+| `github-code-review` | **`claude-sonnet-5`** | Gemini 3.6 Flash | Tâche cadrée, format de sortie imposé, aucune action irréversible sans confirmation. Le jugement porte sur une sortie d'outil, pas sur une architecture à inventer. |
 
 Règle : **opus quand une erreur est irréversible ou quand le raisonnement est le produit ;
 sonnet partout ailleurs.** Ne pas monter le modèle d'un agent pour compenser un prompt vague

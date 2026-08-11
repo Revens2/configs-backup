@@ -106,3 +106,9 @@ Dès que l'utilisateur fait une demande concernant son vault Obsidian, ses notes
 ### 3. `obsidian-context-retriever` (Extraction & Mémoire du Vault Obsidian)
 - **Déclenchement** : Automatique sur tout doute d'infra/VPS/projet ou recherche dans le vault Obsidian.
 - **Rendu** : Retourne un brief de contexte structuré.
+
+### 4. `github-code-review` (Revue de code & rayon d'impact)
+- **Déclenchement** : Automatique dès qu'une tâche touche une branche Git, une Pull Request, un pipeline CI/CD ou une demande de revue de code (`git diff`, `gh pr ...`, workflow modifié).
+- **Méthode** : Extraction du diff (`gh pr diff` ou `git diff main...HEAD`), puis rayon d'impact via `code-review-graph` (venv `C:\Tools\crg-venv`, chemin absolu, `PYTHONUTF8=1`). Mode dégradé annoncé si l'outil est indisponible.
+- **Rendu** : Rapport append-only à 5 sections — Périmètre, Blast radius, Risques, Tests à lancer, Verdict — dans le `progress.md` du dépôt analysé, plus une synthèse d'une vingtaine de lignes.
+- **Garde-fou** : `gh pr comment` n'est jamais exécuté sans accord explicite de l'utilisateur dans le fil. `git push`, `gh pr merge` et `code-review-graph install` sont interdits ; l'agent ne modifie pas le code relu.

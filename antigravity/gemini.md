@@ -49,6 +49,19 @@ avant toute nouvelle tentative — le skill `vps-connect` automatise cette repri
   `codegraph init`. Les remettre à jour après toute fonctionnalité importante.
 
 <!-- AUTO_GRAPH_START -->
+## Revue de code, branches et PR
+
+Toute tâche touchant une branche Git, une Pull Request, un pipeline CI/CD ou une demande de
+revue passe par le sous-agent **`github-code-review`**, sans confirmation préalable. Il extrait
+le diff (`gh pr diff` ou `git diff main...HEAD`), calcule le rayon d'impact avec
+`code-review-graph` (venv `C:\Tools\crg-venv`, chemin absolu, `PYTHONUTF8=1`), et écrit un
+rapport à 5 sections — Périmètre, Blast radius, Risques, Tests à lancer, Verdict — en
+append-only dans le `progress.md` du dépôt analysé.
+
+Un commentaire de PR (`gh pr comment`) est une action sortante : il est proposé en entier et
+attend un accord explicite dans le fil. `git push`, `gh pr merge` et
+`code-review-graph install` sont interdits à cet agent.
+
 ## Navigation du code — CodeGraph & Graphify
 
 Ce projet est indexé par deux graphes. **Passe par eux avant `Grep`/`Glob`/lecture
@@ -73,4 +86,3 @@ se traite **d'abord comme une requête graphify** (skill `graphify`) :
 
 Réindexation : `codegraph index` et `graphify update .` (les deux sont incrémentaux).
 <!-- AUTO_GRAPH_END -->
-
