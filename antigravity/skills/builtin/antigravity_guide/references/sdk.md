@@ -92,4 +92,3 @@ config = LocalAgentConfig(capabilities=CapabilitiesConfig())
 async with Agent(config) as agent:
     await run_interactive_loop(agent)
 ```
-

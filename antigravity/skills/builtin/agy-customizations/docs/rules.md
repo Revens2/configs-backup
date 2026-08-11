@@ -25,4 +25,3 @@ support frontmatter and are always active for their directory scope.
     multiple paths (e.g., inherited from parent directories), it is only applied
     once per conversation.
 *   If a rule is defined in a plugin, it is loaded when the plugin is enabled.
-

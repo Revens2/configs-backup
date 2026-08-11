@@ -68,4 +68,3 @@ Provide clear, step-by-step instructions for the agent here.
 4.  **No Duplication**: Do not instruct the agent on general coding practices or
     things it already knows. Focus strictly on the unique procedures of your
     workflow.
-

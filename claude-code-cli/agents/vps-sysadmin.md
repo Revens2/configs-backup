@@ -1,6 +1,7 @@
 ---
 name: vps-sysadmin
 description: Administrateur système Linux & DevOps. À utiliser pour la gestion de l'OS (Ubuntu), le durcissement SSH, la sécurité UFW, fail2ban, les conteneurs Docker/Compose, les processus PM2 et les routines de maintenance/sauvegarde.
+model: claude-opus-5
 tools: Bash, Read, Write, Edit, Glob, Grep
 ---
 

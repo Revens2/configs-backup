@@ -74,4 +74,3 @@ The most powerful modality for complex, multi-step tasks.
 -   **Workspace-Scoped Customizations**: The IDE automatically discovers and
     respects configurations in the `<project-root>/.agents/` folder, loading
     project-specific rules, custom skills, and plugins.
-

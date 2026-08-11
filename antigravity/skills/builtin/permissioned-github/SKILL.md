@@ -22,6 +22,7 @@ To perform actions on GitHub:
 To perform branch operations (e.g., push):
 
 * Use the **git** command.
+* Git is supported over HTTPS. Do not use SSH.
 
 ## Asking for Permissions
 
@@ -49,10 +50,12 @@ resource_json has the following fields:
     - read
     - create
     - update: to comment, review, edit, close, reopen, etc.
-- branch: Mandatory branch name. Use '*' to indicate all branches.
+- contents: Optional repository contents (code, commit history, branches, tags, files).
+  Use '*' (the only valid value; reads authorize the whole repository).
   Supported actions:
     - read: to clone, pull, fetch, checkout, and to run `gh search commits`.
-      Always set `branch` to `*` for `read`.
+- branch: Optional branch name. Use '*' to indicate all branches.
+  Supported actions:
     - create: to push a new branch.
     - update: to push to an existing remote branch (including force-push).
     - delete: to delete a remote branch.
@@ -101,17 +104,19 @@ Permission: `git.update({"org": "myorg", "repo": "myrepo", "branch": "feature/my
 Command: `git push origin feature/my-feature` (first push of a branch that does not exist on the remote)
 Permission: `git.create({"org": "myorg", "repo": "myrepo", "branch": "feature/my-feature"})`
 
-### Example 7: Fetching all branches
+### Example 7: Fetching a Repository
 
 Command: `git fetch --all`
-Permission: `git.read({"org": "myorg", "repo": "myrepo", "branch": "*"})`
+Permission: `git.read({"org": "myorg", "repo": "myrepo", "contents": "*"})`
 
-*Note: `read` cannot be scoped to a single branch; `branch` must be `*`.*
+*Note: `read` authorizes the whole repository and cannot be scoped to a branch; `contents` must be `*`.*
 
 ### Example 8: Cloning a Repository
 
 Command: `git clone https://github.com/myorg/myrepo.git`
-Permission: `git.read({"org": "myorg", "repo": "myrepo", "branch": "*"})`
+Permission: `git.read({"org": "myorg", "repo": "myrepo", "contents": "*"})`
+
+*Note: `read` authorizes the whole repository and cannot be scoped to a branch; `contents` must be `*`.*
 
 ### Example 9: Deleting a Branch
 
@@ -130,7 +135,7 @@ Permission: `gh.read({"org": "myorg", "repo": "myrepo", "pr": "*"})`
 ### Example 11: Searching Commits
 
 Command: `gh search commits -R myorg/myrepo --author alice`
-Permission: `git.read({"org": "myorg", "repo": "myrepo", "branch": "*"})`
+Permission: `git.read({"org": "myorg", "repo": "myrepo", "contents": "*"})`
 
 *Note: commit search reuses the **git** read permission, so request a `git.*` grant, not a `gh.*` grant.*
 
@@ -148,4 +153,3 @@ When you have determined that you need permisison:
 3. Run the original command that was denied.
 
 **Never try to pipe or redirect output of the gh command, it will not work in your environment**
-

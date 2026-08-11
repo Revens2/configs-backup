@@ -323,4 +323,3 @@ Use to prevent the agent from stopping if goals are not met.
 
 *   Only `type: "command"` is supported (no HTTP or prompt hooks yet).
 *   Hooks run synchronously and block the agent loop (no async execution).
-

@@ -10,11 +10,7 @@
       "explore": "deny"
     }
   },
-  // La clé d'un modèle est l'id envoyé à l'API. La gateway :4002 expose
-  // `qwen-3.6-35b-moe` ; `Qwen 3.6 35b MoE` n'existe que sur :8000 (llama.cpp
-  // direct). L'ancien id ne correspondait à rien sur :4002 : le modèle
-  // répondait vide. Vérifié via GET :4002/v1/models.
-  "model": "vps-ia/qwen-3.6-35b-moe",
+  "model": "vps-ia/Qwen 3.6 35b MoE",
   "provider": {
     "vps-ia": {
       "npm": "@ai-sdk/openai-compatible",
@@ -23,7 +19,7 @@
         "baseURL": "http://100.99.75.104:4002/v1"
       },
       "models": {
-        "qwen-3.6-35b-moe": {
+        "Qwen 3.6 35b MoE": {
           "name": "Qwen 3.6 35B MoE (96k Ctx)",
           "limit": {
             "context": 98304,
