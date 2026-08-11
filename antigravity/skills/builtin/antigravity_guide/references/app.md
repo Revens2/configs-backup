@@ -85,4 +85,3 @@ take priority over their global counterparts when a project is active:
 
 For all other questions, search the live documentation at
 `https://antigravity.google/docs`.
-

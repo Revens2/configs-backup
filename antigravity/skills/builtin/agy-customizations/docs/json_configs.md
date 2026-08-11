@@ -100,4 +100,3 @@ To share customizations across a team:
 3.  **Automatic Activation**: When other team members clone the repository and
     open it, the agent will automatically discover `.agents/skills.json` and
     load the shared skills.
-

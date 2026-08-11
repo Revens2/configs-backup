@@ -1,17 +1,14 @@
-<<<<<<< HEAD
 # Logs & temporary files
 *.log
 *.tmp
 *.bak
+*.bak.*
 *.swp
 .DS_Store
 Thumbs.db
-=======
 dream-report.md
 .turns.md
-dream-run.log
-dream-run.log.1
->>>>>>> 2cb188f (dream: gitignore transcript scratch and run log [setup, 2026-08-04])
+dream-run.log*
 
 # Caches and session dumps
 cache/

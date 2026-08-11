@@ -86,8 +86,10 @@
         "C:\\Users\\Juliann\\Desktop\\Watchy": "bypassPermissions",
         "C:\\Users\\Juliann": "bypassPermissions"
       },
-      "cc-landing-worktree-enabled": true,
-      "epitaxy-pr-create-mode": "create"
+      "cc-landing-worktree-enabled": false,
+      "epitaxy-pr-create-mode": "create",
+      "epitaxy-transcript-links-in-preview": false,
+      "epitaxy-transcript-links-chooser-seen": true
     }
   }
 }

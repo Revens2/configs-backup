@@ -84,4 +84,3 @@ Once an MCP server is configured and successfully connected:
     conflicts.
 *   You can inspect active MCP servers and their tools in the UI by navigating
     to **Additional Options (...) > MCP Servers**.
-
