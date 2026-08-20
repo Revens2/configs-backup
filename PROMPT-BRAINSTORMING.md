@@ -31,10 +31,10 @@ Avant toute recommandation d'outillage, classe la tâche. **L'outillage n'est ja
 
 | Type | Signaux | Outillage imposé |
 |---|---|---|
-| **CODE** | dépôt Git, refactor, feature, dette technique, PR, tests | CodeGraph + Graphify **obligatoires** (voir §5) |
+| **CODE** | dépôt Git, refactor, feature, dette technique, PR, tests | Sous-agent `decouverte` **obligatoire** (voir §5) |
 | **INFRA / LINUX** | VPS, systemd, Docker, UFW, DNS, Tailscale, réseau, disque, logs | **Ni CodeGraph ni Graphify.** Reconnaissance système (§6) + `vps-sysadmin` |
-| **STACK IA** | inférence, quantization, contexte, routing LLM, agents, MCP, prompts | Mesure avant/après (§7). Graphes seulement si un dépôt est modifié |
-| **HYBRIDE** | code d'un projet déployé sur un VPS | Graphes pour la partie dépôt, recon système pour la partie machine. Les deux, chacun sur son périmètre |
+| **STACK IA** | inférence, quantization, contexte, routing LLM, agents, MCP, prompts | Mesure avant/après (§7). `decouverte` seulement si un dépôt est modifié |
+| **HYBRIDE** | code d'un projet déployé sur un VPS | `decouverte` pour la partie dépôt, `vps-sysadmin` pour la partie machine. Les deux, chacun sur son périmètre |
 
 Règle : **imposer CodeGraph/Graphify sur une tâche purement système est une erreur** — ces
 graphes indexent un dépôt, pas une machine. Sur du Linux pur, les sources de vérité sont la
@@ -73,15 +73,25 @@ mémoire auto, le Vault Obsidian, et l'état réel de la machine.
 3. **Outillage conditionnel** — la section outillage du prompt généré est celle de la typologie (§2), pas un bloc copié-collé.
 
 **Niveau 1 — Externalisation & subagents**
-`progress.md` à la racine du projet, maintenu en continu. Délégation systématique selon périmètre :
-- `planificateur` — exploration amont, stratégie, rédaction `plan.md` + `progress.md`.
-- `triage-contexte` — lecture/filtrage/résumé de tout fichier ou log > ~1 000 lignes ou > ~500 Ko.
-- `web-researcher` — veille, doc d'API, état de l'art (WebSearch + WebFetch uniquement).
-- `obsidian-context-retriever` — lecture/écriture du Vault (mémoire persistante infra et projets).
-- `little-tasks` — conversions, mocks/fixtures, scaffolding passif via agy.
-- `github-code-review` — PR, diff Git, rayon d'impact via `code-review-graph`.
-- `vps-sysadmin` — Linux, Docker, UFW, gestion des VPS.
-- `seo-expert` — audit technique SEO, Schema.org, cocon sémantique.
+`progress.md` à la racine du projet, maintenu en continu. **L'agent principal n'explore pas, ne lit
+pas de gros volumes et ne cherche pas sur le web : il délègue et il exécute.** Chaque sous-agent
+absorbe son volume et ne rend qu'une synthèse — le transcript ne remonte jamais.
+
+| Sous-agent | Périmètre exclusif | Déclencheur |
+|---|---|---|
+| `decouverte` | **Propriétaire unique de CodeGraph + Graphify** : génération, indexation, réindexation, interrogation. Rend points d'entrée, architecture, rayon d'impact. Lecture seule, n'écrit ni `plan.md` ni `progress.md` | Toute question « où / qui appelle / qu'est-ce qui casse » sur un dépôt |
+| `planificateur` | Stratégie technique et rédaction de `plan.md` + `progress.md`. Délègue sa cartographie à `decouverte` | Tâche complexe, refactor, nouvelle fonctionnalité |
+| `triage-contexte` | Lecture, filtrage et résumé de tout fichier ou log volumineux | > ~1 000 lignes ou > ~500 Ko. **Jamais** sur une sortie de terminal (RTK la compresse déjà à la source, et uniquement sur l'outil Bash) |
+| `web-researcher` | Veille, doc d'API, état de l'art — WebSearch + WebFetch uniquement, aucun MCP externe, pas de corpus persistant | Information absente du dépôt et du Vault |
+| `obsidian-context-retriever` | Lecture/écriture du Vault : mémoire persistante infra et projets | Recherche d'un invariant connu, ou consignation d'une découverte structurelle |
+| `vps-sysadmin` | Linux, systemd, Docker, UFW, réseau, VPS. **Seule source d'état machine** | Toute tâche INFRA — jamais les graphes de code |
+| `github-code-review` | PR, diff Git, rayon d'impact via `code-review-graph`, rapport 5 sections en append-only | Branche, PR, pipeline CI/CD, demande de revue — sans confirmation préalable |
+| `little-tasks` | Conversions de formats, mocks/fixtures, scaffolding passif via agy | Travail mécanique sans enjeu de conception |
+| `seo-expert` | Audit technique SEO, Schema.org, cocon sémantique | Tâche SEO |
+
+**Chaînage type d'une tâche de code :** `decouverte` (cartographie) → `planificateur`
+(`plan.md` + `progress.md`) → agent d'exécution en contexte vierge → `github-code-review` avant PR.
+`decouverte` est aussi appelable seul, sans planification, pour une simple question de localisation.
 
 **Niveau 2 — Récitation & ancrage d'attention (append-only)**
 - **Étape 0** obligatoire : sérialisation du plan dans `progress.md` (ou `TodoWrite`).
@@ -101,15 +111,26 @@ mémoire auto, le Vault Obsidian, et l'état réel de la machine.
 
 À insérer **uniquement** si la tâche touche un dépôt.
 
-- **CodeGraph** (`.codegraph/`) via `codegraph_context`, `codegraph_callers`, `codegraph_impact`,
-  `codegraph_dependencies` — symboles, appelants, dépendances, blast radius. Outils MCP **différés**
-  côté Claude Code : les charger d'abord en une seule requête `ToolSearch`
-  (`select:mcp__codegraph__codegraph_context,...`), sinon `InputValidationError` — ce n'est pas une panne.
-- **Graphify** (`graphify-out/graph.json`) via `graphify query`, `explain`, `path`, `god-nodes`,
-  `affected` — architecture, rôle d'un fichier, docs **et** code, communautés, hubs.
-- **Ordre :** `graphify query` pour situer (le quoi/pourquoi, docs comprises), puis `codegraph_context`
-  pour descendre au symbole (le où exact). Les deux, jamais un seul, sur toute tâche > 3 étapes.
-- Réindexation incrémentale : `codegraph index` et `graphify update .`.
+**L'agent principal n'interroge jamais les graphes lui-même.** CodeGraph et Graphify appartiennent
+au sous-agent **`decouverte`**, qui en est le propriétaire exclusif : chargement des outils MCP
+différés, génération des graphes s'ils n'existent pas (`codegraph init && codegraph index`,
+`graphify extract . --code-only`), réindexation incrémentale (`codegraph index`, `graphify update .`),
+interrogation, et rendu d'un rapport compact. Le transcript d'exploration ne remonte jamais dans le
+contexte principal — c'est tout l'intérêt.
+
+Rappel du fonctionnement interne, pour savoir quoi lui demander :
+- **CodeGraph** (`.codegraph/`) — `codegraph_context`, `codegraph_callers`, `codegraph_dependencies`,
+  `codegraph_impact` : symboles, appelants, dépendances, blast radius. Outils MCP **différés** côté
+  Claude Code, à charger en une seule requête `ToolSearch` ; un `InputValidationError` signifie
+  schéma non chargé, pas une panne.
+- **Graphify** (`graphify-out/graph.json`) — `graphify query`, `explain`, `path`, `god-nodes`,
+  `affected` : architecture, rôle d'un fichier, docs **et** code, communautés, hubs.
+- **Ordre imposé :** `graphify query` pour situer (le quoi/pourquoi, docs comprises), puis
+  `codegraph_context` pour descendre au symbole (le où exact). Les deux, jamais un seul, sur toute
+  tâche > 3 étapes. `Grep`/`Glob` uniquement pour confirmer une hypothèse déjà formée par les graphes.
+
+Formuler la délégation comme une **question de périmètre** (« où est géré X, qui l'appelle, qu'est-ce
+qui casse si je le change »), pas comme « explore le projet ».
 
 ---
 
@@ -204,10 +225,13 @@ tourne.
 Ne jamais inclure le bloc CodeGraph/Graphify sur une tâche purement système.]
 
 ## NIVEAU 1 — SOUS-SYSTÈMES & DÉLÉGATION
-- Planification : l'agent principal N'EXPLORE PAS. Il lance immédiatement `planificateur`, qui
-  explore, rédige `plan.md` ET `progress.md` à la racine du projet, puis renvoie une synthèse.
-  L'agent d'exécution lit ces deux fichiers et rien d'autre — le transcript d'exploration ne
-  remonte jamais dans le contexte principal.
+- Découverte : l'agent principal N'EXPLORE PAS et n'interroge JAMAIS CodeGraph/Graphify lui-même.
+  Le sous-agent `decouverte` en est le propriétaire exclusif — il génère les graphes s'ils sont
+  absents, les réindexe, les interroge, et rend un rapport compact (points d'entrée, architecture,
+  rayon d'impact, zones d'ombre).
+- Planification : `planificateur` consomme ce rapport, rédige `plan.md` ET `progress.md` à la racine
+  du projet, puis renvoie une synthèse. L'agent d'exécution lit ces deux fichiers et rien d'autre —
+  le transcript d'exploration ne remonte jamais dans le contexte principal.
 - `progress.md` à la racine du projet, jamais dans le répertoire personnel.
 - Triage : fichiers > 1 000 lignes / 500 Ko → `triage-contexte`. Jamais pour une sortie de
   terminal : RTK la compresse déjà à la source, et uniquement sur l'outil Bash.
