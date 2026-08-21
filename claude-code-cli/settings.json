@@ -4,6 +4,8 @@
       "mcp__codegraph",
       "mcp__github",
       "Bash(rtk *)",
+      "Bash(trash *)",
+      "Bash(powershell -NoProfile -File C:/Users/Juliann/.claude/hooks/trash.ps1*)",
       "Bash(git status*)",
       "Bash(git diff*)",
       "Bash(git log*)",
@@ -59,6 +61,12 @@
     ],
     "deny": [
       "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(rm -r *)",
+      "Bash(del /s *)",
+      "Bash(rmdir /s *)",
+      "Bash(Remove-Item *)",
+      "Bash(shred *)",
       "Bash(curl * | sh)",
       "Bash(curl * | bash)",
       "Bash(* | bash)",
@@ -122,6 +130,10 @@
           {
             "type": "command",
             "command": "node C:/Users/Juliann/.claude/hooks/guard-no-kill-agents.js"
+          },
+          {
+            "type": "command",
+            "command": "node C:/Users/Juliann/.claude/hooks/guard-trash-instead-of-rm.js"
           },
           {
             "type": "command",
