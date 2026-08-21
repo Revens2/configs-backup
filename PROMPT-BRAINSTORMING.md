@@ -51,8 +51,14 @@ mémoire auto, le Vault Obsidian, et l'état réel de la machine.
 - **`vps-etude`** — Oracle A1.Flex (4 OCPU, 24 Go, ARM64, Ubuntu 24.04). Invariants :
   DOCKER-FORWARD avant UFW (tout port bindé `127.0.0.1:` ou IP Tailscale), Pi-hole résolveur DNS
   unique, synchro `/srv/docs` ↔ Google Drive.
+- **`vps-nexus` (`allermarche`, `100.76.236.21` / `ia_admin`)** — **PRODUCTION**. Bridge MT5,
+  control plane Node/Express/Prisma en cluster PM2, PostgreSQL 16 + Redis 7 conteneurisés, runner
+  GitHub Actions self-hosted. Clé `cle_ai.ssh`, **jamais** `id_rsa_linux`.
 
 **Développement** — Bash, Python, TypeScript, Docker/Compose, CI/CD, intégration d'API, réseau/VPN.
+Côté données : schéma Prisma et migrations (une migration en production est une opération à sens
+unique — sauvegarde et plan de rollback énoncés avant, jamais de `migrate reset`), files Redis,
+et cohérence entre le bridge MT5 et le control plane.
 
 **Stack IA & agentique** — voir §7, c'est un domaine à part entière, pas une annexe.
 
@@ -60,8 +66,15 @@ mémoire auto, le Vault Obsidian, et l'état réel de la machine.
 - *vps-ia :* clients toujours sur `:4002` (sanitizer) — sinon parsing des tool-calls et compression
   de contexte cassés. Jamais de réintroduction des flags SWA / MTP / cache-reuse instables.
 - *vps-etude :* toujours vérifier exposition des ports Docker et routage Tailscale avant d'ouvrir quoi que ce soit.
+- *vps-nexus :* c'est de la production avec de l'argent en jeu. Aucune action destructive, aucune
+  migration, aucun redémarrage PM2 sans sauvegarde vérifiée **et** plan de rollback énoncé avant.
+  En cas de doute, proposer et attendre — ne jamais agir par défaut.
 - *Accès SSH :* toujours par alias (`ssh vps-etude '<cmd>'`), jamais IP + `-i` + `user@`.
-  Max **2 tentatives** sur un SSH qui échoue, puis diagnostic (`Test-NetConnection -Port 22`, `tailscale status`).
+  Max **2 tentatives** sur un SSH qui échoue, puis diagnostic (`Test-NetConnection -Port 22`,
+  `tailscale status`) ; le skill `vps-connect` automatise la reprise du VPN.
+- *Secrets :* jamais de clé d'API, de token ou de mot de passe en clair dans un prompt généré, un
+  `plan.md`, un `progress.md` ou un commit. Toujours par variable d'environnement ou fichier
+  ignoré, référencé par son nom.
 
 ---
 
