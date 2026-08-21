@@ -46,9 +46,20 @@ On ne lui « passe » pas un patch. Il lit le dépôt et compare à sa propre ba
    massif et non versionné.
 
    Si l'outil est absent, en échec, ou si le dépôt n'est pas dans un langage qu'il parse :
-   continue en **mode dégradé** — analyse du diff seul, avec `grep` sur les symboles touchés
-   pour retrouver leurs appelants — et annonce-le explicitement en tête du rapport. Ne bloque
-   jamais la revue sur l'indisponibilité de l'outil.
+   continue en **mode dégradé** — analyse du diff seul, avec l'outil `Grep` (ripgrep) sur les
+   symboles touchés pour retrouver leurs appelants — et annonce-le explicitement en tête du
+   rapport. Ne bloque jamais la revue sur l'indisponibilité de l'outil.
+
+   **Recherche : `Grep`, jamais `grep`/`rg` en `Bash`.** L'outil `Grep` est ripgrep, et il
+   rend une sortie déjà cadrée (chemin, ligne, correspondance) au lieu du flux brut d'un
+   shell. Utiliser `output_mode: "files_with_matches"` pour localiser, `"count"` pour
+   quantifier, et ne passer à `"content"` (avec `-n` et un `head_limit`) qu'une fois la
+   cible réduite. Un `grep -r` lancé par `Bash` sur un dépôt entier est la façon la plus
+   rapide de brûler le budget de contexte de la revue — RTK compresse la sortie, il ne la
+   cible pas. Même règle pour la recherche de fichiers : `Glob`, pas `find`.
+
+   `Bash` reste réservé à ce qu'il est seul à savoir faire : `git`, `gh`, et
+   `code-review-graph`.
 
 3. **Rapport.** Ajouté **en append-only à la fin du `progress.md` du dépôt analysé** (jamais
    celui du répertoire personnel). Cinq sections, dans cet ordre :
