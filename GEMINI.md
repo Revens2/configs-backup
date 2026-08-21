@@ -40,6 +40,22 @@ Test-NetConnection -Port 22 <ip>; tailscale status
 Si Tailscale est inactif (`unexpected state: NoState`) ou si le SSH expire, relancer le VPN
 avant toute nouvelle tentative — le skill `vps-connect` automatise cette reprise.
 
+## Suppression de fichiers — corbeille obligatoire
+
+Ne jamais supprimer définitivement (`rm`, `rm -rf`, `del`, `rmdir /s`, `Remove-Item`,
+`shred`, `find -delete`). Toute suppression passe par la corbeille Windows :
+
+```powershell
+powershell -NoProfile -File C:/Users/Juliann/.claude/hooks/trash.ps1 "<chemin>"
+```
+
+Repli si la corbeille est indisponible : `%LOCALAPPDATA%\ia-trash\<horodatage>\`.
+Exceptions : fichiers temporaires (`/tmp`, `%TEMP%`), sous-commandes d'outils (`git rm`,
+`docker rm`), ou préfixe `TRASH_GUARD=off ` après accord explicite dans le fil.
+Application mécanique : hook PreToolUse `~/.claude/hooks/guard-trash-instead-of-rm.js`,
+`permissions.deny` de `settings.json`, plugin OpenCode `plugins/trash-guard.ts`,
+règle Antigravity `rules/suppression_via_trash.md`.
+
 ## Amorçage d'un projet
 
 À l'ouverture de travaux sur un projet, si l'élément manque, le créer sans demander :
