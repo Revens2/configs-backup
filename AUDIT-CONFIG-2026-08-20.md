@@ -231,3 +231,60 @@ raisons, jamais par « ça fait plus propre » : soit il **absorbe du volume** (
 `planificateur`, `test-runner`), soit il **confine un risque** (`vps-sysadmin`,
 `prisma-migrator`). Un agent qui ne fait ni l'un ni l'autre est un prompt de plus à maintenir
 et une source de dérive silencieuse.
+
+---
+
+## 7. Découper les sous-agents par couche (front / back / bdd) ?
+
+**Non — pas sous cette forme.** L'intuition est bonne, la ligne de coupe est mauvaise.
+
+### Pourquoi le découpage par couche casse
+
+**Une fonctionnalité traverse les couches ; un sous-agent, non.** « Ajouter un filtre à la
+watchlist » sur Watchy, c'est : `schema.prisma` → migration → route Fastify 5 → hook TanStack
+Query v5 → composant React. Trois agents de couche, c'est trois contextes isolés, trois
+briefs à écrire, et surtout **le contrat entre les couches n'habite nulle part** : la forme
+exacte de la réponse d'API existe dans la tête de l'agent back et dans celle de l'agent
+front, jamais dans un fichier. L'agent principal redevient un intégrateur qui re-dérive à la
+main ce que les trois viennent de décider séparément. Tu paies trois transcripts pour
+reconstruire une cohérence que tu avais gratuitement en restant seul.
+
+**Le livrable n'est pas plus petit que le travail.** C'est le critère du § 6, et un agent
+« qui gère tout le back » produit du code : tu reliras le diff. Même raison que le refus du
+sous-agent codeur générique au § 2 — le découpage par couche, c'est le sous-agent codeur en
+trois exemplaires.
+
+**Un périmètre par couche est un périmètre non borné.** Compare avec `triage-contexte`
+(« lis ce fichier, rends le signal ») ou `little-tasks` (4 micro-tâches énumérées) : le
+prompt tient parce que la tâche est finie. « Gérer le back » n'a pas de fin, donc le prompt
+devient vague, et ton propre `CLAUDE.md` dit ce qu'il faut en penser : *ne pas monter le
+modèle d'un agent pour compenser un prompt vague — corriger le prompt*.
+
+### Ce qu'il faut garder de l'idée
+
+Découper par **verbe**, pas par couche. Et en relisant ta demande, deux des trois y sont déjà :
+
+| Ton idée | Traduction en agent qui tient | Statut |
+|---|---|---|
+| **Front** avec MCP visuels + `impeccable` / `ui-ux-pro-max` | `ui-verifier` — il **constate**, il n'écrit pas : screenshot, DOM, contrastes, anti-patterns, et rend une liste de défauts avec sélecteur + capture. Livrable court, volume absorbé énorme (un DOM ou une capture ne remonte jamais dans le fil principal). Celui-là marche. | **À créer** |
+| **BDD** | C'est `prisma-migrator` (§ 3.3), déjà proposé. Il ne « gère pas la bdd », il encadre l'irréversible : diff de schéma, SQL lisible, dump vérifié, application. | **Déjà au plan** |
+| **Back** | Rien à isoler qui ne le soit déjà : l'écriture reste sur l'agent principal, la vérification part chez `test-runner` (§ 3.1), l'impact chez `github-code-review`. | **Ne pas créer** |
+
+Autrement dit ton découpage en trois devient : un agent de **constat visuel**, un agent de
+**migration**, et pas d'agent back — parce que le back est le seul des trois où il n'y a ni
+volume à absorber ni risque à confiner.
+
+### Notes pour `ui-verifier`
+
+- Modèle : `claude-sonnet-5`. Il décrit ce qu'il voit contre une grille ; il n'invente pas
+  de design.
+- Skills dans le frontmatter : `impeccable` (détecteurs, `detect-antipatterns`, contraste par
+  screenshot) — c'est là que se trouve la vraie valeur, pas dans un MCP.
+- **`ui-ux-pro-max` est actuellement dans `skills-hors-scope/front-ui/`, donc désactivée.**
+  La réactiver pour cet agent, ou renoncer à la citer.
+- MCP visuel : `browser_agent` est déjà activé dans `settings.json` (`agents.overrides`) —
+  commencer par lui plutôt que d'ajouter un serveur Playwright/Chrome DevTools de plus. Si un
+  MCP navigateur s'avère nécessaire, portée **projet**, jamais racine : ces serveurs sont
+  parmi les plus gros en nombre d'outils.
+- Interdit : modifier le CSS ou les composants. Il constate, l'agent principal corrige —
+  sinon on retombe sur l'agent front qui écrit, et sur le problème du § 2.

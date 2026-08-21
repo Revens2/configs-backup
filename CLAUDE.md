@@ -1,7 +1,7 @@
 # CLAUDE.md — répertoire personnel (`C:\Users\Juliann`)
 
 Spécifique à ce répertoire. Le comportement des agents (délégation, confinement MCP, RTK,
-stratégie de contexte, réplication `gemini.md`) est défini une seule fois dans
+stratégie de contexte, lien `CLAUDE.md`/`AGENTS.md`) est défini une seule fois dans
 `~/.claude/CLAUDE.md` — ne pas le dupliquer ici.
 
 ## Sources de vérité pour l'infrastructure
