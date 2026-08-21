@@ -1,24 +1,4 @@
 {
   "version": 2,
-  "plugins": {
-    "caveman@caveman": [
-      {
-        "scope": "user",
-        "installPath": "C:\\Users\\julia\\.claude\\plugins\\cache\\caveman\\caveman\\ef6050c5e184",
-        "version": "ef6050c5e184",
-        "installedAt": "2026-05-04T16:02:23.619Z",
-        "lastUpdated": "2026-05-04T16:02:23.619Z",
-        "gitCommitSha": "ef6050c5e1848b6880ff47c32ade1a608a64f85e"
-      }
-    ],
-    "frontend-design@claude-plugins-official": [
-      {
-        "scope": "user",
-        "installPath": "C:\\Users\\julia\\.claude\\plugins\\cache\\claude-plugins-official\\frontend-design\\unknown",
-        "version": "unknown",
-        "installedAt": "2026-07-01T22:14:19.920Z",
-        "lastUpdated": "2026-07-16T15:58:28.098Z"
-      }
-    ]
-  }
+  "plugins": {}
 }

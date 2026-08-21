@@ -281,17 +281,22 @@ sérialisent l'état vivant dans `~/.claude/state/<projet>/STATE.md` ; `SessionS
 `compact`. Garantie partielle assumée : la réinjection post-compaction n'est pas toujours
 traitée de façon fiable.
 
-## Réplication des fichiers d'instructions
+## Fichiers d'instructions — un seul fichier, deux noms
 
-Toute écriture d'un `CLAUDE.md` (création, réécriture, simple édition de section) est
-**répliquée à l'identique** dans le `gemini.md` du même répertoire, et réciproquement.
-Immédiatement, sans confirmation, dans la même réponse. Contenu identique — pas de résumé
-ni d'adaptation. Sauvegarder l'ancien fichier (`.bak.<timestamp>`) avant tout écrasement.
-Si un `AGENTS.md` existe, le signaler sans y toucher. Si le projet est déployé ailleurs
-(VPS, miroir), y propager les deux fichiers.
+`CLAUDE.md` et `AGENTS.md` sont **le même fichier**, reliés par un lien symbolique géré par
+`agy` CLI. Il n'y a donc plus rien à répliquer : écrire dans l'un écrit dans l'autre.
 
-Raison : je travaille aussi avec Gemini / Antigravity (`agy`) sur les mêmes projets, et
-Gemini ne lit que `gemini.md`. Deux fichiers divergents produisent des comportements
-arbitraires.
+Deux conséquences opérationnelles :
+
+- **Éditer en place, jamais réécrire.** Un outil qui remplace le fichier (écriture d'un
+  temporaire puis `rename`, `Copy-Item`, `>` de shell) casse le lien et rétablit deux
+  fichiers divergents — exactement l'état qu'on vient de supprimer. Utiliser `Edit`
+  (remplacement de chaîne en place). Après toute manipulation douteuse, vérifier :
+  `ls -l CLAUDE.md AGENTS.md` doit montrer le lien.
+- **Pas de `.bak` du fichier lié.** La sauvegarde, c'est Git. Un `.bak.<timestamp>` posé à
+  côté d'un symlink ne sauvegarde rien d'utile et encombre la racine du projet.
+
+Ne plus créer ni maintenir de `gemini.md` : les fichiers résiduels sont à supprimer au fil
+des projets, pas à mettre à jour.
 
 @RTK.md
