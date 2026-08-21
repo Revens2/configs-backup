@@ -182,3 +182,52 @@ d'infra retombe sur le vault — ce qui marche, mais rend la source n°1 décora
 
 Rappel de ta règle de Niveau 3 : `CLAUDE.md` se finalise **avant** de démarrer une session,
 jamais en cours — appliquer l'étape 5 hors session de travail.
+
+---
+
+## 6. Inventaire des sous-agents — utile ou non
+
+Revue des 7 agents existants, plus les 3 proposés. Le critère est unique : **le livrable
+est-il plus petit que le travail ?** Un sous-agent ne gagne du contexte que s'il absorbe
+plus de volume qu'il n'en rend.
+
+### Existants — à garder
+
+| Agent | Verdict | Pourquoi |
+|---|---|---|
+| `planificateur` (opus) | **Garder — pièce maîtresse** | Absorbe toute l'exploration de codebase et ne rend que `plan.md` + `progress.md`. Ratio volume/livrable le meilleur de la liste. C'est aussi la charnière entre le brainstorm Gemini et l'exécution : sans lui, le plan se dilue dans le fil. |
+| `triage-contexte` (sonnet) | **Garder** | Un dump de 500 Ko contre 30 lignes de signal. La délégation à `agy` au-delà du seuil pousse le ratio encore plus loin — l'agent principal ne paie littéralement rien. |
+| `vps-sysadmin` (opus) | **Garder** | Le gain n'est pas le contexte, c'est le **confinement du risque** : UFW, sshd, Docker, PM2 sur trois VPS dont un en prod. Un agent séparé avec un prompt qui porte les règles d'or (ports Docker jamais sur `0.0.0.0`) vaut mieux qu'une règle noyée dans un `CLAUDE.md` de 250 lignes. |
+| `obsidian-context-retriever` (sonnet) | **Garder** | Seul point d'entrée du vault, et seul consommateur de `mcp__obsidian-semantic__*`. Rend un brief, jamais un dump. |
+| `web-researcher` (sonnet) | **Garder tel quel** | Recherche ouverte, sourcée, sans MCP — c'est une contrainte volontaire et elle est saine. **Ne pas** y greffer Context7 : la veille et la doc de dépendance versionnée sont deux métiers, et les mélanger produit un agent qui fait mal les deux. |
+| `github-code-review` (sonnet) | **Garder** | Le rayon d'impact `code-review-graph` est verbeux en JSON et le rapport final tient en 5 sections. Corrigé ce jour : recherche par `Grep`/ripgrep, `Bash` réservé à `git`/`gh`/`code-review-graph`. |
+
+### Existant — à surveiller
+
+| Agent | Verdict | Pourquoi |
+|---|---|---|
+| `little-tasks` (sonnet) | **Garder, mais c'est le plus fragile** | Le périmètre (conversion de formats, mocks, JSDoc, scaffolding) est étroit et le livrable est un chemin de fichier — excellent sur le papier. Mais il dépend entièrement de `agy` : si `agy` est indisponible ou si Gemini 3.6 Flash rate la consigne, l'agent n'a pas de repli et tu paies un aller-retour pour rien. À réévaluer après quelques usages réels : s'il sert moins d'une fois par semaine, son prompt ne s'amortit pas. |
+
+### Proposés — par valeur
+
+| Agent | Verdict | Pourquoi |
+|---|---|---|
+| `test-runner` (sonnet) | **Ajouter en premier** | Le seul vrai trou. Ta règle « rien en `completed` sans vérification » n'est portée par aucun agent : la boucle lancer → lire l'échec → relancer se fait donc dans le contexte principal, où une suite Jest ou Vitest qui casse coûte des centaines de lignes. Livrable : échecs dédoublonnés + fichier:ligne. Ratio excellent, usage quotidien sur Watchy et NexusTrade. |
+| `doc-librarian` (sonnet) | **Ajouter en second** | Porte Context7 hors du contexte principal. Justifié par la stack, pas par la mode : React 19, TanStack Query v5, Fastify 5, Prisma 6 sont précisément les API que le modèle invente. Livrable : la réponse + la version + le lien, 40 lignes maximum. |
+| `prisma-migrator` (opus) | **Ajouter avant la prochaine migration prod** | Même logique que `vps-sysadmin` : ce n'est pas un gain de contexte, c'est une barrière sur de l'irréversible. Deux projets sur Prisma + Postgres, dont un sur `allermarche`. À créer *avant* d'en avoir besoin, pas pendant l'incident. |
+
+### À ne pas créer
+
+| Idée | Pourquoi non |
+|---|---|
+| Sous-agent **« codeur »** générique | Le livrable (le code) n'est pas plus petit que le travail, et tu reliras le diff de toute façon : tu paies deux fois. L'écriture reste sur l'agent principal, encadrée en amont par `planificateur` et en aval par `github-code-review`. |
+| Agent **front / design** | `impeccable` (skill + hooks `PostToolUse` et `Stop`) plus `browser_agent` activé couvrent déjà le terrain. Un agent de plus ne ferait que dupliquer les détecteurs. |
+| Agent **sécurité** | Redondant avec `/security-review` et avec les dix outils `codegraph_scan_security`, `check_owasp`, `check_cwe`, `find_injections`, `trace_taint` — **déjà autorisés dans `settings.json` et jamais routés dans `CLAUDE.md`**. Les router coûte trois lignes ; créer un agent coûte un prompt à maintenir. |
+| Agent **MQL5 / C# bridge** | Trop rare. Un prompt de sous-agent ne s'amortit qu'à partir d'un usage régulier ; en dessous, il vieillit et devient faux sans qu'on s'en aperçoive. |
+| Agent **commit / git** | `git` est déjà trivial pour l'agent principal et RTK compresse la sortie. Rien à absorber. |
+
+**Règle générale qui ressort de l'inventaire.** Un sous-agent se justifie par l'une de deux
+raisons, jamais par « ça fait plus propre » : soit il **absorbe du volume** (`triage-contexte`,
+`planificateur`, `test-runner`), soit il **confine un risque** (`vps-sysadmin`,
+`prisma-migrator`). Un agent qui ne fait ni l'un ni l'autre est un prompt de plus à maintenir
+et une source de dérive silencieuse.
