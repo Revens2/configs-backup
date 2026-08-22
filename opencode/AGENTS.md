@@ -112,3 +112,20 @@ Dès que l'utilisateur fait une demande concernant son vault Obsidian, ses notes
 - **Méthode** : Extraction du diff (`gh pr diff` ou `git diff main...HEAD`), puis rayon d'impact via `code-review-graph` (venv `C:\Tools\crg-venv`, chemin absolu, `PYTHONUTF8=1`). Mode dégradé annoncé si l'outil est indisponible.
 - **Rendu** : Rapport append-only à 5 sections — Périmètre, Blast radius, Risques, Tests à lancer, Verdict — dans le `progress.md` du dépôt analysé, plus une synthèse d'une vingtaine de lignes.
 - **Garde-fou** : `gh pr comment` n'est jamais exécuté sans accord explicite de l'utilisateur dans le fil. `git push`, `gh pr merge` et `code-review-graph install` sont interdits ; l'agent ne modifie pas le code relu.
+
+## Suppression de fichiers — corbeille obligatoire
+
+Ne jamais supprimer définitivement (`rm`, `rm -rf`, `del`, `rmdir /s`, `Remove-Item`,
+`shred`, `find -delete`). Toute suppression passe par la corbeille Windows :
+
+```powershell
+powershell -NoProfile -File C:/Users/Juliann/.claude/hooks/trash.ps1 "<chemin>"
+```
+
+Repli si la corbeille est indisponible : `%LOCALAPPDATA%\ia-trash\<horodatage>\`.
+Exceptions : fichiers temporaires (`/tmp`, `%TEMP%`), sous-commandes d'outils (`git rm`,
+`docker rm`), ou préfixe `TRASH_GUARD=off ` après accord explicite dans le fil.
+Application mécanique : hook PreToolUse `~/.claude/hooks/guard-trash-instead-of-rm.js`,
+`permissions.deny` de `settings.json`, plugin OpenCode `plugins/trash-guard.ts`,
+règle Antigravity `rules/suppression_via_trash.md`.
+
