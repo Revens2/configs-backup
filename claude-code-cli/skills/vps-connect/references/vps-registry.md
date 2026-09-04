@@ -1,110 +1,25 @@
-# VPS Registry (extracted from memory)
+# Registre VPS — alias SSH
 
-This is a parsed registry of all VPS instances extracted from your memory. Used by vps-connect skill to auto-resolve SSH parameters.
+Résumé de `~/.ssh/config`, qui reste la **source de vérité**. Toutes les IP sont NetBird
+(`10.200.0.0/16`) depuis le 2026-08-29, sauf `nas-ts` (dernier reliquat NetBird).
 
-## NEXUS allermarche
+| Alias | IP | User | Clé | Rôle |
+|---|---|---|---|---|
+| `vps-nexus` | 10.200.61.52 | `ia_admin` | `~/cle_ai.ssh` | Prod NEXUS / allermarche. **Pas** `id_rsa_linux`. Joignable **uniquement** par NetBird. |
+| `vps-etude`, `vps-etude-nb` | 10.200.114.203 | `juliann` | `~/.ssh/id_ed25519_juliann` | VPS étude (arm64). Porte le control plane NetBird et le Pi-hole. |
+| `vps-etude-ubuntu` | 10.200.114.203 | `ubuntu` | `~/.ssh/id_ed25519_ubuntu` | Même machine, autre compte. |
+| `vps-etude-ludo` | 10.200.114.203 | `ludo` | `~/.ssh/id_ed25519_ludo` | Même machine, autre compte. |
+| `vps-ia` | 10.200.16.142 | `oui` | `~/.ssh/id_rsa_linux` | Serveur Qwen / ComfyUI. **Hors ligne** — dernière machine sous NetBird. |
+| `vps-ia-lan` | 192.168.1.64 | `oui` | `~/.ssh/id_rsa_linux` | Même machine, accès LAN direct. |
+| `nas` | 192.168.1.187 | `juliann` | `~/.ssh/id_ed25519_nas` | NAS Debian local (Lenovo 14w Gen 2), accès LAN. |
+| `nas-nb` | 10.200.85.236 | `juliann` | `~/.ssh/id_ed25519_nas` | Même NAS par NetBird. |
+| `nas-ts` | 100.122.237.32 | `juliann` | `~/.ssh/id_ed25519_nas` | Même NAS par NetBird — **reliquat**, préférer `nas-nb`. |
+| `pc-travail` | 10.200.221.200 | `julia` | `~/.ssh/id_ed25519_juliann` | Poste distant. |
 
-**Alias**: `nexus`  
-**Type**: Production MT5 SaaS  
-**Tailscale IP**: `100.76.236.21`  
-**Public IP**: `141.253.118.248`  
-**SSH User**: `ia_admin`  
-**SSH Key**: `cle_ai.ssh` (ED25519)  
-**OS**: Ubuntu 24.04.4 LTS (arm64, Oracle KVM)  
-**Memory file**: `nexus-vps-allermarche.md`
+Noms internes également résolus : `<nom>.netbird.selfhosted` (Pi-hole hébergé sur `vps-etude`).
 
-### Key facts
-- Dual NOPASSWD sudo access
-- Supply-chain hardened (2026-06-16)
-- Docker stack: nexustrade-server, db, redis
-- PostgreSQL: user `nexus` on `nexustrade_auth` DB
-- Important: NOT `id_rsa_linux` (rejected by server)
-
-### Ports
-- LAN: `10.0.0.136`
-- Docker GW: `172.18.0.1`
-
----
-
-## vps-ia (VPS LLM / UFO)
-
-**Alias**: `llm`, `vps-ia`  
-**Type**: LLM inference server (UFO backend)  
-**Tailscale IP**: `100.99.75.104`  
-**SSH User**: `oui`  
-**SSH Key**: `id_rsa_linux` (NOT `cle_ai.ssh`)  
-**OS**: Ubuntu 24.04.4 LTS (arm64)  
-**Memory file**: `ufo-vps-llm.md`
-
-### Key facts
-- **Model**: Qwen 3.6 35B MoE (MTP optimized)
-- **Hardware**: RTX 5070 12GB VRAM
-- **Framework**: llama.cpp with spec-draft-mtp
-- **Performance**: ~86 tokens/sec
-- **Key optimizations**: FA_ALL_QUANTS, KV q8_0
-- **Inference port**: 8000
-- **fail2ban**: Enabled (SSH spam protection)
-
-### Related
-- Hermes Desktop (Windows) connects to this via port 8000
-- ComfyUI FLUX.2 also uses this (img2img/inpaint)
-- Memory: `hermes-vps-llm-chain.md`, `comfyui-flux2-vps.md`
-
----
-
-## vps-etude (VPS Étude)
-
-**Alias**: `etude`  
-**Type**: Study/experimental server  
-**Tailscale IP**: `100.76.252.77`  
-**SSH User**: `juliann` (or `oui`)  
-**SSH Key**: `~/.ssh/id_rsa` (default)  
-**OS**: Ubuntu 24.04.4 LTS (arm64)  
-**Tailnet**: `drop.ecom28` (account-specific)  
-**Memory file**: `vps-etude-tailscale.md`
-
-### Key facts
-- CouchDB LiveSync at `:5984`
-- vault_rag (4394 notes) on this VPS
-- Server.py provides plaintext RAG
-- push_vault.py syncs to this VPS
-- Tailscale account: `juliann.ploquin@gmail.com` (on drop.ecom28 tailnet)
-
----
-
-## Connection matrix
-
-| Alias | IP | User | Key | Tailnet | Status |
-|-------|-----|------|-----|---------|--------|
-| nexus | 100.76.236.21 | ia_admin | cle_ai.ssh | (main) | Production |
-| llm | 100.99.75.104 | oui | id_rsa_linux | (main) | Active |
-| etude | 100.76.252.77 | juliann | ~/.ssh/id_rsa | drop.ecom28 | Active |
-
-## How vps-connect uses this
-
-1. User says: `"connect to nexus"`
-2. vps-connect looks up `nexus` in this registry
-3. Extracts: IP=100.76.236.21, user=ia_admin, key=cle_ai.ssh
-4. Runs ensure-tailscale.ps1 to check connectivity
-5. SSHes: `ssh -i C:\Users\Juliann\cle_ai.ssh ia_admin@100.76.236.21`
-6. Loads memory file `nexus-vps-allermarche.md` for context
-
----
-
-## Troubleshooting by VPS
-
-### NEXUS allermarche won't connect
-- Check: `cle_ai.ssh` exists and readable
-- **NOT** id_rsa_linux (wrong key = Permission denied)
-- User must be `ia_admin` (not `ubuntu` or `root`)
-- Tailscale: On account that has `100.76.236.21` visible
-
-### vps-ia connection hangs
-- Check: `id_rsa_linux` is used (not cle_ai.ssh)
-- fail2ban may have blocked SSH if > 5 attempts — wait ~10 min
-- Verify user is `oui` (not `root`)
-
-### vps-etude "No route to host"
-- Check Tailscale account is on `drop.ecom28` tailnet
-- May need: `tailscale switch juliann.ploquin@gmail.com`
-- Default account (main tailnet) can't see `100.76.252.77`
+## Pièges connus
+- Le NAS Debian ne démarre **pas** de façon autonome (GRUB figé) et plafonne à 4 Go de RAM.
+- `vps-nexus` n'est **pas** joignable hors NetBird : aucune IP publique de secours.
+- L'exit node WARP de `vps-etude` repose sur une `ip rule` non persistante, remise à plat par
+  `systemd-networkd` au cron APT de 02:00.

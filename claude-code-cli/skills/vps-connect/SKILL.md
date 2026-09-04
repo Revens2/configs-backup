@@ -1,101 +1,66 @@
 ---
 name: vps-connect
-description: "Auto-connect to VPS with context loading. Use when user says 'connect to [vps-name]' or 'ssh to [vps-name]'. Automatically resolves VPS details from memory, handles Tailscale account switching, and loads VPS context. Also auto-recovers failed Tailscale connections (SSH timeouts, connection refused, 'No route to host', etc.) by restarting Tailscale and cycling accounts."
+description: "Se connecter à un VPS par alias SSH et rétablir NetBird quand la connexion échoue. Utiliser sur « connecte-toi à vps-nexus », « ssh vps-etude », ou dès qu'une commande SSH/curl/ping vers une IP 10.200.x échoue (timeout, connection refused, no route to host). Résout l'alias, vérifie NetBird, relance le VPN si besoin, puis rejoue la commande — maximum 2 tentatives."
 ---
 
-# vps-connect — SSH to any VPS with auto-context
+# vps-connect — accès VPS par alias, avec reprise NetBird
 
-## When to use
+## Invariants
 
-### Primary: Direct VPS connection
-- User asks: "Connect to NEXUS", "SSH to vps-ia", "Connect to etude"
-- Trigger: `/connect vps <vps-name>` or `claude connect <vps-name>`
-- **Do NOT ask for details** — find VPS config in memory (memory/*.md), SSH automatically, load context.
+1. **Toujours par alias `~/.ssh/config`** : `ssh vps-nexus '<cmd>'`.
+   Jamais `ssh -i <clé> user@IP`. L'alias porte déjà l'hôte, l'utilisateur et la clé.
+2. **Toutes les IP sont NetBird** (`10.200.0.0/16`). Tailscale est purgé depuis le 2026-08-29 ;
+   une IP en `100.x` est morte, sauf `nas-ts`.
+3. **Maximum 2 tentatives SSH.** Un `Connection timed out` signifie port fermé ou `sshd` down
+   côté serveur : changer de clé ou d'utilisateur ne sert à rien et risque de faire blacklister
+   l'IP. Après 2 échecs → diagnostiquer, ne pas boucler.
+4. **`netbird up` sans `--allow-server-ssh=false` est interdit.** Le SSH managé NetBird détourne
+   le port 22 par DNAT vers 22022 ; le vrai `sshd` devient injoignable et SSH crie
+   `REMOTE HOST IDENTIFICATION HAS CHANGED`. Un cycle `down`/`up` remet aussi à zéro la
+   sélection des routes du client.
 
-### Secondary: Auto-heal failed Tailscale
-- Any SSH/curl/ping to a `100.x.y.z` or `*.ts.net` address fails with:
-  - `ssh: connect to host <ip> port 22: Connection timed out / refused`
-  - `curl: (7) Failed to connect` or `(28) Operation timeout`
-  - `ping` to tailnet IP fails; `unexpected state: NoState`
-- **Do NOT ask first** — run recovery, retry the command.
+## Procédure
 
----
+### 1. Résoudre l'alias
+Lire `references/vps-registry.md`. Si l'alias demandé n'y est pas, chercher dans
+`~/.ssh/config` — c'est la source de vérité, le registre n'en est qu'un résumé.
 
-## How to connect to a VPS
+### 2. Tenter la connexion (tentative 1/2)
+```bash
+ssh -o ConnectTimeout=8 <alias> 'hostname; uptime'
+```
+Si ça passe → aller au 4.
 
-### Step 1: Find VPS config in memory
-Query your memory index (`MEMORY.md`) for VPS details. Expected memory files:
-- `nexus-vps-allermarche.md` → NEXUS (100.76.236.21)
-- `ufo-vps-llm.md` → vps-ia (100.99.75.104)
-- `vps-etude-tailscale.md` → vps-etude (100.76.252.77)
+### 3. Rétablir NetBird, puis retenter (tentative 2/2)
+```powershell
+& "C:\Users\Juliann\.claude\skills\vps-connect\scripts\ensure-netbird.ps1" -TargetIP 10.200.61.52
+```
+Le script : vérifie le service, `netbird status`, relance avec `--allow-server-ssh=false` si le
+management n'est pas connecté, puis teste le port 22 de la cible.
+Sortie **0** = cible joignable, retenter le `ssh` une fois. Sortie **1** = arrêter et rapporter.
 
-Each file contains:
-- Tailscale IP (100.x.y.z)
-- SSH user (e.g., `ia_admin`, `oui`, `juliann`)
-- SSH key path (e.g., `cle_ai.ssh`, `id_rsa_linux`)
-- Tailscale account email (if account-specific)
+`ensure-netbird.ps1` est un cmdlet PowerShell (`Test-NetConnection` n'a pas d'équivalent POSIX) :
+sa sortie n'est pas compressée par RTK. Ne pas le lancer en boucle.
 
-### Step 2: Ensure Tailscale connectivity
-Run the recovery script:
+### 4. Charger le contexte
+Après une connexion réussie, lire la fiche mémoire de la machine
+(`~/.claude/projects/C--Users-Juliann/memory/`) et résumer : rôle, services, points d'attention.
+Ne pas redemander à l'utilisateur une information qui est dans le registre ou dans la mémoire.
+
+## Diagnostic après 2 échecs
 
 ```powershell
-& "C:\Users\Juliann\.claude\skills\vps-connect\scripts\ensure-tailscale.ps1" -TargetIP 100.76.236.21
+Test-NetConnection -Port 22 <ip>; netbird status
 ```
 
-Script does:
-1. Start Tailscale if not running
-2. Test connectivity to `-TargetIP`
-3. If unreachable, cycle every Tailscale account until one reaches the target
-4. Exit 0 (success) or exit 1 (all accounts failed)
+| Symptôme | Cause probable | Action |
+|---|---|---|
+| `Management: Disconnected` | VPN à terre | `ensure-netbird.ps1`, puis **une** relance |
+| Port 22 fermé, management OK | `sshd` down ou UFW | La machine est joignable : passer par `vps-sysadmin` |
+| `REMOTE HOST IDENTIFICATION HAS CHANGED` | SSH managé NetBird actif (DNAT 22→22022) | `netbird up --allow-server-ssh=false` |
+| `Permission denied (publickey)` | Mauvaise clé | Vérifier l'`IdentityFile` de l'alias — ne pas essayer d'autres clés au hasard |
+| Timeout sur `vps-ia` | Machine hors ligne (dernière sous Tailscale) | Attendu. Ne pas insister. |
 
-**On exit 0**: Proceed to step 3.  
-**On exit 1**: Inform user: "Tailscale can't reach [IP] on any account; VPS may be down or login required."
-
-### Step 3: SSH + load context
-```bash
-ssh -i "$env:USERPROFILE\<ssh-key>" <user>@<tailscale-ip>
-```
-
-**Immediately after successful SSH**, load context by:
-- Reading the VPS memory file (e.g., `nexus-vps-allermarche.md`)
-- Presenting key facts: IP, user, services, recent context
-- Offering to run commands (e.g., "Run `systemctl status nexustrade*`?")
-
----
-
-## SSH key locations
-All keys stored in `$env:USERPROFILE\` (e.g., `C:\Users\Juliann\`):
-- `cle_ai.ssh` — ED25519, for NEXUS allermarche (ia_admin)
-- `id_rsa_linux` — for vps-ia (user oui)
-- (default ~/.ssh/id_rsa) — for vps-etude (juliann)
-
----
-
-## Known VPS aliases
-| Alias | Host | IP | User | Key | Tailnet |
-|-------|------|----|----|-----|---------|
-| `nexus` | NEXUS allermarche | 100.76.236.21 | ia_admin | cle_ai.ssh | (main) |
-| `llm` / `vps-ia` | vps-ia (LLM) | 100.99.75.104 | oui | id_rsa_linux | (default) |
-| `etude` | vps-etude | 100.76.252.77 | juliann | ~/.ssh/id_rsa | drop.ecom28 |
-
----
-
-## Troubleshooting
-
-### "Connection timed out" even after recovery script
-→ VPS may be down or firewall blocked. Check Tailscale status: `tailscale status`
-
-### "Permission denied (publickey)"
-→ Wrong SSH key. Verify key file and user name in memory. For vps-ia, must use `id_rsa_linux` not `cle_ai.ssh`.
-
-### Tailscale account switching needed
-→ Recovery script auto-cycles. If it still fails, user may need manual login: `! & "C:\Program Files\Tailscale\tailscale.exe" login`
-
-### "Unknown configuration file option" on remote
-→ VPS config issue. Log it but don't block connection.
-
----
-
-## Script reference
-See `scripts/ensure-tailscale.ps1` for Tailscale recovery logic.  
-See `references/vps-registry.md` for parsed VPS registry extracted from memory.
+## Références
+- `references/vps-registry.md` — alias, IP NetBird, utilisateurs, clés, rôles.
+- `scripts/ensure-netbird.ps1` — reprise de connexion VPN.

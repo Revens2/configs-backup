@@ -34,3 +34,23 @@ daemon/
 # Dream workspace scratch & quarantined report
 dream-report.md
 .turns.md
+
+# Freebuff runtime (SQLite binaires, caches, binaires de l'app — jamais versionner)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.exe
+*.wasm
+blob_storage/
+Cache/
+
+# Freebuff runtime et identifiants locaux : seuls README.md et global-skills/ sont publics
+freebuff/*
+!freebuff/README.md
+!freebuff/global-skills/
+!freebuff/global-skills/**
+
+# Journaux de mission locaux
+plan.md
+progress*.md

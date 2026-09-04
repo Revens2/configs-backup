@@ -1,0 +1,105 @@
+# Codex configuration backup
+# Volatile notification, marketplace, project-trust, runtime-path, and named-pipe settings are omitted.
+# Replace generic commands and environment-variable names with local values after restoring.
+
+model = "gpt-5.6-luna"
+model_reasoning_effort = "low"
+approvals_reviewer = "user"
+
+[features]
+js_repl = false
+hooks = true
+multi_agent = true
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 8
+default_subagent_model = "gpt-5.6-terra"
+default_subagent_reasoning_effort = "medium"
+
+[windows]
+sandbox = "elevated"
+
+[desktop]
+followUpQueueMode = "queue"
+keepRemoteControlAwakeWhilePluggedIn = true
+localeOverride = "fr-FR"
+
+[plugins."codex-app-tools@openai-bundled"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
+enabled = false
+
+[plugins."documents@openai-primary-runtime"]
+enabled = false
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = false
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = false
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = false
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = false
+
+[plugins."unified-computer-use@openai-bundled"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = false
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[mcp_servers.node_repl]
+args = []
+command = "node_repl.exe"
+startup_timeout_sec = 120
+
+[mcp_servers.codegraph]
+command = "codegraph.exe"
+args = ["serve"]
+env = { "CODEGRAPH_DB" = ".codegraph/codegraph.db" }
+
+[mcp_servers.github]
+command = "npx.cmd"
+args = ["-y", "@modelcontextprotocol/server-github"]
+enabled = true
+
+[mcp_servers.chrome-devtools]
+command = "node"
+args = ["C:/Tools/chrome-devtools-wrapper.mjs"]
+enabled = true
+startup_timeout_sec = 20
+
+[mcp_servers.vault]
+url = "http://10.200.114.203:8788/mcp"
+env_http_headers = { Authorization = "VAULT_MCP_TOKEN" }
+enabled = true
+startup_timeout_sec = 10
+
+[mcp_servers.osauto]
+command = "osauto-mcp.exe"
+env = { PYTHONUTF8 = "1" }
+enabled = true
+
+[mcp_servers.context7]
+url = "https://mcp.context7.com/mcp"
+env_http_headers = { Authorization = "CONTEXT7_API_KEY" }
+enabled = true
+
+[sandbox_workspace_write]
+writable_roots = ["%LOCALAPPDATA%/codex-with-chatgpt"]
+
+[apps.connector]
+enabled = false

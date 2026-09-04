@@ -10,8 +10,55 @@
       "explore": "deny"
     }
   },
-  "model": "vps-ia/Qwen 3.6 35b MoE",
+  // Modèle par défaut : Gemini 3.6 Flash (dernier en date, 1M ctx, thinking)
+  // Alternatives dispo : google/gemini-3.5-flash, google/gemini-3.5-flash-lite,
+  //   google/gemini-3.1-flash-lite, google/gemini-3.1-pro-preview
+  // Pro : quota free-tier = 0, nécessite billing actif sur Google Cloud.
+  "model": "google/gemini-3.6-flash",
   "provider": {
+    // ─── Google Gemini (API Key via GOOGLE_GENERATIVE_AI_API_KEY) ───
+    "google": {
+      "npm": "@ai-sdk/google",
+      "models": {
+        "gemini-3.6-flash": {
+          "name": "Gemini 3.6 Flash (1M Ctx, Thinking)",
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          }
+        },
+        "gemini-3.5-flash": {
+          "name": "Gemini 3.5 Flash (1M Ctx, Thinking)",
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          }
+        },
+        "gemini-3.5-flash-lite": {
+          "name": "Gemini 3.5 Flash Lite (1M Ctx)",
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          }
+        },
+        "gemini-3.1-flash-lite": {
+          "name": "Gemini 3.1 Flash Lite (1M Ctx)",
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          }
+        },
+        "gemini-3.1-pro-preview": {
+          "name": "Gemini 3.1 Pro Preview (1M Ctx, Thinking)",
+          "attachments": true,
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          }
+        }
+      }
+    },
+    // ─── VPS IA (Qwen, inchangé) ───
     "vps-ia": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "VPS IA (Qwen 35B Sanitized)",
@@ -19,7 +66,7 @@
         "baseURL": "http://100.99.75.104:4002/v1"
       },
       "models": {
-        "Qwen 3.6 35b MoE": {
+        "qwen-3.6-35b-moe": {
           "name": "Qwen 3.6 35B MoE (96k Ctx)",
           "limit": {
             "context": 98304,

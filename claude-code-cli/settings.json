@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "0"
+  },
   "permissions": {
     "allow": [
       "mcp__codegraph",
@@ -74,12 +77,20 @@
       "Read(./.credentials.json)",
       "Read(**/.env)",
       "Read(**/id_rsa*)",
-      "Read(**/*.ssh)"
+      "Read(**/*.ssh)",
+      "Bash(sudo *)",
+      "Bash(wget * | bash)",
+      "Read(./.env)",
+      "Read(./.env.*)"
     ],
     "defaultMode": "acceptEdits"
   },
   "model": "opus",
   "skillOverrides": {
+    "audit-gbp": "off",
+    "audit-site": "off",
+    "auditeur-citations-locales": "off",
+    "auditeur-page-locale": "off",
     "brand-guidelines": "off",
     "canvas-design": "off",
     "ckm-banner-design": "off",
@@ -90,12 +101,21 @@
     "ckm-ui-styling": "off",
     "commissaire-aux-comptes": "off",
     "comptable": "off",
+    "content-reviver-local": "off",
     "controleur-fiscal": "off",
     "fiscaliste": "off",
     "frontend-design": "off",
+    "keyword-map": "off",
     "make-interfaces-feel-better": "off",
     "notaire": "off",
     "notebooklm-py": "off",
+    "seo-audit": "off",
+    "seo-expert": "off",
+    "seo-internal-linking": "off",
+    "seo-metadata": "off",
+    "seo-schema": "off",
+    "seo-semantic": "off",
+    "seo-web-vitals": "off",
     "syndic": "off",
     "template-skill": "off",
     "theme-factory": "off"
@@ -129,11 +149,20 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node C:/Users/Juliann/.claude/hooks/guard-no-kill-agents.js"
-          },
+            "command": "rtk hook claude"
+          }
+        ]
+      },
+      {
+        "matcher": "Browser|WebFetch|WebSearch|browser_.*|mcp__claude-in-chrome__.*",
+        "hooks": [
           {
             "type": "command",
             "command": "node C:/Users/Juliann/.claude/hooks/guard-trash-instead-of-rm.js"
+          },
+          {
+            "type": "command",
+            "command": "node C:/Users/Juliann/.claude/hooks/delegate-browser.mjs"
           },
           {
             "type": "command",
@@ -154,22 +183,6 @@
     ],
     "SessionStart": [
       {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node C:/Users/Juliann/.claude/sync-mcp.js"
-          },
-          {
-            "type": "command",
-            "command": "bash C:/Users/Juliann/.claude/hooks/auto-graph-setup.sh"
-          },
-          {
-            "type": "command",
-            "command": "node C:/Users/Juliann/.claude/hooks/caveman-activate.js"
-          }
-        ]
-      },
-      {
         "matcher": "startup|resume|compact",
         "hooks": [
           {
@@ -179,17 +192,37 @@
         ]
       }
     ],
-    "UserPromptSubmit": [
+    "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "node C:/Users/Juliann/.claude/hooks/caveman-mode-tracker.js"
+            "command": "node C:/Users/Juliann/.claude/hooks/verify-before-done.mjs"
+          },
+          {
+            "type": "command",
+            "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:/Users/Juliann/.claude/hooks/agent-notify.ps1 -Event completed",
+            "async": true,
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "permission_prompt|idle_prompt|agent_needs_input",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:/Users/Juliann/.claude/hooks/agent-notify.ps1 -Event needs-input",
+            "async": true,
+            "timeout": 10
           }
         ]
       }
     ]
   },
+  "enableArtifact": false,
   "enableWorkflows": true,
   "statusLine": {
     "type": "command",

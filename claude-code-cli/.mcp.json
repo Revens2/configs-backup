@@ -18,12 +18,34 @@
         "@modelcontextprotocol/server-github"
       ]
     },
-    "obsidian-semantic": {
-      "command": "node",
+    "hermes-capture": {
+      "command": "python",
       "args": [
-        "C:\\Users\\Juliann\\mcp-obsidian-semantic\\src\\index.js",
-        "G:\\Mon Drive\\Obsidian Vault"
+        "-m",
+        "hermes_capture.server"
       ]
+    },
+    "vault": {
+      "type": "http",
+      "url": "http://10.200.114.203:8788/mcp",
+      "headers": {
+        "Authorization": "Bearer ${VAULT_MCP_TOKEN}"
+      }
+    },
+    "osauto": {
+      "command": "C:\\Users\\Juliann\\Desktop\\ui controle\\.venv\\Scripts\\osauto-mcp.exe",
+      "args": [],
+      "env": {
+        "PYTHONUTF8": "1"
+      },
+      "serverInstructions": "Controle d'interface Windows. Cascade imposee CDP -> UIA -> sonde -> vision (« Zero Vision par Defaut » : la capture n'intervient que si toutes les voies deterministes echouent). os_uia_inspect rend par defaut un arbre FILTRE aux types actionnables (uia.filtered_scan=true) : les noeuds Text/Image/Pane en sont absents."
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${CONTEXT7_API_KEY}"
+      }
     }
   }
 }
