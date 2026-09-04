@@ -1,0 +1,12 @@
+# Safety rules migrated from Claude Code permissions.deny.
+
+prefix_rule(pattern=["rm", "-rf"], decision="forbidden", justification="Destructive recursive deletion is blocked; use a targeted, reviewed removal instead.")
+prefix_rule(pattern=["sudo"], decision="prompt", justification="Privilege escalation requires explicit review.")
+prefix_rule(pattern=["git", "push"], decision="forbidden", justification="Pushing changes requires an explicit user request and deliberate review.")
+prefix_rule(pattern=["git", "reset", "--hard"], decision="forbidden", justification="Hard reset can destroy work; use a reversible recovery step instead.")
+prefix_rule(pattern=["git", "clean"], decision="forbidden", justification="Cleaning untracked files can destroy work; inspect and remove targeted files only.")
+prefix_rule(pattern=["git", "branch", "-D"], decision="forbidden", justification="Force-deleting a branch can destroy recoverable work.")
+prefix_rule(pattern=["curl", "*", "|", "sh"], decision="forbidden", justification="Do not execute unreviewed downloaded shell code.")
+prefix_rule(pattern=["curl", "*", "|", "bash"], decision="forbidden", justification="Do not execute unreviewed downloaded shell code.")
+prefix_rule(pattern=["wget", "*", "|", "sh"], decision="forbidden", justification="Do not execute unreviewed downloaded shell code.")
+prefix_rule(pattern=["wget", "*", "|", "bash"], decision="forbidden", justification="Do not execute unreviewed downloaded shell code.")

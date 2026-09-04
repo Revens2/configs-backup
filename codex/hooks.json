@@ -1,0 +1,71 @@
+{
+  "description": "Codex lifecycle hooks without blocking or tool-rewrite hooks.",
+  "hooks": {
+    "PreCompact": [
+      {
+        "matcher": "manual|auto",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.codex/hooks/save-state.mjs",
+            "timeout": 10,
+            "statusMessage": "Saving session state"
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "matcher": "manual|auto",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.codex/hooks/save-state.mjs",
+            "timeout": 10,
+            "statusMessage": "Refreshing session state"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.codex/hooks/restore-state.mjs",
+            "timeout": 10,
+            "additionalContextLimit": 2500,
+            "statusMessage": "Restoring session state"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.codex/hooks/save-state.mjs",
+            "timeout": 3,
+            "statusMessage": "Saving final session state"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "^apply_patch$|^Edit$|^Write$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.codex/hooks/codegraph-post-edit.mjs",
+            "async": true,
+            "timeout": 30,
+            "statusMessage": "Updating code graph"
+          }
+        ]
+      }
+    ]
+  }
+}
