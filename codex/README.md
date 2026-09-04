@@ -9,7 +9,7 @@ This directory contains the reusable, sanitized Codex configuration for this mac
 - `agents/`: custom Codex agent definitions.
 - `hooks/`: hook implementations.
 - `rules/`: command safety rules.
-- `skills/caveman/`: the only user-installed Codex skill; Codex system skills remain managed by Codex itself.
+- `skills/caveman/` et `skills/codex-with-chatgpt/`: skills utilisateur Codex sauvegardés; Codex system skills restent gérés par Codex lui-même.
 The ChatGPT bridge workspace is intentionally separate from Freebuff: use a dedicated project
 root such as `C:\\projet\\codex-with-chatgpt`, never `C:\\Users\\<user>` or another broad home
 root. `run_shell` is not constrained by `allowedRoots`, so keep the bridge account/workspace
