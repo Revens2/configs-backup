@@ -1,80 +1,94 @@
 ---
 name: plan-run
 description: >-
-  Exécute un plan de travail long en le lisant depuis `progress.md` plutôt que depuis le contexte.
-  À utiliser dès qu'une tâche dépasse 3 étapes, s'étale sur plusieurs sessions, ou risque une
-  compaction — migration, audit, refactoring large, mise en place d'infra. Crée `progress.md` s'il
-  n'existe pas, puis boucle : lire → décider → exécuter → vérifier → cocher.
+  Conduit une mission DEEP/CRITICAL avec un plan durable et un état courant compact sur disque.
+  Utilise `plan.md` pour la stratégie stable et `progress.md` pour la prochaine action vérifiable.
+  À utiliser selon l'incertitude et le blast radius, pas simplement selon le nombre d'étapes.
 ---
 
-# plan-run — boucle de plan sur fichier
+# plan-run — exécution durable à contexte propre
 
-Un fichier ne se compacte pas et survit à un crash. **`progress.md` est la source de vérité de
-l'avancement, pas ton contexte.** Si les deux divergent, le fichier a raison.
+Le contexte n'est pas la source de vérité. Pour une mission longue :
+
+- `plan.md` = stratégie stable, périmètre, décisions et critères de succès ;
+- `progress.md` = **snapshot compact courant**, réécrit en place ;
+- `errors.md` = historique détaillé des erreurs uniquement lorsqu'il est réellement utile à éviter une boucle.
+
+Si le contexte et ces fichiers divergent, l'état vérifié sur disque prime.
+
+## Activation
+
+Utilise ce skill pour **DEEP** ou **CRITICAL** : architecture, refactor large, migration, audit large, travail multi-domaines, production ou action à fort blast radius.
+
+Ne l'active pas mécaniquement parce qu'une tâche contient plus de trois étapes. Une tâche FAST ou STANDARD dont le périmètre est clair doit rester directe et légère.
+
+## Initialisation
+
+1. Récupérer uniquement le contexte manquant depuis les sources disponibles : Vault/RAG, dépôt, documentation ou état réel.
+2. Écrire `plan.md` si la stratégie n'existe pas déjà.
+3. Écrire `progress.md` avec les tâches atomiques et leurs critères d'acceptation.
+4. Ne jamais coller les explorations, logs ou sorties d'outils dans ces fichiers.
 
 ## Boucle
 
-1. **Lire** `progress.md` en entier. Toujours, à chaque tour.
-2. **Identifier** la première tâche non cochée (`[ ]` ou `[~]`).
-3. **Exécuter** — toi-même. **Antigravity n'a pas de sous-agents** : Rules, Skills, Plugins, Hooks,
-   MCP, rien d'autre. Ne cherche pas à déléguer, il n'y a personne.
-4. **Vérifier** contre le critère d'acceptation écrit dans la tâche.
-5. **Cocher** `[x]` — *seulement* si la vérification est passée. Jamais sur impression.
-6. Passer à la suivante. En cas d'échec : consigner dans la section « Erreurs », laisser `[~]`,
-   et ne pas rejouer la même approche.
+1. Lire `plan.md` si une décision stratégique est nécessaire ; sinon ne pas le relire inutilement.
+2. Lire `progress.md` et identifier la première tâche `[ ]` ou `[~]`.
+3. Exécuter avec les primitives **réellement disponibles** dans AGY : Rules, Skills, Plugins, Hooks, MCP et outils/workers exposés par le runtime. Ne pas simuler un custom subagent inexistant.
+4. Vérifier contre le critère d'acceptation observable.
+5. Réécrire `progress.md` en place : `[x]` si validé, `[~]` si bloqué/en cours, puis mettre à jour `next` et `blocker`.
+6. Continuer jusqu'à la prochaine frontière de phase ou jusqu'à la fin.
 
-## Le volume se traite par fichier, pas par contexte
+En cas d'erreur : garder dans `progress.md` uniquement le résumé nécessaire à la prochaine décision. Si l'historique détaillé peut éviter de répéter un échec, l'ajouter à `errors.md` en append-only ; sinon ne pas créer de journal pour le principe.
 
-Faute de worker à qui déléguer, la règle du ratio bruit/conclusion se joue autrement : **écris la
-sortie brute dans un fichier, puis ne relis que l'extrait utile.**
+## Volume et contexte
 
-```bash
-rtk <commande> > sortie.txt          # RTK compresse déjà à la source
-cat gros.log | agy "STRICT: <filtre>" > extrait.md
-```
+Beaucoup de sortie pour une petite conclusion doit rester hors du contexte du modèle : rediriger vers un fichier, filtrer, puis ne relire que l'extrait utile. Ne jamais charger un log, dump ou balayage complet « au cas où ».
 
-Ne charge jamais un log, un dump ou un balayage complet dans le contexte.
+Les plugins/MCP de domaine ne sont activés que lorsqu'ils servent réellement à la phase courante et sont désactivés après usage si le runtime le permet, afin de ne pas payer leurs schémas à chaque tour.
 
 ## Format de `progress.md`
 
+Le hook `plan-pointer` s'appuie sur les lignes cochables ; conserve donc ce format minimal :
+
 ```markdown
-# <objectif en une ligne>
-_maj <date> · arbitrage : (A) tokens_
+# Progress
 
-## Tâches
-- [ ] **1. <intitulé>**
-      critère : <vérifiable — commande de test, fichier qui existe, service qui répond>
-      cible : orchestrateur
-- [~] **2. <intitulé>**    ← en cours
-- [x] **3. <intitulé>**    ← vérifié, pas seulement fait
+## State
+next: <action immédiate>
+blocker: <aucun|description courte>
 
-## Décisions
-- <arbitrage tranché, pour ne pas le rejouer>
+## Tasks
+- [x] **1. <tâche validée>**
+      critère: <preuve observable>
+      cible: orchestrateur
+- [~] **2. <tâche courante>**
+      critère: <preuve observable>
+      cible: orchestrateur
+- [ ] **3. <prochaine tâche>**
+      critère: <preuve observable>
+      cible: orchestrateur
 
-## Erreurs (append-only — ne jamais purger)
-- <date> tâche N : <message exact> → <ce qui a été tenté> → <ce qu'il ne faut plus refaire>
+## Decisions
+- <uniquement les décisions qui changent la suite>
 ```
 
-Une tâche = une ligne cochable, sinon la reprise ne sait pas où elle en est. Les lignes `critère :`
-et `cible :` sont **indentées sous** la ligne cochable : c'est ce qui permet au hook `plan-pointer`
-de les réinjecter avec la tâche.
+Une tâche = une ligne cochable. Pas de timestamps répétés, pas de transcript, pas de stack trace complète, pas de liste historique infinie.
 
-## Reprise après compaction
+## Reprise / compaction / changement de runtime
 
-**Antigravity n'expose aucun événement de pré-compaction.** Ses cinq événements de cycle de vie sont
-`PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation`, `Stop` — rien sur la compaction.
+Le hook `plan-pointer` peut rappeler le pointeur vers `progress.md` et la tâche courante. Ce rappel sert à **retrouver l'état**, pas à recopier tout le plan dans le contexte.
 
-Le relais retenu est `PreInvocation` : le hook `plan-pointer` de ce plugin réinjecte, **avant chaque
-invocation du modèle**, un `ephemeralMessage` portant le pointeur vers `progress.md`, le compteur
-`n/total` et la tâche `[~]` avec son critère. Une compaction ne peut donc pas faire perdre la ligne
-en cours : elle est réécrite au tour suivant.
+À une frontière de phase, après une compaction, un crash, un changement de compte Claude/AGY ou un contexte devenu bruyant : reprendre à partir de `plan.md` + `progress.md`. Ne pas transporter l'ancien transcript.
 
-Ce rappel sert à retrouver le fichier, **pas** à travailler dessus : relire `progress.md` avant
-d'agir.
+Message de reprise minimal :
+
+> Lis `plan.md` et `progress.md`, vérifie les préconditions de la tâche courante, puis continue la première tâche non terminée. Mets à jour `progress.md` uniquement après validation effective.
 
 ## Interdits
 
-- Cocher une tâche sans vérification effective (test, linter, typecheck, appel réel).
-- Tenir le plan en mémoire au lieu du fichier.
-- Supprimer une entrée de la section Erreurs.
-- Chercher à déléguer : il n'y a pas de sous-agents dans ce runtime.
+- Cocher sans vérification effective.
+- Transformer `progress.md` en journal append-only.
+- Réémettre tout le ToDo dans chaque réponse.
+- Deviner une donnée dynamique absente des sources.
+- Activer un plugin/MCP sans besoin réel et le laisser chargé inutilement.
+- Prétendre qu'un custom subagent AGY existe sans capacité runtime vérifiée.
