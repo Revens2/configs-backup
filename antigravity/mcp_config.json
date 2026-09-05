@@ -1,27 +1,25 @@
 {
   "mcpServers": {
-    "kicad-gui-bridge": {
-      "command": "python",
+    "chrome-devtools": {
+      "command": "node",
       "args": [
-        "-u",
-        "C:\\Users\\Juliann\\kicad-ai\\qa\\tools\\ipc_tools\\kicad_gui_mcp_bridge.py"
+        "C:\\Tools\\chrome-devtools-wrapper.mjs"
+      ]
+    },
+    "vault": {
+      "command": "C:\\Tools\\mcp-proxy-venv\\Scripts\\python.exe",
+      "args": [
+        "C:\\Tools\\vault-mcp-bridge.py"
       ],
       "env": {
-        "KICAD_GUI_BRIDGE_ATTACH_ONLY": "1",
-        "KICAD_GUI_BRIDGE_BUILD_DIR": "C:\\Users\\Juliann\\kicad-ai\\build\\msvc-win64-release",
-        "KICAD_GUI_BRIDGE_DEBUG_LOG": "C:\\Users\\Juliann\\kicad-ai\\ipc-v1-artifacts\\gui_bridge_agy_debug.log",
-        "KICAD_GUI_BRIDGE_IPC_URL": "ipc://kicad-ai-mcp",
-        "KICAD_GUI_BRIDGE_MINIMAL_TOOLS": "0",
-        "KICAD_GUI_BRIDGE_PROJECT": "",
-        "KICAD_GUI_BRIDGE_RELOAD_STAMP": "agy-init",
-        "KICAD_GUI_BRIDGE_SILENT_STDERR": "1",
-        "KICAD_GUI_BRIDGE_SMOKE_EXE": "C:\\Users\\Juliann\\kicad-ai\\build\\msvc-win64-release\\qa\\tools\\ipc_tools\\qa_ipc_smoke.exe",
-        "KICAD_GUI_BRIDGE_WORKDIR": "C:\\Users\\Juliann\\kicad-ai",
-        "PYTHONUNBUFFERED": "1",
-        "PYTHONWARNINGS": "ignore"
-      },
-      "disabled": true,
-      "cwd": "C:\\Users\\Juliann\\kicad-ai\\qa\\tools\\ipc_tools"
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
+    "context7": {
+      "serverUrl": "https://mcp.context7.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${CONTEXT7_API_KEY}"
+      }
     }
   }
 }
