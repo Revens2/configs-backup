@@ -1,44 +1,65 @@
-# Règle : conduite d'un travail long
+# Règle — orchestration Antigravity / AGY
 
-Active quand le plugin `orchestrateur-kit` est chargé. Pour tout travail long ou multi-domaines —
-migration, audit, mise en place d'infra, refactoring large.
+AGY est un **runtime de substitution complet** quand Claude Code n'est pas disponible ou que son quota est contraint. Une mission complexe ne doit jamais être volontairement simplifiée ou “dégradée” parce qu'elle tourne sur AGY : seul le mécanisme d'orchestration change.
 
-Tu conduis le travail : tu le découpes, tu vérifies, tu consignes. Antigravity n'a pas de sous-agents
-(ses types de customisation sont Rules, Skills, Plugins, Hooks, MCP) : tu exécutes toi-même, et tu
-t'appuies sur les skills et sur les plugins de domaine que tu actives à la demande.
+Antigravity orchestre avec les capacités réellement disponibles dans ce build : Rules, Skills, Plugins, Hooks, MCP et workers/outils exposés par la session. Ne simule jamais un sous-agent inexistant ; reproduis plutôt sa **fonction logique** sous forme de phase isolée, skill, plugin, fichier intermédiaire ou worker disponible.
 
-## Le plan vit sur disque
+## Routage de complexité
 
-`progress.md` à la racine du projet est la **source de vérité**, pas ton contexte. Un fichier ne se compacte pas et survit à un crash. Si ta mémoire et le fichier divergent, le fichier a raison.
+### FAST
+Périmètre connu, modification locale/réversible, faible incertitude → exécuter directement puis vérifier.
 
-Format d'une tâche : intitulé · **critère d'acceptation vérifiable** · cible (toi ou un worker) · statut. Plus une section `Erreurs` **append-only** — la purger fait rejouer les mêmes échecs.
+### STANDARD
+Périmètre à localiser ou impact incertain → faire une exploration ciblée et matérialiser uniquement le brief nécessaire avant exécution.
 
-Boucle : lire `progress.md` → première tâche non cochée → décider → exécuter → **vérifier contre le critère** → cocher `[x]` → suivante. Jamais de `[x]` sur impression.
+### DEEP
+Nouvelle fonctionnalité importante, refactor large, migration, audit large, architecture, tâche multi-domaines → planification explicite sur disque avant exécution.
 
-## Critère de découpe : ratio bruit / conclusion
+### CRITICAL
+Production, sécurité, réseau/SSH, migration irréversible ou fort blast radius → DEEP + état read-only initial + sauvegarde/rollback + vérification après chaque changement.
 
-Beaucoup de sortie pour une petite conclusion — lecture de logs, balayage de gros fichiers,
-exploration large — se traite **en écrivant le résultat filtré dans un fichier**, puis en ne relisant
-que l'extrait. Ne charge jamais la matière brute dans le contexte.
+## État durable et contexte propre
 
-Tâche courte et ciblée sur des fichiers connus → directement.
+Pour DEEP/CRITICAL :
 
-Arbitrage en vigueur : **priorité tokens**.
+- `plan.md` : stratégie stable, étapes atomiques et critères d'acceptation ;
+- `progress.md` : **snapshot compact de l'état courant**, réécrit en place ;
+- `errors.md` : historique détaillé des erreurs seulement si utile, append-only.
 
-## MCP
+`progress.md` n'est pas un journal infini. Il contient seulement : objectif, étape courante, fait, reste à faire, décisions, blocages actifs et validations.
 
-Tu n'en portes aucun. Les serveurs de domaine sont packagés en plugins, désactivés par défaut :
+Ne réémets jamais le ToDo complet à chaque réponse. Si un ancrage de récence est utile, termine par une ligne :
 
-```bash
-agy plugin list
-agy plugin enable obsidian-kit   # n'active le MCP obsidian que pour ce besoin
-```
+`STATE <étape>/<total> | next: <action> | blocker: <aucun|...>`
 
-Un plugin activé charge ses outils dans la session ; ne l'active que le temps nécessaire, et travaille par système de fichiers quand c'est suffisant.
+À une frontière de phase ou après une exploration bruyante, reprendre depuis `plan.md` + `progress.md` plutôt que conserver du contexte devenu inutile.
+
+## Principe d'externalisation
+
+Beaucoup de matière pour une petite conclusion doit être traitée hors du contexte principal :
+
+- logs/dumps → filtrage déterministe ou worker économique avant synthèse ;
+- documentation/API → outil ou skill de documentation ciblé ;
+- Vault/RAG → plugin/MCP seulement quand nécessaire ;
+- exploration code → graphes/recherche ciblée, résultat matérialisé en brief ;
+- rapports longs → fichier, puis seulement une synthèse dans le fil.
+
+Le parent ne lit jamais un dump brut “pour voir”.
+
+## Plugins / MCP
+
+N'activer un plugin de domaine que lorsqu'il est nécessaire. Le désactiver après usage si son chargement permanent ajoute des schémas inutiles au contexte.
+
+Aucun usage de NotebookLM dans la chaîne active.
+
+## Validation
+
+Une tâche n'est terminée qu'après une vérification adaptée : tests, linter, typecheck, build, endpoint réel ou commande d'état. Ne jamais cocher sur impression.
 
 ## Interdits
 
-- Deviner une stack, une IP, un port, un chemin. Une info absente se signale comme absente.
-- Cocher sans vérification effective (test, linter, typecheck, appel réel).
-- Tenir le plan en mémoire au lieu du fichier.
-- Laisser un plugin de domaine activé après usage : il coûte ses schémas d'outils à chaque tour.
+- Deviner une stack, une IP, un port, un credential ou un chemin.
+- Réduire l'ambition d'une mission complexe simplement parce qu'elle tourne sur AGY.
+- Charger des plugins/outils inutiles “au cas où”.
+- Garder dans `progress.md` des dumps ou stack traces complètes.
+- Conserver une exploration périmée en contexte quand un handoff propre suffit.
