@@ -10,7 +10,7 @@ Les fichiers à lire en priorité sont :
 - [`ENVIRONMENT-MAP.md`](ENVIRONMENT-MAP.md) — carte logique de la stack et sources de vérité.
 - [`CONTEXT-ENGINEERING.md`](CONTEXT-ENGINEERING.md) — gestion du contexte, lost-in-the-middle, handoff et artefacts de mission.
 - [`REPARTITION-RUNTIMES.md`](REPARTITION-RUNTIMES.md) — choix entre Claude, ChatGPT/Codex, AGY, Freebuff et OpenCode.
-- [`SKILLS.md`](SKILLS.md) — inventaire généré des skills actuellement versionnés.
+- [`SKILLS.md`](SKILLS.md) — index léger vers les répertoires de skills ; les `SKILL.md` réels restent la source de vérité.
 
 Les fichiers racine `CLAUDE.md`, `AGENTS.md` et `GEMINI.md` sont de simples **pointeurs courts** vers ces sources et vers les règles propres à chaque runtime.
 
