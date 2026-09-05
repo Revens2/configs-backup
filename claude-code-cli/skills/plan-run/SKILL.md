@@ -1,71 +1,91 @@
 ---
 name: plan-run
-description: Exécute un plan de travail long en le lisant depuis `progress.md` plutôt que depuis le contexte. À utiliser dès qu'une tâche dépasse 3 étapes, s'étale sur plusieurs sessions, ou risque une compaction — migration, audit, refactoring large, mise en place d'infra. Crée `progress.md` s'il n'existe pas, puis boucle : lire → décider (déléguer ou exécuter) → vérifier → cocher.
+description: >-
+  Conduit une mission DEEP/CRITICAL avec `plan.md` comme stratégie stable et `progress.md` comme état courant compact. À utiliser selon l'incertitude, la durée et le blast radius — pas simplement selon le nombre d'étapes.
 ---
 
-# plan-run — boucle de plan sur fichier
+# plan-run — exécution durable à contexte propre
 
-Un fichier ne se compacte pas et survit à un crash. **`progress.md` est la source de vérité de
-l'avancement, pas ton contexte.** Si les deux divergent, le fichier a raison.
+Pour une mission longue :
+- `plan.md` = stratégie stable, périmètre et critères de succès ;
+- `progress.md` = **snapshot compact courant**, réécrit en place ;
+- `errors.md` = historique détaillé uniquement lorsqu'il évite réellement de répéter des échecs.
+
+Le contexte de conversation n'est pas la source de vérité.
+
+## Activation
+
+Utiliser pour DEEP/CRITICAL : architecture, refactor large, migration, audit large, travail multi-domaines, production ou action à fort blast radius.
+
+Ne pas l'activer mécaniquement sur une tâche FAST/STANDARD claire sous prétexte qu'elle contient plusieurs étapes ou plusieurs fichiers.
 
 ## Boucle
 
-1. **Lire** `progress.md` en entier. Toujours, à chaque tour — y compris juste après une compaction.
-2. **Identifier** la première tâche non cochée (`[ ]` ou `[~]`).
-3. **Décider** : déléguer ou exécuter soi-même (critère ci-dessous).
-4. **Exécuter**, puis **vérifier** contre le critère d'acceptation écrit dans la tâche.
-5. **Cocher** `[x]` — *seulement* si la vérification est passée. Jamais sur impression.
-6. Passer à la suivante. En cas d'échec : consigner dans la section « Erreurs », laisser `[~]`,
-   et ne pas rejouer la même approche.
+1. Lire `progress.md`. Lire `plan.md` seulement lorsqu'une décision stratégique est nécessaire.
+2. Identifier la première tâche `[ ]` ou `[~]`.
+3. Décider : exécution directe si la tâche est ciblée ; délégation si un spécialiste apporte réellement isolation, expertise ou compression de volume.
+4. Exécuter puis vérifier contre le critère observable.
+5. Réécrire `progress.md` en place avec l'état actuel, `next` et `blocker`.
+6. Replanifier seulement si l'évidence invalide une hypothèse ou le rayon d'impact.
 
-## Critère de découpe : ratio bruit / conclusion
+## Délégation
 
-Beaucoup de sortie pour une petite conclusion → **worker**. Recherche web, lecture de logs,
-exploration de codebase, balayage de gros fichiers.
+Le parent garde la coordination. Les spécialistes absorbent le bruit et rendent uniquement un brief utile :
+- découverte/codebase → `decouverte` ;
+- documentation versionnée → `docs-fetcher` ;
+- web → `web-researcher` ;
+- Vault/RAG → `obsidian-context-retriever` ;
+- gros fichiers statiques → `triage-contexte` ;
+- infra → `vps-sysadmin` ;
+- travail répétitif → `little-tasks` ;
+- revue de diff → `github-code-review`.
 
-Tâche courte et ciblée sur des fichiers connus → **orchestrateur lui-même**. Instancier un worker
-coûterait plus cher que la tâche.
-
-Arbitrage en vigueur : **(A) priorité tokens** — déléguer uniquement sur fort volume ; l'orchestrateur
-fait les tâches moyennes et courtes lui-même. Workers disponibles : `web-researcher`,
-`obsidian-context-retriever`, `triage-contexte`, `little-tasks`, `vps-sysadmin`.
+N'instancie pas un worker pour une opération plus courte que le coût de délégation.
 
 ## Format de `progress.md`
 
 ```markdown
-# <objectif en une ligne>
-_maj <date> · arbitrage : (A) tokens_
+# Progress
 
-## Tâches
-- [ ] **1. <intitulé>**
-      critère : <vérifiable — commande de test, fichier qui existe, service qui répond>
-      cible : orchestrateur | <nom du worker>
-- [~] **2. <intitulé>**    ← en cours
-      critère : …
-      cible : …
-- [x] **3. <intitulé>**    ← vérifié, pas seulement fait
+## State
+next: <action immédiate>
+blocker: <aucun|description courte>
 
-## Décisions
-- <arbitrage tranché, pour ne pas le rejouer>
+## Tasks
+- [x] **1. <tâche validée>**
+      critère: <preuve observable>
+      cible: orchestrateur | <worker>
+- [~] **2. <tâche courante>**
+      critère: <preuve observable>
+      cible: orchestrateur | <worker>
+- [ ] **3. <prochaine tâche>**
+      critère: <preuve observable>
+      cible: orchestrateur | <worker>
 
-## Erreurs (append-only — ne jamais purger)
-- <date> tâche N : <message exact> → <ce qui a été tenté> → <ce qu'il ne faut plus refaire>
+## Decisions
+- <uniquement les décisions qui changent la suite>
 ```
 
-Règles de forme : une tâche = une ligne cochable, sinon la reprise après compaction ne sait pas où
-elle en est. Un critère d'acceptation **vérifiable** par tous — « ça marche » n'en est pas un.
-La section Erreurs est **append-only** : la purger fait rejouer les mêmes échecs.
+Pas de timestamps répétés, de transcript, de logs bruts ou de stack traces complètes dans `progress.md`.
 
-## Reprise après compaction
+## Erreurs
 
-Le hook `PreCompact` (`~/.claude/hooks/state-save.mjs`) écrit dans
-`~/.claude/state/<projet>/STATE.md` un pointeur vers `progress.md` et les 3 prochaines tâches non
-cochées. `SessionStart` (matchers `startup|resume|compact`) le réinjecte. Ce résumé sert à retrouver
-le fichier, **pas** à travailler dessus : relire `progress.md` avant d'agir.
+Si un échec doit rester visible pour éviter une boucle, l'écrire dans `errors.md` en append-only avec : tâche, symptôme, approche tentée, résultat et prochaine hypothèse. Sinon, garder seulement le résumé utile dans `progress.md`.
+
+## Reprise / compaction / changement de compte
+
+Les hooks peuvent réinjecter un pointeur vers l'état. Ce pointeur sert à retrouver les fichiers, pas à recopier tout le plan dans le contexte.
+
+À une frontière de phase, après une compaction, un crash ou un changement de compte Claude : reprendre avec uniquement `plan.md` + `progress.md` et le contexte projet chargé automatiquement.
+
+Message de reprise minimal :
+
+> Lis `plan.md` et `progress.md`, vérifie les préconditions de la tâche courante, puis continue la première tâche non terminée. Mets à jour `progress.md` uniquement après validation effective.
 
 ## Interdits
 
-- Cocher une tâche sans vérification effective (test, linter, typecheck, appel réel).
-- Tenir le plan en mémoire au lieu du fichier.
-- Supprimer une entrée de la section Erreurs.
-- Réécrire l'historique du fichier : on ajoute, on coche, on ne réécrit pas.
+- Cocher sans preuve effective.
+- Transformer `progress.md` en journal append-only.
+- Réémettre tout le ToDo dans chaque réponse.
+- Remonter des sorties brutes d'exploration au parent.
+- Deviner des données dynamiques absentes des sources.
