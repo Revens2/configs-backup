@@ -1,50 +1,29 @@
-# Skills AGY hors scope
+# Skills AGY hors scope (simplification 2026-09-05)
 
-Déplacés ici le 2026-08-04. Ils venaient de `~/.agents/skills/`, la racine de customisation
-**workspace** d'Antigravity pour `C:\Users\Juliann` — lue par **AGY et par OpenCode**.
+Le 2026-09-05, les racines de skills AGY ont été réduites aux seuls skills réellement actifs.
+Les versions supprimées restent dans l'historique Git du dépôt et dans les archives locales du
+poste (voir ci-dessous). Ne pas réimporter en bloc : un skill ne revient qu'à la portée d'un
+projet qui en a besoin (`<projet>/.agents/skills/`).
 
-## Pourquoi
+## Racines AGY et état actuel
 
-Mesure différentielle sur AGY (`agy -p "ok" --output-format json`, lecture de `usage.input_tokens`) :
+| Racine | Contenu conservé |
+|---|---|
+| `~/.agents/skills/` (workspace `C:\Users\Juliann`, lu par AGY) | `shell`, `review`, `loop`, `babysit` |
+| `~/.gemini/config/skills/` (global AGY) | `rds` |
+| `~/.antigravitycli/skills/` | vide (skills archivés) |
+| Plugins AGY | `orchestrateur-kit` (actif, embarque son `plan-run`), `chrome-devtools-plugin` (actif) ; `obsidian-kit` retiré (obsolète, remplacé par `vault-mcp`) |
 
-| État | Contexte |
-|---|---:|
-| `.agents/` présent, 20 skills | 21 517 tok |
-| `.agents/` renommé (absent) | 9 305 tok |
-| **après triage, 4 skills gardés** | **9 303 tok** |
+### Archives locales (2026-09-05)
 
-`.agents/` coûtait **12 212 tokens, 57 % du contexte de démarrage d'AGY**. Les 16 skills sortis
-représentaient la totalité de ce coût : les 4 conservés ne pèsent rien de mesurable.
+- `~/.agents/skills-hors-scope-2026-09-05/` — 85 skills précédemment importés en bloc.
+- `~/.antigravitycli/skills-hors-scope-2026-09-05/` — anciens skills obsidian/graphique AGY CLI.
+- `~/.claude/archives/skills-hors-scope/2026-09-05-simplification/` — skills Claude retirés.
 
-## Conservés dans `~/.agents/skills/`
+## Remarques
 
-`shell` · `review` · `babysit` · `loop` — génériques et peu coûteux.
-
-## Blocs sortis
-
-| Bloc | Skills | Raison |
-|---|---|---|
-| `doublons` | `caveman`, `graphify` | présents ailleurs : `caveman` dans `~/.claude/skills` et `~/.config/opencode/skills` ; `graphify` dans `~/.claude/skills` et `~/.antigravitycli/skills`. Le log OpenCode les signalait en « duplicate skill name ». |
-| `meta-agy` | `create-hook`, `create-rule`, `create-skill`, `create-subagent`, `migrate-to-skills`, `statusline`, `update-cli-config`, `update-cursor-settings`, `sdk` | ne servent qu'à modifier AGY lui-même |
-| `flux-dev` | `review-bugbot`, `review-security`, `split-to-prs`, `deploy` | flux de code, portée projet |
-| `ui` | `canvas` | 84 Ko, ne sert qu'à construire des UI canvas |
-
-## Remettre un skill en service
-
-Dans le projet qui en a besoin — portée correcte :
-
-```bash
-mkdir -p <projet>/.agents/skills && cp -r ~/.agents-hors-scope/<bloc>/<skill> <projet>/.agents/skills/
-```
-
-Au niveau du workspace personnel malgré tout :
-
-```bash
-mv ~/.agents-hors-scope/<bloc>/<skill> ~/.agents/skills/
-```
-
-## Note sur `create-subagent`
-
-Ce skill documente `.cursor/agents/` — un emplacement de **Cursor**. Antigravity n'a pas de
-sous-agents : ses types de customisation sont Rules, Skills, Plugins, Hooks, MCP. C'est un résidu de
-lignée, sans usage sur ce runtime.
+- AGY n'a pas de sous-agents : les définitions de « spécialistes » (`~/.agents/agents/`,
+  `~/.gemini/config/agents/`) ont été archivées le 2026-09-05 comme résidus sans chargeur.
+- `impeccable` (frontend générique) et les builtins applicatifs (`antigravity_guide`,
+  `permissioned-github`) ne sont pas versionnés ici : les builtins sont fournis et mis à jour
+  par l'application AGY elle-même.

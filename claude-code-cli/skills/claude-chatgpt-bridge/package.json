@@ -1,0 +1,7 @@
+{
+  "name": "claude-chatgpt-bridge",
+  "version": "1.0.0",
+  "description": "A Claude Code skill package for high-context task delegation to ChatGPT Solo via scoped local DevSpace MCP bridge and Cloudflare tunnels.",
+  "main": "SKILL.md",
+  "license": "MIT"
+}

@@ -1,0 +1,447 @@
+<h1 align="center">Claude Code ChatGPT Bridge</h1>
+
+<p align="center">
+  <strong>让 Claude Code 与 ChatGPT 安全地分工协作：ChatGPT 负责深度思考，Claude Code 掌控本地执行与验证。</strong>
+</p>
+
+<p align="center">
+  <strong>省 Claude Code token</strong> ·
+  <strong>ChatGPT 规划，Claude Code 执行</strong> ·
+  <strong>本地执行可控、可改锁</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Zhenyu98/claude-chatgpt-bridge/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Zhenyu98/claude-chatgpt-bridge?style=for-the-badge&logo=github"></a>
+  <a href="LICENSE"><img alt="License MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge"></a>
+  <img alt="Windows PowerShell" src="https://img.shields.io/badge/Windows-PowerShell-blue?style=for-the-badge&logo=windows&logoColor=white">
+  <img alt="Claude Code Skill" src="https://img.shields.io/badge/Claude Code-Skill-5B7266?style=for-the-badge">
+</p>
+
+<p align="center">
+  <a href="#这是什么">这是什么</a> ·
+  <a href="#适合谁">适合谁</a> ·
+  <a href="#安装">安装</a> ·
+  <a href="#让-chatgpt-不用每次重新设置">免重连</a> ·
+  <a href="chatgpt-app-setup.md">创建 App</a> ·
+  <a href="#路由模式">路由模式</a> ·
+  <a href="#安全模型">安全模型</a> ·
+  <a href="#常见问题">常见问题</a> ·
+  <a href="README.md">English</a>
+</p>
+
+<p align="center">
+  <img src="docs/assets/architecture.svg" alt="Claude Code ChatGPT Bridge 架构" width="92%" />
+</p>
+
+让 Claude Code 和 ChatGPT 作为两个协作代理进行分工：Claude Code 负责本地执行，ChatGPT 负责深度思考、审查和大上下文理解。
+
+## 这是什么
+
+MCP 桥本身是上游开源项目 [DevSpace](https://github.com/Waishnav/devspace)，通过 npm 安装，包名为 `@waishnav/devspace`，由它提供 MCP server、OAuth、文件工具和 `run_shell`。本仓库不 fork、不打补丁，也不在它外面再套一层 server。
+
+把 DevSpace 真正部署在「coding agent ↔ ChatGPT」之间以后，还缺两样东西，本仓库补上的正是它们：**一份告诉 agent 该怎么用它的 skill**，以及**跑在桥进程之外的控制脚本**。
+
+| 层 | 归属 | 负责什么 |
+|---|---|---|
+| MCP 桥 | DevSpace（上游） | MCP server、OAuth、文件工具、`run_shell` |
+| Skill | 本仓库 — `SKILL.md` | 哪些任务应交给 ChatGPT、`L0`–`L5` 权限等级、任务包与 manifest 格式、人工审批环节 |
+| 控制层 | 本仓库 — `scripts/bridge_controller.ps1` | 把 `On` / `Off` / `Reboot` 做成一个带互斥锁、带健康校验的期望状态事务 |
+| 外部恢复 | 本仓库 — `scripts/restart_task.ps1` | 按需的 Windows 计划任务，agent 已经够不到桥时也能把它重启起来 |
+| 链路稳定 | 本仓库 — `scripts/set_cf_api_config.ps1` | 刷新稳定 Worker 的 upstream，让对外的 MCP URL 始终不变 |
+
+上表中的仓库路径都相对于 [](skills/claude-chatgpt-bridge)，也就是 `install.ps1` 复制到 `%USERPROFILE%\.claude\skills\claude-chatgpt-bridge` 的那一份。
+
+控制层刻意放在桥之外。桥停了之后无法自行重启；刚关闭自身通道的 agent 更是失去了控制链路。所以生命周期交给 agent 调用的脚本，再加一个「agent 也无法调用时由 Windows 触发」的计划任务。
+
+这个项目的目标很简单：
+
+- 复杂问题交给 ChatGPT 想清楚。
+- 本地改文件、跑测试、构建、git diff 仍由 Claude Code 执行。
+- 大项目阅读和长日志分析尽量交给 ChatGPT，节省 Claude Code token。
+- 本地 MCP 通道默认关闭，只在需要时打开，用完关闭——而且开关多少次都不用回 ChatGPT 里重配 app。
+
+## 适合谁
+
+适合已经在使用 Claude Code，并且希望把 ChatGPT 作为强力协作代理的人：
+
+- 想让 ChatGPT 帮忙读大项目，但不想把大量文件复制进 Claude Code 对话。
+- 想让 ChatGPT 提供架构审查、论文/硬件/复杂 bug 的第二意见。
+- 想保留 Claude Code 对本地文件、测试、构建、git 的执行控制权。
+- 想在安全边界内使用本地 MCP：窄暴露、用完即关、随时改锁。
+
+## 工作方式
+
+```text
+用户任务
+  ↓
+Claude Code 判断任务类型和模式
+  ↓
+需要大上下文/深度推理时，把紧凑任务包发给 ChatGPT
+  ↓
+ChatGPT 通过本地 MCP 桥读取受限项目目录
+  ↓
+ChatGPT 返回 Action Manifest
+  ↓
+Claude Code 本地执行改动、测试和验证
+  ↓
+Claude Code 汇报结果和证据
+```
+
+默认分工：
+
+- Claude Code 负责写文件、跑测试、构建、git 和最终验证。
+- ChatGPT 负责深度推理、大上下文阅读、视觉/PDF/截图分析和独立 review。
+- 本地桥默认只暴露一个明确项目目录，并且默认只读。
+
+## 安装
+
+### 1. 克隆仓库
+
+```powershell
+git clone https://github.com/Zhenyu98/claude-chatgpt-bridge.git
+cd claude-chatgpt-bridge
+```
+
+### 2. 安装 Claude Code skill
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+如果目标位置已经有旧版 skill，安装器会先把它移动到带时间戳的备份目录，再复制新版。只有明确要丢弃旧安装时才使用 `-ForceOverwrite`。如需同时注册可选的按需 Reboot 计划任务，可加 `-RegisterRestartTask`；它不会创建自动触发器。
+
+安装后 skill 会被复制到：
+
+```text
+%USERPROFILE%\.claude\skills\claude-chatgpt-bridge
+```
+
+安装完成后，重启 Claude Code 或刷新 skills 列表。
+
+### 3. 检查本地环境
+
+```powershell
+$skill = "$env:USERPROFILE\.claude\skills\claude-chatgpt-bridge"
+powershell -ExecutionPolicy Bypass -File "$skill\scripts\local_bridge.ps1" -Action Doctor
+```
+
+`Doctor` 会检查本地桥所需的 Node/npm、Git Bash、CLI 依赖等环境。
+
+如缺少底层本地 MCP 桥 CLI，可按脚本提示安装。本仓库驱动的就是这个上游 CLI，不自带实现：
+
+```powershell
+npm install -g @waishnav/devspace
+```
+
+## 配置、启动、关闭和重启
+
+正常生命周期统一走外部 controller。底层 `Start`/`Stop` 保留为恢复原语，不作为日常开关。
+
+### 1. 保存非密钥配置
+
+临时 Quick Tunnel：
+
+```powershell
+$skill = "$env:USERPROFILE\.claude\skills\claude-chatgpt-bridge"
+$controller = "$skill\scripts\bridge_controller.ps1"
+
+powershell -ExecutionPolicy Bypass -File $controller -Action Configure -ProjectRoot "D:\your\project" -Tunnel cloudflare -InstallCloudflared
+```
+
+稳定 Worker URL：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File $controller -Action Configure -ProjectRoot "D:\your\project" -Tunnel cloudflare-worker -PublicBaseUrl https://bridge.example.workers.dev -InstallCloudflared
+```
+
+`Configure` 只保存项目路径、端口、隧道模式和稳定 URL，不保存 token。
+
+需要授权多个明确目录时，`ProjectRoot` 仍作为默认工作目录，并通过分号分隔的 `AllowedRoots` 列出其他目录；`ProjectRoot` 必须位于其中一个 root 内：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File $controller -Action Configure -ProjectRoot "C:\Users\you\DevSpace" -AllowedRoots "C:\Users\you\DevSpace;D:\Projects;E:\Reference" -Tunnel cloudflare-worker -PublicBaseUrl https://bridge.example.workers.dev
+```
+
+controller 会用 profile schema v2 保存该列表，并在后续 `On`、`Restart`、`Reboot` 中持续传给 DevSpace，不会退化为单一 root。
+
+### 2. Worker 模式先保存 KV 凭据
+
+如果使用 `cloudflare-worker`，第一次 `On` 前用最小权限 Cloudflare token 配置自动 KV 刷新：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "$skill\scripts\set_cf_api_config.ps1" -Action Set -AccountId <account-id> -KvNamespaceId <namespace-id>
+```
+
+脚本会安全提示输入 token，并用 Windows DPAPI `CurrentUser` 加密保存在 `%LOCALAPPDATA%\devspace-bridge`，不会把 token 放进命令行或输出。保存前会验证一次 DPAPI 加密/解密闭环；成功迁移后会清除旧的明文 `cf-api.json`，controller 也会拒绝使用遗留明文凭据。DPAPI 只保护静态文件；同一 Windows 用户下运行的桥、controller 和 `run_shell` 仍共享该用户权限，所以它不是权限隔离边界。
+
+使用 `-InstallCloudflared` 自动下载时，脚本会先验证 Windows Authenticode 签名有效且签名方为 Cloudflare, Inc.，验证失败不会安装或运行该文件。
+
+稳定 Worker 与 external 模式的公网 base URL 必须使用 HTTPS，且不能嵌入账号密码、查询参数或 fragment。
+
+凭据脚本会读取刚保存的 controller profile，把稳定 Worker URL 和 KV namespace 同步到不含认证凭据、但仍应留在本机且禁止提交到版本库的 `worker-proxy.json`。独立配置时也可以显式传 `-WorkerBaseUrl`。
+
+### 3. 日常开关与健康检查
+
+```powershell
+powershell -ExecutionPolicy Bypass -File $controller -Action On
+powershell -ExecutionPolicy Bypass -File $controller -Action Reboot
+powershell -ExecutionPolicy Bypass -File $controller -Action Off
+powershell -ExecutionPolicy Bypass -File $controller -Action Status
+powershell -ExecutionPolicy Bypass -File $controller -Action Doctor
+```
+
+- `On` 记录“有意运行”，按保存的 profile 启动，并验证本地、Quick Tunnel、稳定 Worker 三层端点的 `200/401` 合约。
+- `Off` 先记录“有意停止”，再关闭本地 MCP 与 tunnel；保留 ChatGPT app、OAuth 和 profile，所以下次 `On` 不需要重建 app。
+- `Restart` 与 `Reboot` 是同一个加互斥锁的完整事务：停 → 启 → Worker KV 刷新 → 健康检查。它不是两个可被分别执行的命令。
+- `Off` 后执行 `Reboot` 会被拒绝，避免外部任务误把你有意关闭的桥重新打开；需要恢复时明确执行 `On`。
+- 停止与重启只会清理当前配置端口上的 DevSpace 和对应 tunnel。若该端口属于无关程序，脚本会保留它并报告冲突，不会误杀。
+- `Status` 和日志不含 token，但会包含本机路径、PID、日志路径和 tunnel URL；分享截图或诊断前请脱敏。
+
+### 4. 可选的独立重启入口
+
+按需计划任务由桥接进程之外的 Windows Task Scheduler 启动，适合在底层桥意外被 ChatGPT 关掉后恢复：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "$skill\scripts\restart_task.ps1" -Action Install
+powershell -ExecutionPolicy Bypass -File "$skill\scripts\restart_task.ps1" -Action Run
+```
+
+它没有自动触发器，只调用固定的 `Reboot`；`MultipleInstances=IgnoreNew` 会避免并发重启。`Run` 只是异步提交请求，不代表已经成功。最终要查看 `%LOCALAPPDATA%\devspace-bridge\controller-result.json`，再运行 controller `Doctor`。
+
+默认任务使用当前用户的 `Interactive`、`Limited` 身份，因此该用户必须已登录。它解决的是“桥无法自行重启”的可靠性问题，不是安全隔离。真正的授权边界需要专门的最小权限 Windows 账号，并用 ACL 隔离脚本、状态、日志和凭据。
+
+### 5. 改锁 / Rotate（怀疑被别人连上时）
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "$skill\scripts\local_bridge.ps1" -Action Rotate
+```
+
+`Rotate` 是“一键改锁”：停桥（清内存 token）→ 删除 `oauth-state.json`（吊销已签发的 token）→ 生成新的 Owner password。之后用 controller `On`，再用新密码重新授权你自己的 ChatGPT。只要怀疑被未授权连接，执行该命令即可。
+
+## 让 ChatGPT 不用每次重新设置
+
+该关桥的理由很简单：闲置的公网端点纯粹是在增加攻击面。而大家宁愿一直开着的理由同样简单：Quick Tunnel URL 重启就变，关一次就要回 ChatGPT 里改 app URL、再走一遍授权。只要在会变的那一层前面加一个固定层，这笔代价就消失了：
+
+```text
+ChatGPT app URL        固定，只配一次
+  ↓
+稳定 Worker / 代理      域名固定，upstream 存在 KV 里
+  ↓
+当前 Quick Tunnel      每次重启随便变
+  ↓
+本地 DevSpace MCP      只绑定你授权的 roots
+```
+
+`On` 和 `Reboot` 会把新的 upstream 写进 Worker KV，并且只有本地、Quick Tunnel、稳定 Worker 三层都满足 `200/401` 健康合约才算成功。ChatGPT app 完全感知不到中间的变化，所以日常就是：
+
+```text
+不用时 Off  →  要用时 On  →  出问题时 Reboot
+```
+
+全程不用重建 app、不用改 URL、不用重新授权。`Off` 特意保留 app 配置和授权信息，就是为了守住这一点；真要吊销时用 `Rotate`。
+
+直接使用 Quick Tunnel URL 只适合第一次 smoke test，不适合长期存进 app。
+
+## 在 ChatGPT 里创建 App
+
+完整流程单独放在 **[chatgpt-app-setup.md](chatgpt-app-setup.md)**：开发者模式、app URL、OAuth 授权（Owner password 从哪读）、只读 smoke test，以及常见问题排查。
+
+授权前请记住两点：先确认暴露的项目目录正确且足够窄；不要把 Owner password、token、OAuth secret、cookie、API key 贴进聊天或截图。
+
+## 路由模式
+
+### NORMAL
+
+正常模式。ChatGPT 是强力 subagent，Claude Code 仍主动参与上下文理解和执行。
+
+适合：
+
+- 复杂实现任务
+- 需要 Claude Code 一边改一边验证
+- 希望 ChatGPT 给架构建议、审查和第二意见
+- 质量和可靠性比省 token 更重要
+
+例子：
+
+```text
+使用 claude-chatgpt-bridge 的 NORMAL 模式，让 ChatGPT 先 review 方案，再由 Claude Code 实现和测试。
+```
+
+### TOKEN_SAVING
+
+省 token 模式。Claude Code 主要负责调度和执行，安全的阅读、分析、综合尽量交给 ChatGPT。
+
+适合：
+
+- 项目文件很多
+- 日志很长
+- PDF、截图、图纸、论文、硬件审查
+- 想减少 Claude Code 对大上下文的阅读
+
+例子：
+
+```text
+使用 claude-chatgpt-bridge 的 TOKEN_SAVING 模式。非必要不要让 Claude Code 大量读文件，让 ChatGPT 通过本地桥做只读审查，Claude Code 只执行和验证。
+```
+
+### CHATGPT_ARCHITECT
+
+“规划反转”模式，适合长时间、连续的构建。ChatGPT 当架构师/经理（写 spec、设计、拆任务、为每个小任务生成提示、审查），Claude Code 每回合只做一个小任务并验证。
+
+适合：
+
+- 一个完整功能 / app / 游戏，先规划再逐步实现
+- 想尽量省 Claude Code 配额、跑长会话不撞用量上限
+
+要点：
+
+- 按边际成本路由：只有当某项任务能省下远超“一次慢速桥往返”的 Claude Code token 时，才交给 ChatGPT。
+- 需要多 subagent 时，ChatGPT 可以直接充当 subagent 池，fan-out 不占 Claude Code 配额；Claude Code 始终是唯一的总控 + 集成 + 验证。
+- 可选：你显式授予 `L3` 后，ChatGPT 可经桥直接写代码并自验证，Claude Code 只负责集成验证（读 diff + 跑测试），仍掌管 git 和最终结论。
+
+例子：
+
+```text
+使用 claude-chatgpt-bridge 的 CHATGPT_ARCHITECT 模式。让 ChatGPT 先出 spec 和任务分解，再逐个把单任务提示交给 Claude Code 实现和验证。
+```
+
+## 权限等级
+
+建议所有任务都从最低权限开始。
+
+| 等级 | 含义 | 典型用途 |
+|---|---|---|
+| `L0_NO_TOOL` | ChatGPT 只拿 prompt，不访问本地 | 概念讨论、算法推理、写作 |
+| `L1_READ_ONLY` | ChatGPT 可读受限 workspace | 代码审查、项目理解、文档审查 |
+| `L2_DIAGNOSTIC_COMMANDS` | ChatGPT 可运行非修改性诊断命令 | `rg`、目录列表、`git status`、dry-run |
+| `L3_WORKSPACE_WRITE` | 在受限 workspace 内写入 | 默认只写报告目录（`docs/chatgpt/`）；你把 ChatGPT 当独立 agent 时，可在窄 root 内写源码并自验证（不含安装依赖 / commit / push / 删除越界 / 密钥 / root 外） |
+| `L4_PRIVILEGED_ROOT` | 管理员/root 操作 | 安装工具、硬件设备权限 |
+| `L5_IRREVERSIBLE_EXTERNAL` | 不可逆外部动作 | force push、刷固件、下单、删除数据 |
+
+`L4` 和 `L5` 默认必须人工审批。
+
+## 安全边界
+
+不要暴露：
+
+- `.env`
+- `auth.json`
+- API key
+- SSH key
+- `id_rsa`
+- `*.pem`
+- 浏览器 cookie
+- 整个 `C:\Users\<user>`
+- 整个磁盘
+- 无关私人文件夹
+
+推荐暴露：
+
+- 一个项目目录
+- 一个仓库
+- 一个明确任务
+
+默认策略：
+
+- ChatGPT 负责 review。
+- Claude Code 负责写入和验证。
+- 本地桥默认只读（这是**策略约定**，不是强制沙箱，见下）。
+
+## 安全模型
+
+先明确真实的信任边界：一旦完成 ChatGPT app 的 OAuth 授权，桥就授予了对你机器的文件读写和 shell 执行。「这是一份 skill，不是一个沙箱」在这里是关键前提——`L0`–`L5` 只是 Claude Code 要求 ChatGPT 遵守的**策略**，并非桥强制执行；`run_shell` 不受 root 约束，所以被授权的 app 实际上等于本地用户级代码执行。真正被强制的边界只有三条，其中两条来自 DevSpace：OAuth 授权（一个强随机 Owner password）和文件工具的窄 `allowedRoots`；第三条是本仓库提供的——用 controller `Off` 切断访问途径。这也是为什么「`Off` 足够顺手」比那张等级表更重要。
+
+实操建议：
+
+- **不用时就用 controller `Off`**——常驻的公网端点是主要攻击面。
+- root 要窄、不含密钥；要实现更强隔离，请运行在最小权限账号或一次性 VM 中。
+- 查看 controller `Doctor.securityWarnings`；磁盘根目录、完整用户目录及其父目录会被标记为范围过宽。
+- 一旦怀疑别人连上，跑 `-Action Rotate` 吊销所有 token 并改锁。
+- controller 状态和日志包含路径、PID 与 tunnel URL，分享前先脱敏。
+- shell 命令日志默认关闭，避免无意持久化敏感参数；确实需要审计轨迹时，再设置用户级环境变量 `DEVSPACE_LOG_SHELL_COMMANDS=true`。
+
+## 面向 Agent 用户
+
+想让 agent（Claude Code、Claude Code 等）替你安装配置，见 [agent-setup.md](agent-setup.md)：开头就是复制即用的提示词和安全默认。
+
+## 常见问题
+
+### 这是 DevSpace 的 fork 吗？
+
+不是。DevSpace 从 npm 原样安装为 `@waishnav/devspace`，MCP 桥一直是它。本仓库是 agent 读的那份 skill 加上它调用的那些脚本，不替换、不打补丁、也不代理上游 server。
+
+### 为什么生命周期要放在桥之外？
+
+因为已经停掉的进程无法自行重启，而通道刚断掉的 agent 也无法让它重启。controller 是 agent 调用的独立脚本；可选的计划任务是第二个入口，在无法调用 controller 时由 Windows 触发。
+
+### 每次重启是不是都要重配 ChatGPT app？
+
+前面挂了稳定 Worker 或代理就不用。见[让 ChatGPT 不用每次重新设置](#让-chatgpt-不用每次重新设置)：app URL 固定不动，`Reboot` 只换它背后的 upstream。
+
+### 关闭后 ChatGPT 还会不会访问本地项目？
+
+正常情况下不会。controller `Off` 会记录“有意停止”，并关闭本地 MCP 服务和 tunnel。
+
+但 ChatGPT 端可能仍保留 app 连接记录。这个记录本身不是本地通道；只有服务和 tunnel 重新打开时才可访问。
+
+### 为什么不直接 revoke 授权？
+
+因为 revoke 后下次可能需要重新授权。这个项目的目标是：
+
+```text
+平时 `Off` → 使用时 `On` → 需要时 `Reboot` → 不反复重配 ChatGPT app
+```
+
+### Quick Tunnel 为什么不适合长期配置？
+
+Quick Tunnel URL 可能变化。适合测试，不适合作为长期 ChatGPT app URL。
+
+想稳定复用，应使用 Worker/custom proxy 或其他稳定 URL。
+
+### ChatGPT 能不能直接改源码？
+
+不推荐。默认模式下，ChatGPT 应返回 Action Manifest；Claude Code 读取必要文件、应用补丁、运行测试并验证。
+
+## 目录结构
+
+```text
+
+  SKILL.md
+  agents/openai.yaml
+  scripts/
+    bridge_controller.ps1
+    local_bridge.ps1
+    restart_task.ps1
+    set_cf_api_config.ps1
+  references/
+    bridge-operations.md
+    router-policy.md
+    examples.md
+    hook-design.md
+    agents-snippet.md
+tests/
+  static_validation.ps1
+```
+
+## 路线图
+
+- 更稳定的一键配置向导
+- 更清晰的 ChatGPT app 创建截图/视频教程
+- 可选的 pre-handoff 安全检查脚本
+- 更完整的跨平台启动脚本
+- 更多实际任务模板：代码审查、论文审查、硬件审查、复杂 bug
+
+## 致谢
+
+- 本 skill 驱动的 MCP 桥是 Waishnav 的开源项目 [DevSpace](https://github.com/Waishnav/devspace)。
+- Special thanks to [LINUX.DO](https://linux.do/) for providing a promotion platform.
+
+## 许可证
+
+[MIT](LICENSE)
+
+## Star History
+
+[![Star History Chart](https://www.repostars.dev/api/og?repos=Zhenyu98%2Fclaude-chatgpt-bridge&theme=light&ogv=4&v=20260705)](https://www.star-history.com/?repos=Zhenyu98%2Fclaude-chatgpt-bridge&type=date&legend=top-left)
+
+

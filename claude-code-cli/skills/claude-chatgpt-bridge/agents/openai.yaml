@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claude Code ChatGPT Bridge"
+  short_description: "Route work and recover the local bridge safely."
+  default_prompt: "Use $claude-chatgpt-bridge to route coding work, operate a scoped local DevSpace MCP bridge, and run verified Restart or Reboot recovery with approval gates."
