@@ -152,23 +152,6 @@
             "command": "rtk hook claude"
           }
         ]
-      },
-      {
-        "matcher": "Browser|WebFetch|WebSearch|browser_.*|mcp__claude-in-chrome__.*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node C:/Users/Juliann/.claude/hooks/guard-trash-instead-of-rm.js"
-          },
-          {
-            "type": "command",
-            "command": "node C:/Users/Juliann/.claude/hooks/delegate-browser.mjs"
-          },
-          {
-            "type": "command",
-            "command": "rtk hook claude"
-          }
-        ]
       }
     ],
     "SessionEnd": [
