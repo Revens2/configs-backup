@@ -1,93 +1,74 @@
-# Répartition des tâches entre runtimes
+# Répartition actuelle des runtimes
 
-Écrit le 2026-08-04, phase 5.3. Fondé sur ce que chaque runtime **sait faire**, vérifié binaire en
-main, pas sur ce qu'on lui prête.
+Ce fichier décrit le **routage logique actuel**. Les versions de modèles, IP, ports et mesures de contexte vieillissent vite et ne sont pas figés ici ; les récupérer dans les configurations runtime, le Vault ou l'état réel.
 
-## Capacités réelles
+## Claude Code CLI / Desktop — primaire
 
-| | Claude Code | AGY (Antigravity 1.1.10) | OpenCode 1.18.3 |
-|---|---|---|---|
-| Sous-agents | **oui** (`~/.claude/agents/*.md`) | **non** | oui |
-| MCP par sous-agent | non | — | non |
-| MCP par plugin activable | non | **oui** | non |
-| Retirer un sous-agent du contexte | non | — | **oui** (`task` deny) |
-| Nesting | 1 niveau | — | 2 niveaux |
-| Contexte de démarrage **mesuré** | **16 021 tok** | **9 303 tok** | **~12 800 tok** |
+Usage principal : fondation d'applications, code complexe, architecture, refactors, migrations et infra à risque.
 
-> Chiffres au 2026-08-04 après triage de `~/.agents/skills/` (16 skills sortis, −12 212 tok sur AGY,
-> −2 000 sur OpenCode). Avant ce triage : AGY 21 517, OpenCode ~14 800.
-> **AGY est bien le plus léger — mais seulement une fois `.agents/` dégraissé.**
+Forces :
+- sous-agents spécialisés ;
+- isolation de contexte ;
+- CodeGraph / Graphify ;
+- Vault/RAG ;
+- Context7 ;
+- browser/web ;
+- hooks d'état ;
+- modèles différenciés selon le spécialiste.
 
-### Correction : AGY n'est pas le runtime le plus léger
+Deux comptes Claude peuvent se relayer. Le handoff est fait par `plan.md` + `progress.md`, pas par copie du transcript.
 
-Les chiffres ci-dessus sont des relevés réels, pas des estimations tirées des tailles de fichiers.
-`agy -p … --output-format json` renvoie `usage.input_tokens = 21 530`. Ma première estimation
-(~2 000 tok, déduite de `GEMINI.md` + `settings.json`) était fausse d'un facteur 10 : elle ignorait
-le prompt système d'Antigravity et ses outils intégrés, exactement l'erreur que j'avais commise sur
-Claude Code.
+## ChatGPT — cerveau global + exécution connectée
 
-**Après coupure des connecteurs claude.ai, Claude Code démarre plus léger qu'AGY** — 16 021 contre
-21 530. L'argument « AGY est le runtime le plus léger » tombe. Ce qui reste vrai d'AGY, c'est le
-confinement MCP par plugin ; ce n'est pas un argument de contexte de départ.
+Usage : brainstorming, architecture, recherche, compréhension de l'environnement, génération de prompts et, quand les outils connectés suffisent, exécution directe.
 
-### OpenCode : mesuré après réparation d'un second bug
+ChatGPT doit connaître la carte complète des runtimes et de leurs capacités. Pour du code local ou une tâche nécessitant le workspace de développement, il peut déléguer à Codex ou produire le prompt exact pour Claude/AGY.
 
-Première tentative : réponses vides. Cause trouvée par `GET :4002/v1/models` — la gateway expose le
-modèle sous l'id **`qwen-3.6-35b-moe`**, alors que `opencode.jsonc` demandait `Qwen 3.6 35b MoE`,
-identifiant qui n'existe que sur `:8000` (llama.cpp direct, sans le sanitizer de tool-calls). La clé
-d'un modèle dans la config **est** l'id envoyé à l'API : elle ne correspondait à rien, d'où le
-silence. Corrigé, OpenCode répond.
+Le Project Brainstorming consulte le RAG/Vault en priorité pour les faits dynamiques et les fichiers de contexte pour les capacités stables.
 
-Mesure obtenue par delta sur `opencode stats` : 6 sessions × 489,2 K → 8 sessions × 369,2 K, soit
-**~14 800 tokens** pour la session minimale. Cohérent avec la médiane affichée (16,1 K).
+## Codex — secondaire fort / bras de ChatGPT
 
-**Classement final : OpenCode ~14 800 < Claude Code 16 021 < AGY 21 530.**
+Runtime multi-agent complet. À utiliser comme alternative de premier rang à Claude, pour exécuter une tâche issue de ChatGPT, ou pour paralléliser quand cela apporte réellement quelque chose.
 
-### Correction d'un postulat de la mission
+Conserver la même philosophie que Claude : FAST / STANDARD / DEEP / CRITICAL, spécialistes, état durable et contexte propre.
 
-L'énoncé affirmait : « AGY gère nativement les sous-agents dynamiques et le nesting, contrairement à
-Claude Code. C'est donc lui qui porte l'orchestration profonde. » **C'est faux pour ce build.**
+## Antigravity / AGY — fallback complet
 
-Les types de customisation d'Antigravity sont **Rules, Skills, Plugins, Hooks, MCP Servers** — il n'y
-a pas de sous-agents (source : skill intégré `agy-customizations`, `~/.gemini/config/` comme racine
-globale). Le dossier `antigravity/subagents/` du dépôt et le skill `create-subagent` (qui documente
-`.cursor/agents/`) sont des **résidus de lignée Cursor**, pas des fonctionnalités d'Antigravity.
-`agy agents` renvoie une liste vide, y compris après dépôt d'un fichier d'agent aux deux emplacements
-candidats.
+AGY est la **solution de substitution à Claude Code quand le quota Claude est épuisé**. Il doit pouvoir prendre une grosse tâche et la mener de bout en bout avec le même niveau d'exigence.
 
-Le runtime qui a réellement des sous-agents, c'est **Claude Code**. Celui qui sait réellement confiner
-un MCP, c'est **AGY — par plugin**. Ce ne sont pas les mêmes leviers, et aucun runtime n'a les deux.
+Son mécanisme interne peut différer : Rules, Skills, Plugins, Hooks, MCP et capacités réellement exposées. Ne jamais faire semblant qu'un sous-agent existe s'il n'est pas callable ; reproduire sa fonction sous forme de phase/skill/plugin/worker disponible.
 
-## Répartition retenue
+Une mission AGY complexe ne doit pas recevoir un prompt volontairement simplifié : elle garde planification, exploration, validation, état durable et handoff propre.
 
-**Claude Code — implémentation fine et travail multi-étapes.**
-C'est le seul à avoir des sous-agents. Il porte les 5 workers et le skill `/plan-run`.
-MCP racine réduit à `codegraph`, `github`, `obsidian-semantic` ; les autres se déclarent dans le
-`.mcp.json` du projet qui en a besoin.
+## Freebuff — worker économique
 
-**AGY — quand il faut un MCP de domaine sans le payer partout.**
-21 530 tok au démarrage, aucun MCP global actif. Les serveurs de domaine sont packagés en plugins
-**désactivés par défaut** :
+Usage : rapports, transformations, extraction, documentation passive et tâches textuelles peu risquées.
 
-```bash
-agy plugin list
-agy plugin enable obsidian-kit      # charge le MCP obsidian, le temps du besoin
-agy plugin enable orchestrateur-kit # charge la règle de conduite de travail long
-```
+Pas de dépendance supposée à des MCP ou sous-agents. Donner un brief minimal et le payload strictement nécessaire. Ne pas lui transmettre toute la topologie de la stack.
 
-C'est la seule confinement per-domaine réel de tout le parc. À privilégier pour : balayage de gros
-volumes, tâches longues répétitives, tout ce qui n'a pas besoin de déléguer.
+## OpenCode + Qwen local — local / expérimental
 
-**OpenCode — quand il faut du nesting.**
-Deux niveaux, et le seul à pouvoir **retirer un sous-agent du contexte** via les règles de permission
-`task` en `deny` (le sous-agent disparaît de la description de l'outil Task). Modèle local
-`Qwen 3.6 35B MoE` sur `100.99.75.104:4002`, fenêtre 98 304 tokens — coût marginal nul, donc le
-runtime naturel pour ce qui est volumineux mais peu exigeant en raisonnement.
+Usage rare : tâches simples, essais locaux, gros volume peu exigeant en raisonnement, cas où le coût marginal local est intéressant.
 
-## Règle de décision
+Ne pas en faire le chemin critique d'une migration, d'une architecture ou d'une intervention risquée tant que la fiabilité tool-use/agentique du modèle local n'est pas suffisante.
 
-1. Besoin de déléguer à un spécialiste → **Claude Code**.
-2. Besoin d'un MCP de domaine sans le payer partout → **AGY**, plugin activé le temps du besoin.
-3. Besoin d'imbriquer des agents, ou volume énorme sur modèle local → **OpenCode**
-   (nécessite Tailscale actif et le VPS `100.99.75.104` en ligne).
-4. Sinon → Claude Code : le mieux outillé **et**, depuis la coupure des connecteurs, le plus léger.
+## Règle de choix
+
+1. Qualité maximale, fondation, code complexe, infra risquée → **Claude Code**.
+2. Claude indisponible/quota épuisé → **AGY en fallback complet**.
+3. Besoin d'un runtime fort multi-agent, exécution depuis ChatGPT ou parallélisation pertinente → **Codex**.
+4. Rapport/transformation/tâche textuelle peu risquée → **Freebuff**.
+5. Besoin local/offline/expérimental ou gros volume peu exigeant → **OpenCode/Qwen**.
+
+La disponibilité réelle, les outils nécessaires, le blast radius et le coût de contexte priment sur cette préférence.
+
+## Context engineering commun
+
+- FAST : direct.
+- STANDARD : spécialiste ciblé, sans plan lourd si inutile.
+- DEEP : planification isolée + `plan.md` + `progress.md` compact.
+- CRITICAL : DEEP + état read-only, sauvegarde, rollback et validation après chaque changement.
+
+`progress.md` est un snapshot courant, pas un journal infini. L'historique détaillé va dans `errors.md` seulement si nécessaire. Ne pas réémettre le ToDo complet à chaque tour ; utiliser au besoin un micro-ancrage d'une ligne.
+
+Voir `ENVIRONMENT-MAP.md` pour la carte canonique de routage.
