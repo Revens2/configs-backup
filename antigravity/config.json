@@ -1,30 +1,25 @@
 {
-  "plugins": {
-    "chrome-devtools-plugin": {
-      "enabled": true
-    },
-    "obsidian-kit": {
-      "enabled": false
-    },
-    "orchestrateur-kit": {
-      "enabled": true
-    }
-  },
-  "userSettings": {
-    "artifactReviewMode": "ARTIFACT_REVIEW_MODE_TURBO",
-    "autoExecutionPolicy": "CASCADE_COMMANDS_AUTO_EXECUTION_EAGER",
-    "browserJsExecutionPolicy": "BROWSER_JS_EXECUTION_POLICY_TURBO",
-    "enableTerminalSandbox": false,
-    "globalPermissionGrants": {
-      "allow": [
-        "execute_url(youtube.com)",
-        "execute_url(localhost)",
-        "execute_url(docs.google.com)"
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "node",
+      "args": [
+        "C:\\Tools\\chrome-devtools-wrapper.mjs"
       ]
     },
-    "nonWorkspaceFileAccessPolicy": "AGENT_SETTING_POLICY_ALLOW",
-    "queuedMessageDeliveryStrategy": "MESSAGE_DELIVERY_STRATEGY_NEXT_INVOCATION",
-    "remoteControlHostname": "desktop-v30kq19-astral-cosmos",
-    "themeMode": "THEME_MODE_DARK"
+    "vault": {
+      "command": "C:\\Tools\\mcp-proxy-venv\\Scripts\\python.exe",
+      "args": [
+        "C:\\Tools\\vault-mcp-bridge.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
+    "context7": {
+      "serverUrl": "https://mcp.context7.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${CONTEXT7_API_KEY}"
+      }
+    }
   }
 }
