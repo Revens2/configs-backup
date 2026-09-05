@@ -51,6 +51,7 @@ freebuff/*
 !freebuff/global-skills/
 !freebuff/global-skills/**
 
-# Journaux de mission locaux
+# Artefacts de mission locaux
 plan.md
 progress*.md
+errors.md
