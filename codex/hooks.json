@@ -1,5 +1,5 @@
 {
-  "description": "Codex lifecycle hooks without blocking or tool-rewrite hooks.",
+  "description": "Codex lifecycle hooks — notif uniquement fin de tache principale (pas de sous-agents).",
   "hooks": {
     "PreCompact": [
       {
@@ -63,6 +63,18 @@
             "async": true,
             "timeout": 30,
             "statusMessage": "Updating code graph"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File ~/.claude/hooks/agent-notify.ps1 -Event completed -Harness codex",
+            "timeout": 10,
+            "async": true
           }
         ]
       }
