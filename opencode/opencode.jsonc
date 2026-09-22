@@ -6,7 +6,7 @@
       "explore": "deny"
     }
   },
-  "model": "experiential/deepseek-v4.1-flash",
+  "model": "opencode/muse-spark-1.3-contributor-free",
   "provider": {
     "vps-ia": {
       "npm": "@ai-sdk/openai-compatible",
@@ -21,22 +21,6 @@
             "context": 98304,
             "output": 16384
           }
-        }
-      }
-    },
-    "experimental-labs": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Experiential",
-      "options": {
-        "baseURL": "https://api.experientiallabs.ai/v1",
-        "apiKey": "{env:EXPLABS_API_KEY}"
-      },
-      "models": {
-        "deepsync-flash-v4.1": {
-          "name": "DeepSync Flash V4.1"
-        },
-        "deepseek-v4.1-flash": {
-          "name": "DeepSeek V4.1 Flash"
         }
       }
     },
@@ -112,12 +96,13 @@
       },
       "timeout": 60000
     },
-    "astra": {
-      "type": "remote",
-      "url": "https://mymcps.duckdns.org/astra/mcp",
-      "oauth": {
-        "scope": "astra:lecture"
-      },
+    "chrome-devtools": {
+      "type": "local",
+      "command": [
+        "node",
+        "C:\\Tools\\chrome-devtools-wrapper.mjs",
+        "--no-launch"
+      ],
       "timeout": 60000
     }
   }
