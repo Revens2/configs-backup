@@ -13,9 +13,9 @@ multi_agent = true
 
 [agents]
 enabled = true
-max_concurrent_threads_per_session = 8
-default_subagent_model = "gpt-5.6-terra"
-default_subagent_reasoning_effort = "medium"
+max_concurrent_threads_per_session = 3
+default_subagent_model = "gpt-5.6-luna"
+default_subagent_reasoning_effort = "low"
 
 [windows]
 sandbox = "elevated"
@@ -71,10 +71,13 @@ command = "codegraph.exe"
 args = ["serve"]
 env = { "CODEGRAPH_DB" = ".codegraph/codegraph.db" }
 
-[mcp_servers.github]
-command = "npx.cmd"
-args = ["-y", "@modelcontextprotocol/server-github"]
-enabled = true
+# github : retire le 2026-09-22. Le paquet @modelcontextprotocol/server-github exige
+# GITHUB_PERSONAL_ACCESS_TOKEN, absent de l'environnement : le serveur demarrait sans jamais
+# repondre. Les operations Git passent par git/gh CLI.
+# [mcp_servers.github]
+# command = "npx.cmd"
+# args = ["-y", "@modelcontextprotocol/server-github"]
+# enabled = true
 
 [mcp_servers.chrome-devtools]
 command = "node"
