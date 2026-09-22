@@ -7,7 +7,7 @@ Ce fichier n'est **pas** un inventaire figé des skills installés. Les descript
 Pour connaître les skills réellement versionnés, inspecter le répertoire du runtime concerné :
 
 - Claude Code : `claude-code-cli/skills/`
-- Antigravity / AGY : `antigravity/skills/` et les `skills/` embarqués dans ses plugins
+- Antigravity / AGY : `antigravity/skills/` et les `skills/` embarqués dans ses plugins ; `antigravity/agents/` porte les subagents Markdown (ce ne sont pas des skills)
 - OpenCode : `opencode/skills/`
 - Freebuff : `freebuff/global-skills/`
 - Codex : `codex/` et ses agents/règles propres

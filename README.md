@@ -18,7 +18,11 @@ Les fichiers racine `CLAUDE.md`, `AGENTS.md` et `GEMINI.md` sont de simples **po
 
 - `claude-code-cli/` — settings, MCP, sous-agents, hooks, skills et plugins Claude Code.
 - `claude-code-desktop/` — configuration spécifique Desktop lorsqu'elle diffère du CLI.
-- `antigravity/` — configuration, Rules, Skills, Plugins, Hooks et MCP d'AGY. Ne pas déduire l'existence de custom subagents à partir d'anciens fichiers historiques.
+- `antigravity/` — configuration, Rules, Agents, Skills, Plugins, Hooks et MCP d'AGY.
+  Depuis AGY 1.2.x les **subagents Markdown existent réellement** : `~/.gemini/config/agents/<nom>.md`,
+  invocation par `invoke_subagent`, sélection comme agent primaire selon `mainAgent`. `agents/` porte les
+  11 spécialistes et `rules/agents-routage.md` la table de délégation. Ne pas déduire cette capacité d'un
+  ancien fichier historique : elle se vérifie avec `agy agents` et le roster de subagents rendu au modèle.
 - `codex/` — configuration Codex, agents, hooks et règles.
 - `opencode/` — configuration, agents/plugins/skills OpenCode.
 - `freebuff/` — skills réutilisables Freebuff.

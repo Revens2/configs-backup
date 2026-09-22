@@ -38,6 +38,8 @@ AGY est la **solution de substitution à Claude Code quand le quota Claude est �
 
 Son mécanisme interne peut différer : Rules, Skills, Plugins, Hooks, MCP et capacités réellement exposées. Ne jamais faire semblant qu'un sous-agent existe s'il n'est pas callable ; reproduire sa fonction sous forme de phase/skill/plugin/worker disponible.
 
+Depuis AGY 1.2.x, les **subagents natifs existent** : les 11 spécialistes sont déclarés en Markdown dans `~/.gemini/config/agents/`, invoqués par `invoke_subagent`, et vérifiables par `agy agents` (agents sélectionnables comme primaire) et par le roster de subagents rendu au modèle. La reproduction par phase/skill/plugin ne concerne donc que ce qu'AGY n'expose pas réellement.
+
 Une mission AGY complexe ne doit pas recevoir un prompt volontairement simplifié : elle garde planification, exploration, validation, état durable et handoff propre.
 
 ## Freebuff — worker économique

@@ -1,24 +1,46 @@
 {
   "mcpServers": {
-    "chrome-devtools": {
-      "command": "node",
+    "broker": {
       "args": [
-        "C:\\Tools\\chrome-devtools-wrapper.mjs"
-      ]
-    },
-    "vault": {
-      "command": "C:\\Tools\\mcp-proxy-venv\\Scripts\\python.exe",
-      "args": [
-        "C:\\Tools\\vault-mcp-bridge.py"
+        "-o",
+        "BatchMode=yes",
+        "-i",
+        "C:/Users/Juliann/.ssh/broker/broker_antigravity",
+        "brokermcp@10.200.114.203"
       ],
+      "command": "ssh",
+      "disabled": false
+    },
+    "chrome-devtools": {
+      "args": [
+        "C:\\Tools\\chrome-devtools-wrapper.mjs",
+        "--no-launch"
+      ],
+      "command": "node"
+    },
+    "codegraph": {
+      "args": [
+        "serve"
+      ],
+      "command": "C:/Users/Juliann/.cargo/bin/codegraph.exe",
+      "disabled": false,
       "env": {
-        "PYTHONUNBUFFERED": "1"
+        "CODEGRAPH_DB": ".codegraph/codegraph.db"
       }
     },
     "context7": {
-      "serverUrl": "https://mcp.context7.com/mcp",
       "headers": {
         "Authorization": "Bearer ${CONTEXT7_API_KEY}"
+      },
+      "serverUrl": "https://mcp.context7.com/mcp"
+    },
+    "vault": {
+      "args": [
+        "C:\\Tools\\vault-mcp-bridge.py"
+      ],
+      "command": "C:\\Tools\\mcp-proxy-venv\\Scripts\\python.exe",
+      "env": {
+        "PYTHONUNBUFFERED": "1"
       }
     }
   }

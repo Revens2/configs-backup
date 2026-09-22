@@ -1,0 +1,7 @@
+{
+  "model": "Claude Sonnet 4.6 (Thinking)",
+  "trustedWorkspaces": [
+    "/var/lib/convia/agy-stage",
+    "C:\\Users\\Juliann"
+  ]
+}
