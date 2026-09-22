@@ -104,6 +104,25 @@
         "--no-launch"
       ],
       "timeout": 60000
+    },
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "Authorization": "Bearer {env:CONTEXT7_API_KEY}"
+      },
+      "timeout": 60000
+    },
+    "codegraph": {
+      "type": "local",
+      "command": [
+        "C:/Users/Juliann/.cargo/bin/codegraph.exe",
+        "serve"
+      ],
+      "environment": {
+        "CODEGRAPH_DB": ".codegraph/codegraph.db"
+      },
+      "timeout": 60000
     }
   }
 }
