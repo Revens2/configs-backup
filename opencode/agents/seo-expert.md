@@ -1,7 +1,6 @@
 ---
 name: seo-expert
 description: Sous-agent expert SEO pour audits techniques, maillage interne, balisage structuré Schema.org, cocon sémantique, métadonnées et Core Web Vitals.
-model: claude-sonnet-5
 tools:
   websearch: true
   webfetch: true

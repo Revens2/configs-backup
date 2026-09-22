@@ -1,7 +1,6 @@
 ---
 name: little-tasks
 description: Micro-exécuteur passif. À utiliser dès qu'une tâche est brute, répétitive ou volumineuse en tokens mais faible en raisonnement — conversion de formats (JSON↔YAML, cURL→.env.example, table Markdown↔JSON), génération de mocks/fixtures (JSON, SQL, CSV), documentation passive (JSDoc/PHPDoc, README sur code existant), scaffolding d'arborescence (mkdir -p / touch). Délègue le traitement textuel à `agy` (Gemini) et ne renvoie qu'un chemin de fichier.
-model: claude-sonnet-5
 tools:
   bash: true
   read: true
