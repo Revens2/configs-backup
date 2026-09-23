@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "vault": {
+      "type": "http",
+      "url": "https://mymcps.duckdns.org/vault/mcp",
+      "headers": {
+        "Authorization": "Bearer $VAULT_MCP_TOKEN"
+      }
+    },
+    "claude-opus": {
+      "type": "stdio",
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "mcp-remote@0.14.3",
+        "https://mymcps.duckdns.org/claude-opus/mcp"
+      ],
+      "env": {
+        "MCP_REMOTE_CONFIG_DIR": "C:\\Users\\Juliann\\.mcp-auth"
+      }
+    }
+  }
+}
