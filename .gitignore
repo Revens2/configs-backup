@@ -48,6 +48,8 @@ Cache/
 # Freebuff runtime et identifiants locaux : seuls README.md et global-skills/ sont publics
 freebuff/*
 !freebuff/README.md
+!freebuff/AGENTS.md
+!freebuff/mcp.json
 !freebuff/global-skills/
 !freebuff/global-skills/**
 
