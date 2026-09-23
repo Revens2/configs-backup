@@ -213,3 +213,12 @@ OpenCode, Freebuff), pour tout projet personnel IA :
 
 Exceptions : un projet qui vit déjà ailleurs et qu'on n'a pas décidé de déplacer reste où il
 est (voir `C:\projet\PROPOSITIONS.md` avant tout déplacement).
+
+## Politique Opus (tâches non triviales uniquement)
+
+- Les outils/subagents collectent d'abord juste assez de faits.
+- AVANT la décision/stratégie principale, le main agent appelle obligatoirement opus_think (MCP claude-opus) avec contexte compact.
+- Le main agent exécute et vérifie lui-même.
+- Nouvel appel opus_think si nouvelles preuves/échec changent la stratégie.
+- Pas d'Opus pour trivial/déterministe.
+- Opus n'est pas source factuelle.

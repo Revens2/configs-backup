@@ -121,8 +121,17 @@
       "timeout": 60000
     },
     "claude-opus": {
-      "type": "remote",
-      "url": "https://mymcps.duckdns.org/claude-opus/mcp"
+      "type": "local",
+      "command": [
+        "npx.cmd",
+        "-y",
+        "mcp-remote@0.14.3",
+        "https://mymcps.duckdns.org/claude-opus/mcp"
+      ],
+      "environment": {
+        "MCP_REMOTE_CONFIG_DIR": "C:\\Users\\Juliann\\.mcp-auth"
+      },
+      "timeout": 60000
     }
   }
 }

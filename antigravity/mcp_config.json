@@ -33,7 +33,16 @@
       "serverUrl": "https://mcp.context7.com/mcp"
     },
     "claude-opus": {
-      "serverUrl": "https://mymcps.duckdns.org/claude-opus/mcp"
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "mcp-remote@0.14.3",
+        "https://mymcps.duckdns.org/claude-opus/mcp"
+      ],
+      "env": {
+        "MCP_REMOTE_CONFIG_DIR": "C:\\Users\\Juliann\\.mcp-auth"
+      },
+      "disabled": false
     },
     "vault": {
       "args": [

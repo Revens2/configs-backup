@@ -6,8 +6,16 @@
       "headers": "REDACTED"
     },
     "claude-opus": {
-      "type": "http",
-      "url": "https://mymcps.duckdns.org/claude-opus/mcp"
+      "type": "stdio",
+      "command": "npx.cmd",
+      "args": [
+        "-y",
+        "mcp-remote@0.14.3",
+        "https://mymcps.duckdns.org/claude-opus/mcp"
+      ],
+      "env": {
+        "MCP_REMOTE_CONFIG_DIR": "C:\\Users\\Juliann\\.mcp-auth"
+      }
     }
   }
 }
