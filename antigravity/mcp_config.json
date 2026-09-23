@@ -29,10 +29,11 @@
       }
     },
     "context7": {
-      "headers": {
-        "Authorization": "Bearer ${CONTEXT7_API_KEY}"
-      },
+      "headers": "REDACTED",
       "serverUrl": "https://mcp.context7.com/mcp"
+    },
+    "claude-opus": {
+      "serverUrl": "https://mymcps.duckdns.org/claude-opus/mcp"
     },
     "vault": {
       "args": [
