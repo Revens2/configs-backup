@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "vault": {
+      "type": "http",
+      "url": "https://mymcps.duckdns.org/vault/mcp",
+      "headers": "REDACTED"
+    },
+    "claude-opus": {
+      "type": "http",
+      "url": "https://mymcps.duckdns.org/claude-opus/mcp"
+    }
+  }
+}

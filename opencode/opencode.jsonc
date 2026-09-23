@@ -91,9 +91,7 @@
     "vault": {
       "type": "remote",
       "url": "https://mymcps.duckdns.org/vault/mcp",
-      "headers": {
-        "Authorization": "Bearer {env:VAULT_MCP_TOKEN}"
-      },
+      "headers": "REDACTED",
       "timeout": 60000
     },
     "chrome-devtools": {
@@ -108,9 +106,7 @@
     "context7": {
       "type": "remote",
       "url": "https://mcp.context7.com/mcp",
-      "headers": {
-        "Authorization": "Bearer {env:CONTEXT7_API_KEY}"
-      },
+      "headers": "REDACTED",
       "timeout": 60000
     },
     "codegraph": {
@@ -123,6 +119,10 @@
         "CODEGRAPH_DB": ".codegraph/codegraph.db"
       },
       "timeout": 60000
+    },
+    "claude-opus": {
+      "type": "remote",
+      "url": "https://mymcps.duckdns.org/claude-opus/mcp"
     }
   }
 }
