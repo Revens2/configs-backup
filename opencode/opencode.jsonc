@@ -91,7 +91,9 @@
     "vault": {
       "type": "remote",
       "url": "https://mymcps.duckdns.org/vault/mcp",
-      "headers": "REDACTED",
+      "headers": {
+        "Authorization": "Bearer {env:VAULT_MCP_TOKEN}"
+      },
       "timeout": 60000
     },
     "chrome-devtools": {
@@ -106,7 +108,9 @@
     "context7": {
       "type": "remote",
       "url": "https://mcp.context7.com/mcp",
-      "headers": "REDACTED",
+      "headers": {
+        "Authorization": "Bearer {env:CONTEXT7_API_KEY}"
+      },
       "timeout": 60000
     },
     "codegraph": {
@@ -131,7 +135,7 @@
       "environment": {
         "MCP_REMOTE_CONFIG_DIR": "C:\\Users\\Juliann\\.mcp-auth"
       },
-      "timeout": 60000
+      "timeout": 900000
     }
   }
 }

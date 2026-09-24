@@ -118,12 +118,12 @@ Déjà installé et actif :
 - OpenCode : `C:\Users\Juliann\.config\opencode\opencode.jsonc` (section `mcp.claude-opus`, `mcp-remote@0.14.3` vers `https://mymcps.duckdns.org/claude-opus/mcp`, `MCP_REMOTE_CONFIG_DIR=C:\Users\Juliann\.mcp-auth`).
 - FreeBuff Desktop : `C:\Users\Juliann\.agents\mcp.json` (format `mcpServers`, même URL, même version). Ne pas dupliquer dans `mcp_config.json` / `.mcp.json` (sans effet sur FreeBuff).
 
-**Politique Opus (alignée OpenCode) :**
-- Les skills/outils collectent d'abord juste assez de faits.
-- AVANT la décision/stratégie principale d'une tâche non triviale, appeler obligatoirement `opus_think` (MCP `claude-opus`) avec contexte compact.
-- Exécuter et vérifier soi-même ensuite.
-- Nouvel appel `opus_think` si nouvelles preuves/échec changent la stratégie.
-- Pas d'Opus pour trivial/déterministe. Opus n'est pas source factuelle.
+**Politique deux-passes (alignée OpenCode, adaptée sans MCP) :**
+- Passe 1 : les skills/outils collectent d'abord juste assez de faits, l'agent vérifie lui-même.
+- Passe 2 : AVANT la décision/stratégie principale d'une tâche non triviale, appeler obligatoirement le skill `opus-seconde-passe` (`.freebuff/skills/opus-seconde-passe/SKILL.md`) : Freebuff ne parle pas MCP donc pas d'`opus_think` — même discipline en auto-critique structurée (angles morts, causes, risques hiérarchisés, synthèse améliorée).
+- Exécuter et vérifier soi-même ensuite ; fusionner sans jamais supprimer un constat utile ignoré par la passe 2 (preuves d'abord, incertitude explicitée).
+- Nouvelle passe 2 si nouvelles preuves/échec changent la stratégie.
+- Pas de passe 2 pour trivial/déterministe.
 
 ## 7. VAULT OBSIDIAN — SOURCE DE VÉRITÉ INFRA (aligné OpenCode)
 
