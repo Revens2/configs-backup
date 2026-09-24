@@ -52,6 +52,8 @@ freebuff/*
 !freebuff/mcp.json
 !freebuff/global-skills/
 !freebuff/global-skills/**
+!freebuff/skills/
+!freebuff/skills/**
 
 # Artefacts de mission locaux
 plan.md

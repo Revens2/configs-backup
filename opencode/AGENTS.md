@@ -7,7 +7,7 @@
 **INTERDICTIONS agent principal :**
 - INTERDIT de lire >3 fichiers, de lancer glob/grep large, de lire logs/dumps volumineux, de lister un dossier volumineux, d'explorer une codebase, de faire une recherche web, de chercher dans le vault, de planifier une tâche complexe — sans passer par Task.
 - INTERDIT de refaire le travail d'un subagent ou de re-lire les fichiers déjà triés par lui. Consommer uniquement son retour compact.
-- INTERDIT d'utiliser des subagents génériques `general` / `explore` — seuls les 11 subagents dédiés ci-dessous sont autorisés (`permission.task.general/explore: deny` dans `opencode.jsonc`, les autres `task:*` restent `allow` par défaut).
+- INTERDIT d'utiliser des subagents génériques `general` / `explore` — seuls les 12 subagents dédiés ci-dessous sont autorisés (`permission.task.general/explore: deny` dans `opencode.jsonc`, les autres `task:*` restent `allow` par défaut).
 
 **OBLIGATIONS :**
 1. Dès qu'un signal du tableau de routage correspond → appel Task IMMÉDIAT, sans demander confirmation.
@@ -15,7 +15,7 @@
 3. Prompt Task = question précise + périmètre + format de retour attendu (chemins:lignes, pas de dump brut).
 4. Retour subagent = livrable auto-suffisant. Le synthétiser, ne jamais le re-dumper ni le re-vérifier en relisant tout.
 
-**Table de routage exhaustive (11 subagents `~/.config/opencode/agents/`) :**
+**Table de routage exhaustive (12 subagents `~/.config/opencode/agents/`) :**
 | Signal | Subagent à appeler |
 |---|---|
 | Où est X, architecture, appelants, dépendances, blast radius, CodeGraph/Graphify | `decouverte` |
@@ -29,6 +29,7 @@
 | Fichier >500 Ko ou >1000 lignes, logs/dumps/CSV/JSON massifs, dossier volumineux, output de build | `triage-contexte` |
 | Linux, systemd, Docker/Compose, PM2, SSH, pare-feu, réseau/VPN, backup, état VPS | `vps-sysadmin` |
 | Recherche web, état de l'art, veille, doc API externe en ligne | `web-researcher` |
+| Seconde passe de réflexion : critique d'analyse, angles morts, causes, risques hiérarchisés (audit, archi, diagnostic, décision, migration, revue de travail produit) | `opus-seconde-passe` |
 
 **Seules exceptions (à justifier en 1 ligne si utilisées) :**
 - Fichier unique <200 lignes explicitement nommé par l'utilisateur.
@@ -214,11 +215,28 @@ OpenCode, Freebuff), pour tout projet personnel IA :
 Exceptions : un projet qui vit déjà ailleurs et qu'on n'a pas décidé de déplacer reste où il
 est (voir `C:\projet\PROPOSITIONS.md` avant tout déplacement).
 
-## Politique Opus (tâches non triviales uniquement)
+## Politique Opus deux-passes (tâches complexes uniquement)
 
-- Les outils/subagents collectent d'abord juste assez de faits.
-- AVANT la décision/stratégie principale, le main agent appelle obligatoirement opus_think (MCP claude-opus) avec contexte compact.
-- Le main agent exécute et vérifie lui-même.
-- Nouvel appel opus_think si nouvelles preuves/échec changent la stratégie.
-- Pas d'Opus pour trivial/déterministe.
-- Opus n'est pas source factuelle.
+Pour toute tâche complexe nécessitant un raisonnement substantiel — audit, architecture,
+diagnostic, comparaison, décision multicritère, recherche approfondie, plan de migration,
+revue d'un travail produit — travail systématique en deux passes, SANS demander confirmation :
+
+1. **Passe 1 — agent principal** : explore et vérifie d'abord toi-même. Utilise les outils
+   et sources disponibles (ou délègue la collecte aux subagents du tableau), rassemble
+   preuves, métriques, contradictions, anomalies, détails techniques et signaux faibles.
+2. **Passe 2 — `opus-seconde-passe`** : délègue ensuite au MCP Opus (`opus_think` via le
+   subagent) une seconde passe de réflexion pour critiquer l'analyse, détecter les angles
+   morts, regrouper les problèmes par causes, hiérarchiser les risques et actions,
+   et améliorer la synthèse.
+
+- Donne à Opus suffisamment de contexte UTILE : faits vérifiés, contraintes, incertitudes,
+  résultats des outils, points précis à critiquer. Évite le contexte inutile.
+- Timeout MCP (`-32001`) : UN retry en prompt court, nouvelle session. Double échec =
+  consigner en ## Erreurs et continuer sur passe 1 seule, jamais bloquer la mission.
+- Après le retour d'Opus, produis toi-même la réponse finale en fusionnant les deux analyses.
+  Ne supprime JAMAIS un constat technique, une anomalie ou un signal faible utile simplement
+  parce qu'Opus ne l'a pas repris. En cas de désaccord, privilégie les preuves et explicite
+  l'incertitude.
+- Règles complémentaires : AVANT la décision/stratégie principale (pas après coup) ;
+  nouvel appel si nouvelles preuves/échec changent la stratégie ; pas d'Opus pour
+  trivial/déterministe ; Opus n'est pas source factuelle.
