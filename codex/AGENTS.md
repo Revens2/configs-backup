@@ -1,12 +1,11 @@
 # Codex global instructions
 
-These instructions are the Codex adaptation of the shared agent configuration. The canonical
-working rules are kept in the repository root `AGENTS.md`; this copy is archived here so the
-Codex-specific source is available with the backup.
-
-- Keep the working tree safe and preserve unrelated changes.
-- Never commit credentials, tokens, private keys, `.env` files, auth databases, transcripts, or runtime state.
-- Use documented SSH aliases and NetBird for infrastructure; do not guess hosts or credentials.
-- Use plans and durable progress for multi-step work.
-- Verify changes with relevant tests, typechecks, builds, or safe service checks.
-- Do not push, deploy, merge, or communicate externally without explicit user scope.
+* Keep the working tree safe and preserve unrelated changes.
+* Never commit credentials, tokens, private keys, `.env` files, auth databases, transcripts, or runtime state.
+* Use documented SSH aliases and NetBird for infrastructure; never guess hosts or credentials.
+* Use plans and durable progress only for genuinely multi-step or long-running work.
+* Verify changes with the narrowest relevant tests, typechecks, builds, or safe service checks.
+* Do not push, deploy, merge, or communicate externally without explicit user scope.
+* Delegate only when it provides meaningful parallelism, isolates large/noisy context, or offloads bounded repetitive work. Do not delegate trivial work already localized in the current context.
+* Keep tool and subagent output concise: return conclusions, relevant paths/lines, verification status, and blockers instead of raw dumps.
+* When shell work requires RTK conventions, read `C:\Users\Juliann\.codex\RTK.md` before proceeding.
