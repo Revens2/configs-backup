@@ -112,8 +112,9 @@ Capacités logiques à conserver entre runtimes quand elles existent :
 - `github-code-review` — revue de diff/PR et risques.
 - `little-tasks` — travail répétitif à faible raisonnement.
 - `seo-expert` — SEO.
+- `opus-seconde-passe` — seconde passe critique (réflexion pure, jamais de collecte ni d'exécution).
 
-Ces 11 rôles sont définis dans les quatre runtimes : agents Claude Code, `.codex/agents/`, `~/.config/opencode/agents/` et `~/.gemini/config/agents/` pour AGY. Le socle MCP commun est `vault`, `context7`, `chrome-devtools`, `codegraph` ; `osauto` reste propre à Codex, le `broker` est lié à une identité par clé (une par runtime, jamais partagée), et `github` est retiré partout faute de `GITHUB_PERSONAL_ACCESS_TOKEN` — les opérations Git passent par `git`/`gh`.
+Ces 12 rôles sont définis dans les runtimes Codex et OpenCode : agents `.codex/agents/`, `~/.config/opencode/agents/` (miroirs `codex/agents/`, `opencode/agents/`). AGY (`~/.gemini/config/agents/`, `antigravity/agents/`) en compte 11 (`opus-seconde-passe` non porté — voir `GENERATION.md`). Le socle MCP commun est `vault`, `context7`, `chrome-devtools`, `codegraph` ; `osauto` reste propre à Codex, le `broker` est lié à une identité par clé (une par runtime, jamais partagée), et `github` est retiré partout faute de `GITHUB_PERSONAL_ACCESS_TOKEN` — les opérations Git passent par `git`/`gh`.
 
 Le parent ne doit connaître que **quand** déléguer. Le mode d'emploi détaillé reste dans le fichier du spécialiste.
 

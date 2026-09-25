@@ -93,9 +93,6 @@ Si un projet possède un fichier `CLAUDE.md`, `GEMINI.md` ou `AGENTS.md` à sa r
 2. **Navigation intelligente** : Se référer en priorité aux données `graphify` (`graphify query`, `graphify god-nodes`, `graphify-out/graph.json`) et `codegraph` pour comprendre l'architecture, naviguer intelligemment et cibler les fichiers à modifier de manière optimisée.
 3. **Mise à jour post-développement** : Après avoir créé ou modifié d'importantes fonctionnalités dans le projet, ré-exécuter automatiquement la mise à jour des graphes `graphify` et `codegraph`.
 
-## Démarrage automatique de Tailscale
-
-En cas d'échec de connexion SSH (timeout) ou si Tailscale est inactif (`unexpected state: NoState`), lancer automatiquement la commande suivante pour reconnecter le VPN avant toute nouvelle tentative.
 
 ## Autonomie Maximale & Prise de Décision Proactive
 
