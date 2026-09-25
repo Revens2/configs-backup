@@ -12,13 +12,19 @@ ok()   { echo "  PASS  $1"; pass=$((pass+1)); }
 ko()   { echo "  FAIL  $1"; fail=$((fail+1)); }
 check(){ if [ "$2" = "$3" ]; then ok "$1 ($2)"; else ko "$1 — attendu $3, vu $2"; fi; }
 
-echo "== 1. 11 spécialistes déclarés dans chaque runtime =="
+echo "== 1. 12 spécialistes Codex/OpenCode, 11 AGY =="
 for pair in \
   "codex live:$HOME_DIR/.codex/agents:toml" \
   "opencode live:$HOME_DIR/.config/opencode/agents:md" \
-  "agy live:$HOME_DIR/.gemini/config/agents:md" \
   "codex backup:$BACKUP/codex/agents:toml" \
-  "opencode backup:$BACKUP/opencode/agents:md" \
+  "opencode backup:$BACKUP/opencode/agents:md" ; do
+  label="${pair%%:*}"; rest="${pair#*:}"; dir="${rest%:*}"; ext="${rest##*:}"
+  n=0
+  [ -d "$dir" ] && n=$(ls "$dir"/*."$ext" 2>/dev/null | wc -l)
+  check "$label" "$n" "12"
+done
+for pair in \
+  "agy live:$HOME_DIR/.gemini/config/agents:md" \
   "agy backup:$BACKUP/antigravity/agents:md" ; do
   label="${pair%%:*}"; rest="${pair#*:}"; dir="${rest%:*}"; ext="${rest##*:}"
   n=0
@@ -56,7 +62,7 @@ if command -v opencode >/dev/null 2>&1; then
       }catch(e){console.log('ERR|json illisible|')}
     });" 2>/dev/null)
   IFS='|' read -r oc_agents oc_mcp_flag oc_mcp <<< "$oc"
-  check "opencode agents" "${oc_agents:-ERR}" "11"
+  check "opencode agents" "${oc_agents:-ERR}" "12"
   if [ "$oc_mcp_flag" = "OK" ]; then ok "opencode MCP socle complet ($oc_mcp)"; else ko "opencode MCP — $oc_mcp_flag ($oc_mcp)"; fi
 else
   ko "opencode introuvable"
