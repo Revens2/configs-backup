@@ -88,6 +88,8 @@ node_modules/
 
 ## Génération, navigation et mise à jour automatique de Graphify & Code Graph
 
+**INTERDIT home `C:\Users\Juliann`.** Jamais `codegraph init/index`, jamais `graphify extract/update` si CWD = home ou sans git root ; DB/scopes uniquement sous `C:\projet\<nom>\`.
+
 Si un projet possède un fichier `CLAUDE.md`, `GEMINI.md` ou `AGENTS.md` à sa racine :
 1. **Génération initiale** : Générer automatiquement la base de connaissances `graphify` (`graphify extract <chemin> --code-only` puis `graphify tree`) et le graphe de dépendances `codegraph` si absents dès le démarrage des travaux.
 2. **Navigation intelligente** : Se référer en priorité aux données `graphify` (`graphify query`, `graphify god-nodes`, `graphify-out/graph.json`) et `codegraph` pour comprendre l'architecture, naviguer intelligemment et cibler les fichiers à modifier de manière optimisée.

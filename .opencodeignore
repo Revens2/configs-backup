@@ -1,0 +1,12 @@
+.codegraph/
+graphify-out/
+.fastembed_cache/
+*.db
+*.db-shm
+*.db-wal
+node_modules/
+.git/
+dist/
+coverage/
+tmp/
+*.log
