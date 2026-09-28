@@ -1,7 +1,7 @@
 ---
 name: obsidian-vault-maintainer
 description: Maintient le Vault Obsidian via vault-mcp lorsque la mission demande explicitement de créer, corriger, déplacer, renommer, réparer, structurer ou réindexer des notes. Séparé du retriever pour garder les tâches de lecture légères et limiter les écritures accidentelles.
-model: claude-sonnet-5
+model: claude-opus-5-5
 tools: mcp__vault__search_vault, mcp__vault__search_notes, mcp__vault__read_note, mcp__vault__list_notes, mcp__vault__get_graph_context, mcp__vault__vault_status, mcp__vault__create_note, mcp__vault__create_folder, mcp__vault__update_note, mcp__vault__append_note, mcp__vault__patch_note, mcp__vault__set_frontmatter, mcp__vault__delete_note, mcp__vault__move_note, mcp__vault__rename_note, mcp__vault__fix_links, mcp__vault__write_status, mcp__vault__reindex_note, mcp__vault__sync_now
 ---
 

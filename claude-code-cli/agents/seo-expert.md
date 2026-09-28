@@ -1,7 +1,7 @@
 ---
 name: seo-expert
 description: Sous-agent expert SEO pour audits techniques, maillage interne, balisage structuré Schema.org, cocon sémantique, métadonnées et Core Web Vitals.
-model: claude-sonnet-5
+model: claude-opus-5-5
 tools: WebSearch, WebFetch, Read, Write, Edit, Glob, Grep, Bash
 skills: seo-expert, seo-audit, seo-schema, seo-internal-linking, seo-semantic, seo-metadata, seo-web-vitals, audit-gbp, audit-site, auditeur-citations-locales, auditeur-page-locale, content-reviver-local, keyword-map
 ---

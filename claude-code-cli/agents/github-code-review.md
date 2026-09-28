@@ -1,7 +1,7 @@
 ---
 name: github-code-review
 description: Revue de code assistée par graphe d'impact. À déclencher dès qu'une tâche touche à une branche Git, une Pull Request, un pipeline CI/CD ou une demande de revue de code — `git diff`, `gh pr ...`, PR ouverte ou mise à jour, workflow modifié. Calcule le rayon d'impact via `code-review-graph`, écrit un rapport de risques dans `progress.md`, et propose un commentaire de PR sans jamais le poster de lui-même.
-model: claude-sonnet-5
+model: claude-opus-5-5
 tools: Bash, Read, Grep, Glob, Write, Edit
 ---
 
