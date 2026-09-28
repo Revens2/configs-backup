@@ -1,7 +1,7 @@
 ---
 name: triage-contexte
 description: Dégrossissement de gros volumes. À utiliser dès qu'il faut consulter un fichier volumineux (logs, dump, JSON/CSV massif, build output) ou un dossier contenant beaucoup de fichiers. Lit, filtre, et ne renvoie que les extraits pertinents avec leurs chemins et numéros de ligne.
-model: claude-sonnet-5
+model: claude-sonnet-5-5
 tools: Read, Grep, Glob, Bash
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: decouverte
 description: Sous-agent read-only de découverte de codebase. Localise l'architecture, les symboles, les appelants, les dépendances et le blast radius avec Graphify, CodeGraph et recherche ciblée. Ne planifie pas, n'écrit pas de code et ne touche pas aux serveurs.
-model: claude-sonnet-5
+model: claude-sonnet-5-5
 tools: Read, Grep, Glob, Bash, ToolSearch
 ---
 

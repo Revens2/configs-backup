@@ -1,7 +1,7 @@
 ---
 name: web-researcher
 description: Recherche web approfondie via WebSearch + WebFetch. À déclencher dès qu'il faut chercher en ligne, se renseigner, faire une veille, un état de l'art, ou lire la doc d'une API externe. Renvoie une synthèse compacte et sourcée, pas un dump.
-model: claude-sonnet-5
+model: claude-sonnet-5-5
 tools: WebSearch, WebFetch, Read, Write, Glob, Grep, Bash, mcp__claude-in-chrome__select_browser, mcp__claude-in-chrome__tabs_context_mcp, mcp__claude-in-chrome__tabs_create_mcp, mcp__claude-in-chrome__tabs_close_mcp, mcp__claude-in-chrome__navigate, mcp__claude-in-chrome__find, mcp__claude-in-chrome__read_page, mcp__claude-in-chrome__get_page_text, mcp__claude-in-chrome__computer, mcp__claude-in-chrome__browser_batch, mcp__claude-in-chrome__form_input, mcp__claude-in-chrome__read_console_messages, mcp__claude-in-chrome__read_network_requests
 ---
 

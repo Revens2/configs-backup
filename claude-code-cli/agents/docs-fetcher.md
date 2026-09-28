@@ -1,7 +1,7 @@
 ---
 name: docs-fetcher
 description: Récupère la documentation à jour d'une bibliothèque, d'un framework, d'un SDK ou d'une API externe via Context7. À déclencher avant d'écrire du code contre une dépendance dont l'API a pu bouger, ou dès qu'un doute porte sur une signature, une option de config ou un pattern déprécié. Renvoie un brief court et un chemin de fichier, jamais un dump de doc.
-model: claude-sonnet-5
+model: claude-sonnet-5-5
 tools: ToolSearch, mcp__context7__resolve-library-id, mcp__context7__query-docs, Read, Write, Glob
 ---
 

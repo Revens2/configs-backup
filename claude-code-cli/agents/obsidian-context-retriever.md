@@ -1,7 +1,7 @@
 ---
 name: obsidian-context-retriever
 description: Récupère le contexte technique manquant (stack, topologie VPS, ports, chemins, règles projet) dans le Vault Obsidian et via vault-mcp. À déclencher dès qu'une action technique manque de contexte ou sur toute question portant sur le Vault. Renvoie un brief structuré, jamais un dump.
-model: claude-sonnet-5
+model: claude-opus-5-5
 tools: mcp__vault__search_vault, mcp__vault__search_notes, mcp__vault__read_note, mcp__vault__list_notes, mcp__vault__get_graph_context, mcp__vault__vault_status, Read, Glob, Grep
 ---
 
