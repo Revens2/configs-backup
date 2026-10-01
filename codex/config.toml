@@ -85,9 +85,9 @@ args = ["C:/Tools/chrome-devtools-wrapper.mjs"]
 enabled = true
 startup_timeout_sec = 20
 
-[mcp_servers.vault]
+[mcp_servers.vault-ro]
 url = "https://mymcps.duckdns.org/vault-ro/mcp"
-env_http_headers = { Authorization = "VAULT_MCP_TOKEN" }
+env_http_headers = { Authorization = "VAULT_CONTEXT_TOKEN" }
 enabled = true
 startup_timeout_sec = 10
 

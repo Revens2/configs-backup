@@ -116,7 +116,7 @@ Les gros payloads, logs, sorties d'outils et recherches sont filtrés avant de r
 
 ## 7. MCP et recherche externe
 
-- Vault/RAG → `obsidian-context-retriever` et `mcp__vault__*`.
+- Vault/RAG → `obsidian-context-retriever` et `mcp__vault-ro__*`.
 - Documentation versionnée → `docs-fetcher` / Context7.
 - Recherche internet → `web-researcher`.
 

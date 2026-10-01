@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "vault": {
+    "vault-ro": {
       "type": "http",
-      "url": "https://mymcps.duckdns.org/vault/mcp",
+      "url": "https://mymcps.duckdns.org/vault-ro/mcp",
       "headers": "REDACTED"
     },
     "claude-opus": {

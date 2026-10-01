@@ -54,5 +54,5 @@ bash configs-backup/tests/verifier-parite.sh
 ```
 
 Exclusions : jamais `auth.json`, `*.sqlite*`, `.env`, tokens/placeholders
-(`VAULT_MCP_TOKEN`, `CONTEXT7_API_KEY`), `node_modules/`, état machine.
+(`VAULT_MCP_TOKEN`, `VAULT_CONTEXT_TOKEN`, `CONTEXT7_API_KEY`), `node_modules/`, état machine.
 Voir `.gitignore` + `AGENTS.md` (pas de push sans périmètre explicite).

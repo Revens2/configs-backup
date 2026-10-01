@@ -25,11 +25,11 @@
         "hermes_capture.server"
       ]
     },
-    "vault": {
+    "vault-ro": {
       "type": "http",
       "url": "https://mymcps.duckdns.org/vault-ro/mcp",
       "headers": {
-        "Authorization": "Bearer ${VAULT_MCP_TOKEN}"
+        "Authorization": "Bearer ${VAULT_CONTEXT_TOKEN}"
       }
     },
     "osauto": {

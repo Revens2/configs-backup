@@ -56,7 +56,7 @@ if command -v opencode >/dev/null 2>&1; then
       try{const j=JSON.parse(s);
         const a=Object.keys(j.agent||{}).length;
         const m=Object.keys(j.mcp||{});
-        const core=['vault','context7','chrome-devtools','codegraph'];
+        const core=['vault-ro','context7','chrome-devtools','codegraph'];
         const missing=core.filter(x=>!m.includes(x));
         console.log(a+'|'+(missing.length?'MANQUE:'+missing.join(','):'OK')+'|'+m.join(','));
       }catch(e){console.log('ERR|json illisible|')}
