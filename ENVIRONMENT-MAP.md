@@ -28,7 +28,7 @@ Ne jamais déduire qu'une capacité est active uniquement parce qu'un fichier hi
 
 Le Vault humain sur Google Drive est la mémoire documentaire principale. Un miroir VPS alimente `vault-mcp` et son index. Le miroir et l'index peuvent avoir un délai ; pour une information très récente, préférer la source live disponible.
 
-`vault-mcp` est le moteur de recherche sémantique actuel. `obsidian-semantic` et l'ancien usage NotebookLM ne font plus partie de la chaîne active.
+`vault-ro` (serveur lecture seule de `vault-mcp`) est le moteur de recherche sémantique actuel. `obsidian-semantic` et l'ancien usage NotebookLM ne font plus partie de la chaîne active.
 
 ### Politique de récupération
 

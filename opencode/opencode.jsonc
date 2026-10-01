@@ -138,11 +138,11 @@
     }
   },
   "mcp": {
-    "vault": {
+    "vault-ro": {
       "type": "remote",
-      "url": "https://mymcps.duckdns.org/vault/mcp",
+      "url": "https://mymcps.duckdns.org/vault-ro/mcp",
       "headers": {
-        "Authorization": "Bearer {env:VAULT_MCP_TOKEN}"
+        "Authorization": "Bearer {env:VAULT_CONTEXT_TOKEN}"
       },
       "timeout": 60000
     },

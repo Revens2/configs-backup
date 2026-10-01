@@ -24,6 +24,15 @@
         "C:\\Users\\Juliann\\mcp-obsidian-semantic\\src\\index.js",
         "G:\\Mon Drive\\Obsidian Vault"
       ]
+    },
+    "vault-ro": {
+      "command": "C:\\Tools\\mcp-proxy-venv\\Scripts\\python.exe",
+      "args": [
+        "C:\\Tools\\vault-ro-bridge.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
     }
   },
   "coworkUserFilesPath": "C:\\Users\\Juliann\\Claude",

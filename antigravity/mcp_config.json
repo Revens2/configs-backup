@@ -44,9 +44,9 @@
       },
       "disabled": false
     },
-    "vault": {
+    "vault-ro": {
       "args": [
-        "C:\\Tools\\vault-mcp-bridge.py"
+        "C:\\Tools\\vault-ro-bridge.py"
       ],
       "command": "C:\\Tools\\mcp-proxy-venv\\Scripts\\python.exe",
       "env": {

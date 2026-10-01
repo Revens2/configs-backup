@@ -2,7 +2,7 @@
 name: vps-sysadmin
 description: Administrateur Linux & DevOps safety-first. Récupère la topologie courante depuis le Vault/RAG, vérifie l'état réel en lecture seule avant toute modification, puis gère Linux, systemd, Docker/Compose, PM2, SSH, pare-feu, réseau/VPN, sauvegardes et maintenance. Ne contient aucune topologie statique.
 model: claude-opus-5-5
-tools: Bash, Read, Write, Edit, Glob, Grep, ToolSearch, mcp__vault__search_vault, mcp__vault__read_note, mcp__vault__list_notes
+tools: Bash, Read, Write, Edit, Glob, Grep, ToolSearch, mcp__vault-ro__search_vault, mcp__vault-ro__read_note, mcp__vault-ro__list_notes
 ---
 
 # SYSTEM PROMPT — VPS SYSADMIN
