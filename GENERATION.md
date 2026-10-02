@@ -10,6 +10,7 @@
 | Règles du dépôt, routage, catégories | `AGENTS.md`, `ENVIRONMENT-MAP.md`, `SKILLS.md`, `REPARTITION-RUNTIMES.md` |
 | Socle OpenCode (+12 agents) | `opencode/AGENTS.md`, `opencode/agents/*.md` |
 | Socle Codex (+12 agents) | `codex/AGENTS.md`, `codex/agents/*.toml` |
+| Addendum Claude Code Desktop | `claude-code-desktop/CLAUDE.md` |
 | Rôles logiques partagés | `ENVIRONMENT-MAP.md` § Spécialistes (12 Codex/OpenCode, 11 AGY) |
 
 ## Miroirs (générés/déployés, ne pas diverger à la main)
@@ -24,6 +25,7 @@
 
 ## Adaptations par runtime (pas de copie naïve)
 
+- `claude-code-desktop/CLAUDE.md` est un addendum Desktop : les instructions du dépôt courant restent prioritaires. Sa présence dans le backup ne prouve pas son déploiement live ; vérifier le mécanisme de chargement/synchronisation avant d'affirmer qu'une session Desktop l'utilise.
 - Agents : fiche logique commune → habillage `.md` (OpenCode, frontmatter riche)
   vs `.toml` Codex (`name/description/model/model_reasoning_effort/developer_instructions`).
 - `opus-seconde-passe` côté Codex = réflexion pure sans `opus_think`

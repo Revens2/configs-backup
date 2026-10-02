@@ -28,6 +28,17 @@ Hiérarchie : **intention actuelle de Titou > état live > dépôt courant > RAG
 
 Choisis selon difficulté, risque, outils requis et besoin de vérification.
 
+## Orchestration multi-agent ARION
+
+La gouvernance projet dans `Revens2/ARION/ARION.md` fait foi pour les garde-fous et l'orchestration. La délégation n'accorde aucune permission supplémentaire sur gels, holdouts, tokens scientifiques, protocoles ou vérités scellées.
+
+- **FAST** : direct. **STANDARD** : spécialiste ciblé si utile. **DEEP/CRITICAL avec au moins deux workstreams indépendants** : `SOUS-AGENTS : OUI` par défaut si le runtime le supporte, avec **2 à 4 spécialistes bornés**.
+- Chaque brief fixe objectif, périmètre, dépendances, sources autorisées, interdits et livrable référencé. Les spécialistes sont read-only par défaut ; le parent synthétise, tranche et applique les changements applicatifs.
+- **Claude Code + Opus** : fan-out des explorations indépendantes avant la synthèse du parent ; utiliser les spécialistes pour isoler code/architecture, science/preuves, runtime Quest et données/docs lorsque ces axes sont réellement indépendants.
+- **OpenCode + Muse Spark** : collecte/analyse bornée en parallèle → consolidation des preuves → seconde passe MCP Claude Opus obligatoire selon la règle ci-dessous avant une décision structurante. Ne pas ajouter une revue décorative si cette passe couvre déjà le besoin.
+- Sur T05, PC Python/PnP, Quest Unity/Kotlin/C# et préparation/analyse de validation peuvent être parallélisés uniquement lorsque leurs interfaces et prérequis sont fixés.
+- Consensus d'agents ≠ preuve expérimentale. Si fan-out indisponible, l'indiquer et continuer sans simuler une vérification indépendante.
+
 # 3. Classification / effort
 Classe : **FAST / STANDARD / DEEP / CRITICAL**, puis route selon le sous-problème déterminant :
 - mécanique/localisé/clair/réversible ou implémentation cadrée → **OpenCode + Muse** ;
