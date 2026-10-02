@@ -15,6 +15,19 @@
 3. Prompt Task = question précise + périmètre + format de retour attendu (chemins:lignes, pas de dump brut).
 4. Retour subagent = livrable auto-suffisant. Le synthétiser, ne jamais le re-dumper ni le re-vérifier en relisant tout.
 
+### Orchestration d'équipe — DEEP / CRITICAL
+
+Pour une mission complexe, construis un petit graphe de travail au lieu d'enchaîner mécaniquement les spécialistes.
+
+1. **Fan-out factuel** : si au moins deux axes sont indépendants, lance **2 à 4 subagents en parallèle** dans le même bloc Task : `decouverte` + les spécialistes contexte/doc/web/infra utiles.
+2. **Consolidation** : récupère leurs briefs compacts, compare les contradictions et relance seulement le point encore incertain. Ne refais pas leur collecte.
+3. **Seconde passe Opus** : faits suffisants établis, et avant une décision structurante d'architecture, diagnostic causal, migration, sécurité ou arbitrage, lance `opus-seconde-passe`.
+4. **Planification** : pour DEEP/CRITICAL, transmets au `planificateur` les briefs déjà consolidés ; il ne recommence pas une exploration valide.
+5. **Implémentation** : l'agent principal Muse Spark reste propriétaire des décisions et du code applicatif. `little-tasks` n'écrit que sur un périmètre mécanique explicitement disjoint.
+6. **Vérification indépendante** : après un diff/PR/CI significatif, lance `github-code-review`. Refaire Opus seulement si de nouvelles preuves ou un échec changent la stratégie.
+
+Règles : ne sérialise pas des missions indépendantes ; aucun fichier écrit par deux agents en parallèle ; chaque Task précise mission, périmètre, livrable, dépendances et droits d'écriture ; vise au plus 4 subagents actifs sauf gain clair ; pas de fan-out décoratif sur FAST.
+
 **Table de routage exhaustive (12 subagents `~/.config/opencode/agents/`) :**
 | Signal | Subagent à appeler |
 |---|---|
@@ -24,7 +37,7 @@
 | Conversion brute/répétitive (JSON↔YAML, cURL→env, mocks/fixtures, JSDoc, scaffolding) | `little-tasks` |
 | Infra/VPS/stack/ports/env manquants, fiche projet, lecture vault Obsidian | `obsidian-context-retriever` |
 | Écriture dans le vault (créer/corriger/déplacer/renommer/réindexer notes) | `obsidian-vault-maintainer` |
-| Tâche >3 étapes, >2 fichiers, migration, refactor, feature, audit → `plan.md`/`progress.md` | `planificateur` |
+| Incertitude ou blast radius élevé : migration, refactor large, feature importante, audit, architecture → `plan.md`/`progress.md` | `planificateur` |
 | Audit SEO, maillage, Schema.org, cocon sémantique, métadonnées, Core Web Vitals | `seo-expert` |
 | Fichier >500 Ko ou >1000 lignes, logs/dumps/CSV/JSON massifs, dossier volumineux, output de build | `triage-contexte` |
 | Linux, systemd, Docker/Compose, PM2, SSH, pare-feu, réseau/VPN, backup, état VPS | `vps-sysadmin` |
