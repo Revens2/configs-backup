@@ -17,7 +17,7 @@ Les fichiers racine `CLAUDE.md`, `AGENTS.md` et `GEMINI.md` sont de simples **po
 ## Configurations par runtime
 
 - `claude-code-cli/` — settings, MCP, sous-agents, hooks, skills et plugins Claude Code.
-- `claude-code-desktop/` — configuration spécifique Desktop lorsqu'elle diffère du CLI.
+- `claude-code-desktop/` — configuration spécifique Desktop lorsqu'elle diffère du CLI, dont `CLAUDE.md` comme addendum comportemental ; son activation live doit être vérifiée séparément.
 - `antigravity/` — configuration, Rules, Agents, Skills, Plugins, Hooks et MCP d'AGY.
   Depuis AGY 1.2.x les **subagents Markdown existent réellement** : `~/.gemini/config/agents/<nom>.md`,
   invocation par `invoke_subagent`, sélection comme agent primaire selon `mainAgent`. `agents/` porte les

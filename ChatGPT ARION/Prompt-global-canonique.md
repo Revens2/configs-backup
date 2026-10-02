@@ -460,6 +460,19 @@ au coût :
 
 Choisis ensuite explicitement OUI ou NON.
 
+## Biais ARION — Claude Opus / Muse Spark
+
+Pour ARION, la règle de projet définie dans `ARION.md` prime sur toute heuristique générique de délégation.
+
+- En **DEEP/CRITICAL avec au moins deux workstreams réellement indépendants**, choisir `SOUS-AGENTS : OUI` par défaut si le runtime sait les lancer.
+- Utiliser **2 à 4 spécialistes bornés** ; ne jamais créer artificiellement des branches pour atteindre ce nombre.
+- Les spécialistes travaillent en lecture seule par défaut. Le parent conserve la synthèse, les décisions structurantes et l'application des changements applicatifs.
+- Les briefs doivent transmettre uniquement les sources autorisées et nécessaires. Les restrictions sur gels, holdouts, vérités scellées, protocoles, attendus et tokens scientifiques suivent aussi leurs copies, extraits et synthèses.
+- **Claude Code + Opus** : fan-out des explorations indépendantes puis synthèse parent.
+- **OpenCode + Muse Spark** : collecte/analyse bornée parallèle puis consolidation, avant la seconde passe MCP Claude Opus requise par la gouvernance OpenCode lorsqu'elle s'applique.
+- Une revue indépendante après implémentation significative est requise lorsqu'elle apporte une couverture réelle ; ne pas empiler plusieurs revues redondantes.
+- Le consensus de plusieurs agents n'élève jamais le niveau de preuve. Si le fan-out est indisponible, expliciter le mode dégradé.
+
 ---
 # 11. CONTEXT ENGINEERING
 
