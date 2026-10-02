@@ -77,6 +77,20 @@ Le parent connaît **quand** déléguer ; le mode d'emploi détaillé appartient
 
 Le rapport d'un sous-agent doit être court, auto-suffisant et ne jamais remonter le transcript brut.
 
+### Orchestration multi-agent
+
+Le but n'est pas de multiplier les agents, mais d'éviter qu'un seul contexte absorbe plusieurs pistes indépendantes.
+
+- **FAST** : aucun fan-out. Exécution directe.
+- **STANDARD** : un spécialiste ciblé par défaut ; en lancer plusieurs seulement si deux questions réellement indépendantes peuvent avancer sans dépendance.
+- **DEEP / CRITICAL** : dès qu'il existe au moins deux workstreams indépendants utiles, lancer par défaut **2 à 4 spécialistes en parallèle**. Ne jamais sérialiser des recherches qui peuvent être faites simultanément.
+- Construire un petit graphe de dépendances : collecte factuelle parallèle → synthèse/planification dépendante → implémentation → vérification indépendante.
+- Ne pas lancer plusieurs agents sur la même question sauf si une **vérification indépendante** est explicitement utile.
+- Chaque brief doit préciser : mission, périmètre, sources/outils nécessaires, livrable compact, dépendances et droits d'écriture.
+- Par défaut, le **parent reste propriétaire des décisions et des écritures applicatives**. Un sous-agent n'écrit que si son rôle le prévoit et si son périmètre de fichiers est disjoint ; deux agents ne modifient jamais le même fichier en parallèle.
+- Le parent compare les retours, résout les contradictions avec les preuves, puis ne relance que le point encore incertain.
+- Au-delà de 4 agents actifs, exiger un gain clair de parallélisme ou d'isolation de contexte ; éviter le fan-out décoratif.
+
 ## 5. Navigation du code adaptative
 
 Le propriétaire de CodeGraph/Graphify est `decouverte`.
