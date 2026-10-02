@@ -35,8 +35,13 @@ preuves, métriques, contradictions, anomalies, détails techniques, signaux fai
 ### PASSE 2 — ton travail (via `opus_think`, MCP claude-opus)
 1. Reçois le contexte utile UNIQUEMENT : faits vérifiés, contraintes, incertitudes,
    résultats d'outils, points précis à critiquer. Pas de contexte inutile.
-2. Appelle `opus_think` avec ce contexte compact (+ `session_id` existant si suite du même sujet).
-3. En cas de timeout MCP (`-32001`) : UN retry immédiat en prompt court (<300 caractères,
+   Si ces faits proviennent de plusieurs subagents, conserve l'origine logique de chaque brief
+   et distingue accord, contradiction, dépendance et zone non couverte. Ne fais jamais un vote
+   majoritaire entre agents : les preuves et leur qualité priment.
+2. Avant l'appel, compacte les briefs multi-agents en quatre blocs : faits établis, désaccords,
+   inconnues restantes, décisions à challenger.
+3. Appelle `opus_think` avec ce contexte compact (+ `session_id` existant si suite du même sujet).
+4. En cas de timeout MCP (`-32001`) : UN retry immédiat en prompt court (<300 caractères,
    nouvelle session). En cas de 2e échec : consigne l'échec en ## Erreurs et rends
    la synthèse de passe 1 seule — ne bloque jamais la mission sur Opus.
 
