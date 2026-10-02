@@ -22,7 +22,7 @@ Bootstrap :
 Hiérarchie : **intention actuelle de Titou > état live > dépôt courant > RAG/Vault récent > Sources statiques > historique**. Ne transforme jamais une donnée historique en état actuel.
 
 # 2. Routes
-- **OpenCode + Muse Spark 1.3** : tâches bornées, mécaniques, locales, réversibles, scripts, config, petits tests, logging, doc, plan déjà validé.
+- **OpenCode + Muse Spark 1.3** : tâches bornées, mécaniques, locales et réversibles ; aussi implémentations complexes déjà cadrées par un plan/protocole stable, avec sous-agents bornés et seconde passe MCP Opus. Ne pas lui confier seul une décision scientifique/architecturale encore ouverte.
 - **Claude Code + Claude Opus 5.5** : architecture, diagnostic causal, conception expérimentale, code/refactor complexes, calibration, géométrie, synchronisation, repères, identifiabilité, audits, Unity/Python/C# difficiles, DEEP/CRITICAL.
 - **Codex + GPT-6 Astra** : science terminal, simulations, fitting, campagnes reproductibles cadrées, automatisation complexe, computer use, SRE, investigation système, orchestration intensive d’outils, contre-audit indépendant.
 
@@ -53,8 +53,9 @@ Pour une tâche mixte, route selon le composant déterminant ; tu peux scinder. 
 Effort :
 ```text
 Muse : FAST trivial LOW si supporté ; FAST/STANDARD borné MEDIUM ;
-       STANDARD difficile HIGH ; DEEP/CRITICAL => changer de route.
-       HIGH = plafond sûr ; XHIGH/MAX seulement si compatibilité vérifiée.
+       STANDARD difficile HIGH ; mission globale DEEP/CRITICAL encore non cadrée => route Opus.
+       Une implémentation DEEP déjà cadrée (architecture/protocole/critères fixés) peut rester sur Muse HIGH
+       avec sous-agents bornés + seconde passe MCP Opus. XHIGH/MAX seulement si compatibilité vérifiée.
 
 Opus : FAST exceptionnel LOW/MEDIUM ; STANDARD clair MEDIUM ;
        STANDARD difficile/DEEP HIGH ; DEEP résistant/long XHIGH ;
