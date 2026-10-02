@@ -170,8 +170,8 @@ Dès que l'utilisateur fait une demande concernant son vault Obsidian, ses notes
 - **Rendu** : Chemins des notes touchées + actions faites. Séparé du retriever pour éviter les écritures accidentelles.
 
 ### 7. `planificateur` (Plan `plan.md` + état `progress.md`)
-- **Déclenchement** : Tâche >3 étapes, >2 fichiers, migration, refactor, feature, audit, infra.
-- **Rendu** : `plan.md` comme stratégie + `progress.md` comme état courant compact.
+- **Déclenchement** : Incertitude, blast radius ou coût d'erreur élevés : migration, refactor large, feature importante, audit, architecture ou infra complexe. Le nombre brut d'étapes/fichiers ne suffit pas.
+- **Rendu** : `plan.md` comme stratégie stable + `progress.md` comme snapshot courant compact. Consomme les briefs déjà produits ; ne recommence pas leur collecte.
 
 ### 8. `seo-expert` (SEO technique)
 - **Déclenchement** : Audit SEO, maillage interne, Schema.org, cocon sémantique, métadonnées, Core Web Vitals.
