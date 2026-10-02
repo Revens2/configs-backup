@@ -70,8 +70,8 @@ Get-ChildItem "G:\Mon Drive\Obsidian Vault\raw\assets\" | Where-Object { $_.Name
 ```
 
 **Fichiers de référence connus** :
-- `VPS_IA.md` — Config VPS IA (IP: ${VPS_IA_TAILSCALE}, user: oui, port 22)
-- `Rapport_VPS_ETUDE.md` — Config VPS Étude (IP: ${VPS_ETUDE_TAILSCALE})
+- `VPS_IA.md` — Config VPS IA (alias SSH `vps-ia`, IP/port/user dans la note)
+- `Rapport_VPS_ETUDE.md` — Config VPS Étude (alias SSH `vps-etude-nb`, IP dans la note)
 - `config_vps.md` — Config générale VPS
 - `NEXUS_PROJECT_MEMORY.md` — Mémoire du projet NexusTrade
 - `NEXUS_*.md` — Tout ce qui concerne le projet NexusTrade/Nexus

@@ -131,7 +131,7 @@ Quand une info infra manque (VPS, IPs, credentials, configs, ports) : chercher d
 
 - Chemin : `G:\Mon Drive\Obsidian Vault\raw\assets\`
 - Recherche : `Get-ChildItem "G:\Mon Drive\Obsidian Vault\raw\assets\" | Where-Object { $_.Name -match "<mot-clé>" }`
-- Références : `VPS_IA.md` (${VPS_IA_TAILSCALE}:22), `Rapport_VPS_ETUDE.md` (${VPS_ETUDE_TAILSCALE}), `config_vps.md`, `NEXUS_PROJECT_MEMORY.md`, `NEXUS_*.md`, `Audit_VPS_OCI*.md`.
+- Références : `VPS_IA.md` (vps-ia), `Rapport_VPS_ETUDE.md` (vps-etude), `config_vps.md`, `NEXUS_PROJECT_MEMORY.md`, `NEXUS_*.md`, `Audit_VPS_OCI*.md` (IPs/ports/users dans les notes, jamais en dur ici).
 - Ne jamais copier/exposer credentials, tokens, clés, `.env` dans les réponses ou commits.
 
 ## 8. SUPPRESSION DE FICHIERS — CORBEILLE OBLIGATOIRE
