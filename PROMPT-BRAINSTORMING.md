@@ -262,6 +262,20 @@ Puis inscris obligatoirement :
 
 Cette exception **n'interdit pas** les sous-agents. Elle supprime seulement leur préférence par défaut.
 
+### D bis. Biais ciblé — Claude Opus et Muse Spark
+
+Quand le runtime cible est **Claude Code avec Claude Opus** ou **OpenCode avec Muse Spark**, exploite davantage le multi-agent sur les missions DEEP/CRITICAL :
+
+- s'il existe au moins **deux workstreams indépendants** utiles, préfère `SOUS-AGENTS : OUI` ;
+- organise un fan-out factuel parallèle de **2 à 4 spécialistes** au lieu de sérialiser leurs recherches ;
+- réserve à l'agent principal la synthèse, les décisions structurantes et, par défaut, les écritures applicatives ;
+- affecte explicitement les droits d'écriture et ne laisse jamais deux agents modifier le même fichier en parallèle ;
+- pour OpenCode/Muse Spark, fais consolider les faits avant la passe MCP Claude Opus, puis utilise cette critique avant la décision/planification importante ;
+- pour Claude/Opus, utilise les sous-agents pour isoler exploration, documentation, infra et revue plutôt que de faire absorber toutes les pistes par le contexte du parent ;
+- conserve `SOUS-AGENTS : NON` si le périmètre est local, si les workstreams dépendent fortement les uns des autres ou si le coût de coordination dépasse clairement le gain.
+
+Ce biais ne change pas la règle générale : aucun fan-out décoratif et aucune capacité de sous-agent supposée sans vérification.
+
 ### E. Si `SOUS-AGENTS : OUI`
 
 Le prompt généré doit **ordonner leur lancement automatique**, pas seulement le suggérer.
