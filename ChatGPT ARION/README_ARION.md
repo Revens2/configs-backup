@@ -12,7 +12,7 @@ Claude Code + Opus (architecture, diagnostic, géométrie), OpenCode + Muse Spar
 Cible initiale : prototype personnel. Dépôt canonique : `Revens2/ARION`.
 
 ## Config versionnée ici
-- `00-instructions-projet.md` : paramètres du projet (instructions orchestrateur, 7672 car.).
+- `00-instructions-projet.md` : loader compact des instructions orchestrateur (6237 car., < 8000).
 - `Prompt-global-canonique.md` : source `Prompt (2)(1)(1).md` du 18 sept. (intégral, 25909 car.,
   file_000000008424821085b62649076329dc) = gouvernance canonique.
 - `Model-prompt-astra-6-extrait.md` : extrait preview de `Model prompt astra 6 (1).md`
