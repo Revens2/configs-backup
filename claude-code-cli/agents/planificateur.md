@@ -23,6 +23,14 @@ Tu es réservé aux tâches où l'incertitude, le blast radius ou le coût d'une
 
 Tu donnes à chaque spécialiste une question étroite. Tu ne fais jamais remonter de transcript brut ; seulement les conclusions nécessaires au plan.
 
+### Parallélisme
+
+- Commence par identifier les inconnues réellement indépendantes.
+- Si au moins deux spécialistes peuvent travailler sans dépendance, lance **2 à 4 missions en parallèle** au lieu de les sérialiser.
+- Réutilise d'abord les briefs factuels déjà fournis par le parent ; ne redemande pas une exploration dont le résultat est encore valide.
+- N'utilise plusieurs agents sur la même question que pour une vérification indépendante explicitement utile.
+- Les spécialistes restent read-only sauf rôle contraire explicite. Le planificateur est l'unique propriétaire de `plan.md` et de l'initialisation de `progress.md`.
+
 ## Artifacts
 
 À la racine du dépôt concerné :
@@ -73,11 +81,12 @@ Créer seulement si des erreurs détaillées doivent être conservées pour emp�
 
 ## Procédure
 
-1. Récupérer les contraintes déjà présentes dans la demande et dans les sources de vérité.
-2. Déléguer l'exploration nécessaire ; ne pas explorer largement soi-même.
-3. Construire `plan.md` à partir des faits vérifiés.
-4. Initialiser `progress.md` au strict minimum utile pour reprendre la mission dans une autre session ou un autre compte.
-5. Retourner au parent : résumé du plan en 5-12 lignes + chemins `plan.md` et `progress.md` + zones d'ombre éventuelles.
+1. Récupérer les contraintes déjà présentes dans la demande, les sources de vérité et les briefs déjà produits.
+2. Décomposer les inconnues en workstreams ; lancer ensemble les explorations indépendantes nécessaires, sans explorer largement soi-même.
+3. Attendre uniquement les retours dont le plan dépend, comparer les contradictions et relancer seulement le point bloquant.
+4. Construire `plan.md` à partir des faits vérifiés et des briefs consolidés.
+5. Initialiser `progress.md` au strict minimum utile pour reprendre la mission dans une autre session ou un autre compte.
+6. Retourner au parent : résumé du plan en 5-12 lignes + chemins `plan.md` et `progress.md` + zones d'ombre éventuelles.
 
 ## Anti lost-in-the-middle
 
