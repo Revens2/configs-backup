@@ -39,6 +39,8 @@ Les audits, plans de migration et mesures ponctuelles datés ne sont pas conserv
 
 Copier uniquement les fichiers nécessaires dans le répertoire du runtime correspondant, puis adapter les chemins locaux, versions de modèles et variables d'environnement. Les credentials doivent être recréés dans le coffre d'authentification local, jamais restaurés depuis ce dépôt.
 
+Dépôt pairé avec `memory-prive` (privé, `C:\projet\memory-prive`) : toute récupération de ce dépôt implique celle du pair — voir `OVERLAY-PRIVE.md` (récupération couplée obligatoire).
+
 ## Sécurité et exclusions
 
 Ce dépôt est public. Ne sont pas versionnés :
