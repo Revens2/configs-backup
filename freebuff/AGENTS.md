@@ -27,33 +27,14 @@ En cas d'erreur lors de l'exécution d'un skill (code de retour non nul, crash d
 
 ---
 
-## 3. STRATÉGIE À 3 NIVEAUX (ADAPTATION SKILLS)
+## 3. CONTEXT ENGINEERING
 
-### NIVEAU 1 — Externalisation & Organisation
-- **Organisation des chemins (Règle Globale Poste) :**
-  - **Tout code, script ou application créé :** `C:\\projet\\<nom_du_projet>`
-  - **Toute documentation (README, notes, mémo, rapports) :** `C:\\projetdocs\\clone de projet\\<sujet>`
-- **Fichier de suivi vivant (`progress.md`) :**
-  - Doit être créé dès l'Étape 0 à la racine du projet (`C:\\projet\\<nom>\\progress.md`).
-  - Il contient : l'objectif, la checklist des tâches, les commandes de validation et le journal d'erreurs append-only.
-- **Gestion des gros volumes (> 500 Ko ou > 1 000 lignes) :**
-  - Ne lis jamais un fichier massif d'un bloc.
-  - Utilise les skills de filtrage, grep, ou lecture partielle (offset/limit) pour n'extraire que le signal utile.
-
-### NIVEAU 2 — Récitation & Ancrage d'Attention (Append-Only)
-- **Étape 0 obligatoire :** Initialise le plan d'action dans `progress.md` avant toute écriture de code.
-- **Récitation en fin de message :** Réémets **systématiquement le bloc TODO complet à la toute fin de chaque réponse** (exploitation du biais de récence du modèle).
-- **Gating strict :** Aucune tâche ne passe à l'état `[x]` sans vérification concrète :
-  - Code : compilation/build OK, linter OK, tests unitaires/intégration verts.
-  - Système/Fichier : vérification d'existence, taille ou statut de service effectif.
-- **Historique immuable des erreurs :** Conserve toutes les traces d'erreurs passées dans `progress.md` pour immuniser la session contre les régressions.
-
-### NIVEAU 3 — Préservation du Contexte & Efficacité
-- **Préfixe immuable :** Ne modifie jamais l'en-tête de tes instructions ni les variables de base en cours de route.
-- **Mises à jour append-only :** Toutes les écritures d'état et d'historique s'ajoutent à la suite des fichiers existants.
-- **Navigation du code :** Privilégie l'analyse structurelle ciblée (recherche de symboles, définitions, imports) avant toute lecture exhaustive de dossiers.
-
----
+- **FAST** : direct, pas de plan lourd.
+- **STANDARD** : résoudre uniquement l'incertitude utile.
+- **DEEP / CRITICAL** : `plan.md` stable + `progress.md` snapshot compact réécrit en place ; `errors.md` append-only seulement si un historique détaillé est utile.
+- Ne jamais réémettre le TODO complet à chaque tour. Si nécessaire, terminer par une seule ligne : `STATE <étape>/<total> | next: <action> | blocker: <aucun|...>`.
+- Préférer chemins/IDs et lecture ciblée aux gros payloads ; ne pas transporter de transcript complet.
+- Une erreur résolue quitte `progress.md` ; son historique reste dans `errors.md` si nécessaire.
 
 ## 4. FORMAT DE COMMUNICATION & ANTI-BAVARDAGE
 
@@ -61,22 +42,8 @@ Les modèles compacts / open-source doivent concentrer leurs tokens sur le raiso
 
 - **Pas de formules de politesse :** Bannis les *"Bonjour"*, *"Avec plaisir"*, *"J'espère que cela vous convient"*.
 - **Pas de méta-commentaire :** Bannis les transitions inutiles (*"Je vais maintenant lire le fichier pour comprendre..."*). Appelle directement le skill de lecture.
-- **Sortie structurée :**
-  1. Résumé ultra-dense de l'action exécutée (1 ligne).
-  2. Résultat de la vérification / test (1 ligne).
-  3. Bloc TODO réémis en fin de message.
+- **Sortie structurée :** résultat exécuté + validation + blocage éventuel. Pas de TODO intégral répété.
 
----
-
-## 5. FORMAT DU BLOC TODO OBLIGATOIRE (À placer en fin de message)
-
-```markdown
-[PROGRESS STATE]
-- [x] Tâche 1 validée (vérification : build OK)
-- [/] Tâche 2 en cours (action : implémentation du handler)
-- [ ] Tâche 3 en attente (gating : tests unitaires)
-
-Erreurs rencontrées & résolues : N
 ## Broker de secrets — comment appeler l'infra sans jamais voir de credential
 
 Freebuff ne parle pas MCP. L'accès passe donc par un pont CLI, qui offre exactement les
@@ -118,12 +85,12 @@ Déjà installé et actif :
 - OpenCode : `C:\Users\Juliann\.config\opencode\opencode.jsonc` (section `mcp.claude-opus`, `mcp-remote@0.14.3` vers `https://mymcps.duckdns.org/claude-opus/mcp`, `MCP_REMOTE_CONFIG_DIR=C:\Users\Juliann\.mcp-auth`).
 - FreeBuff Desktop : `C:\Users\Juliann\.agents\mcp.json` (format `mcpServers`, même URL, même version). Ne pas dupliquer dans `mcp_config.json` / `.mcp.json` (sans effet sur FreeBuff).
 
-**Politique deux-passes (alignée OpenCode, adaptée sans MCP) :**
-- Passe 1 : les skills/outils collectent d'abord juste assez de faits, l'agent vérifie lui-même.
-- Passe 2 : AVANT la décision/stratégie principale d'une tâche non triviale, appeler obligatoirement le skill `opus-seconde-passe` (`.freebuff/skills/opus-seconde-passe/SKILL.md`) : Freebuff ne parle pas MCP donc pas d'`opus_think` — même discipline en auto-critique structurée (angles morts, causes, risques hiérarchisés, synthèse améliorée).
-- Exécuter et vérifier soi-même ensuite ; fusionner sans jamais supprimer un constat utile ignoré par la passe 2 (preuves d'abord, incertitude explicitée).
-- Nouvelle passe 2 si nouvelles preuves/échec changent la stratégie.
-- Pas de passe 2 pour trivial/déterministe.
+**Politique deux-passes :**
+- Passe 1 : collecter et vérifier d'abord les faits nécessaires.
+- Passe 2 : pour une tâche non triviale, appeler réellement Claude Opus via le mécanisme MCP/skill effectivement disponible. Ne jamais simuler cet appel par une simple auto-critique.
+- Si l'accès Opus est indisponible, le signaler et continuer en mode dégradé.
+- Opus critique le raisonnement ; toute nouvelle affirmation factuelle doit être vérifiée.
+- Nouvelle passe si de nouvelles preuves changent la stratégie. Pas d'Opus pour trivial/déterministe.
 
 ## 7. VAULT OBSIDIAN — SOURCE DE VÉRITÉ INFRA (aligné OpenCode)
 
@@ -169,3 +136,9 @@ node_modules/
 Pour toute action navigateur : utiliser la session Brave réelle de Juliann (cookies + logins LeBonCoin/Vinted), jamais le headless isolé (bloqué DataDome : `Accès temporairement restreint`).
 
 Procédure : `Stop-Process -Name brave -Force`, puis `Start-Process brave.exe --remote-debugging-port=9222 --remote-allow-origins=* --restore-last-session`, vérifier `http://127.0.0.1:9222/json/version` sans `HeadlessChrome`. Ne jamais demander mot de passe/2FA : faire valider dans la fenêtre visible.
+
+## Mémoire utilisateur locale
+
+Appliquer `LOCAL-AGENT-MEMORY.md` lorsque le contexte personnel peut changer la réponse : récupérer le contrat/contexte depuis le Vault avant de demander à l'utilisateur de répéter ; capturer automatiquement les corrections/préférences/objectifs explicites dans la couche privée ; garder toute inférence en proposition non vérifiée ; ne jamais stocker de secret en clair.
+
+Pour une décision nécessaire, utiliser un choix natif cliquable si le runtime le permet, sinon un QCM A/B/C très court avec la recommandation en premier.

@@ -11,6 +11,7 @@ Les fichiers à lire en priorité sont :
 - [`CONTEXT-ENGINEERING.md`](CONTEXT-ENGINEERING.md) — gestion du contexte, lost-in-the-middle, handoff et artefacts de mission.
 - [`REPARTITION-RUNTIMES.md`](REPARTITION-RUNTIMES.md) — choix entre Claude, ChatGPT/Codex, AGY, Freebuff et OpenCode.
 - [`SKILLS.md`](SKILLS.md) — index léger vers les répertoires de skills ; les `SKILL.md` réels restent la source de vérité.
+- [`LOCAL-AGENT-MEMORY.md`](LOCAL-AGENT-MEMORY.md) — protocole générique de mémoire/interaction pour les agents locaux ; les données personnelles restent dans le Vault et `Revens2/agent-memory-private`.
 
 Les fichiers racine `CLAUDE.md`, `AGENTS.md` et `GEMINI.md` sont de simples **pointeurs courts** vers ces sources et vers les règles propres à chaque runtime.
 

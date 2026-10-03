@@ -33,3 +33,9 @@ points à critiquer). Timeout MCP : 1 retry court, puis continuer sur passe 1 se
 Fusion par l'agent principal : ne jamais supprimer un constat utile ignoré par la passe 2 ;
 preuves d'abord, incertitude explicitée. Pas de passe 2 pour trivial/déterministe ;
 Opus n'est pas source factuelle.
+
+## Mémoire utilisateur locale
+
+Appliquer `LOCAL-AGENT-MEMORY.md` lorsque le contexte personnel peut changer la réponse : récupérer le contrat/contexte depuis le Vault avant de demander à l'utilisateur de répéter ; capturer automatiquement les corrections/préférences/objectifs explicites dans la couche privée ; garder toute inférence en proposition non vérifiée ; ne jamais stocker de secret en clair.
+
+Pour une décision nécessaire, utiliser un choix natif cliquable si le runtime le permet, sinon un QCM A/B/C très court avec la recommandation en premier.
