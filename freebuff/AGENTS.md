@@ -20,7 +20,7 @@
 En cas d'erreur lors de l'exécution d'un skill (code de retour non nul, crash de build, test en échec, fichier introuvable) :
 
 1. **Interdiction de solliciter l'utilisateur immédiatement.**
-2. **Consignation de l'erreur :** Enregistre immédiatement l'erreur exacte et sa stack trace dans la section `## Journal des Erreurs` de `progress.md`.
+2. **Consignation de l'erreur :** si l'historique détaillé est utile, écrire l'erreur dans `errors.md`; garder `progress.md` comme snapshot compact courant.
 3. **Hypothèse & Correction :** Analyse la cause racine et formule une alternative technique.
 4. **Obligation de 2 tentatives autonomes :** Tu dois tester au moins **deux approches de contournement ou correctifs distincts** par toi-même avant de déclarer un blocage.
 5. **Anti-boucle :** Interdiction de réexécuter à l'identique une commande ou une modification qui a déjà échoué.
