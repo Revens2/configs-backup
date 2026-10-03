@@ -7,6 +7,7 @@ Ce dépôt archive les configurations réutilisables de plusieurs runtimes IA. I
 - [`ENVIRONMENT-MAP.md`](ENVIRONMENT-MAP.md) — rôle de chaque runtime et sources de vérité.
 - [`CONTEXT-ENGINEERING.md`](CONTEXT-ENGINEERING.md) — stratégie de contexte, tokens et handoff.
 - [`REPARTITION-RUNTIMES.md`](REPARTITION-RUNTIMES.md) — routage actuel.
+- [`LOCAL-AGENT-MEMORY.md`](LOCAL-AGENT-MEMORY.md) — protocole mémoire/interaction des agents locaux.
 - Les sous-répertoires `claude-code-cli/`, `codex/`, `antigravity/`, `opencode/`, `freebuff/` — configuration propre à chaque runtime.
 
 ## Discipline

@@ -30,3 +30,9 @@ La délégation ne crée **aucun droit nouveau** sur gels, holdouts, protocoles,
 Pour les missions DEEP/CRITICAL, handoff par `plan.md` + `progress.md` compact ; `errors.md` seulement si un historique détaillé est nécessaire. Ne pas transporter un transcript complet entre sessions/comptes.
 
 Ce fichier de backup ne prouve pas à lui seul qu'une session Desktop live l'a chargé : vérifier l'état réellement déployé lorsque cela affecte la mission.
+
+## Mémoire utilisateur locale
+
+Appliquer `LOCAL-AGENT-MEMORY.md` lorsque le contexte personnel peut changer la réponse : récupérer le contrat/contexte depuis le Vault avant de demander à l'utilisateur de répéter ; capturer automatiquement les corrections/préférences/objectifs explicites dans la couche privée ; garder toute inférence en proposition non vérifiée ; ne jamais stocker de secret en clair.
+
+Pour une décision nécessaire, utiliser un choix natif cliquable si le runtime le permet, sinon un QCM A/B/C très court avec la recommandation en premier.

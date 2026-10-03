@@ -1,53 +1,14 @@
 # Configuration OpenCode — Juliann
 
-## Délégation systématique aux subagents — règle absolue (anti context-bloat)
+## Délégation adaptative aux subagents
 
-> L'agent principal NE FAIT JAMAIS de context gathering volumineux lui-même. Il DÉLÈGUE TOUJOURS via Task. L'utilisateur ne doit jamais avoir à le demander — c'est automatique, dès le premier tour.
-
-**INTERDICTIONS agent principal :**
-- INTERDIT de lire >3 fichiers, de lancer glob/grep large, de lire logs/dumps volumineux, de lister un dossier volumineux, d'explorer une codebase, de faire une recherche web, de chercher dans le vault, de planifier une tâche complexe — sans passer par Task.
-- INTERDIT de refaire le travail d'un subagent ou de re-lire les fichiers déjà triés par lui. Consommer uniquement son retour compact.
-- INTERDIT d'utiliser des subagents génériques `general` / `explore` — seuls les 12 subagents dédiés ci-dessous sont autorisés (`permission.task.general/explore: deny` dans `opencode.jsonc`, les autres `task:*` restent `allow` par défaut).
-
-**OBLIGATIONS :**
-1. Dès qu'un signal du tableau de routage correspond → appel Task IMMÉDIAT, sans demander confirmation.
-2. Signaux indépendants → appels Task en PARALLÈLE dans le même bloc.
-3. Prompt Task = question précise + périmètre + format de retour attendu (chemins:lignes, pas de dump brut).
-4. Retour subagent = livrable auto-suffisant. Le synthétiser, ne jamais le re-dumper ni le re-vérifier en relisant tout.
-
-### Orchestration d'équipe — DEEP / CRITICAL
-
-Pour une mission complexe, construis un petit graphe de travail au lieu d'enchaîner mécaniquement les spécialistes.
-
-1. **Fan-out factuel** : si au moins deux axes sont indépendants, lance **2 à 4 subagents en parallèle** dans le même bloc Task : `decouverte` + les spécialistes contexte/doc/web/infra utiles.
-2. **Consolidation** : récupère leurs briefs compacts, compare les contradictions et relance seulement le point encore incertain. Ne refais pas leur collecte.
-3. **Seconde passe Opus** : faits suffisants établis, et avant une décision structurante d'architecture, diagnostic causal, migration, sécurité ou arbitrage, lance `opus-seconde-passe`.
-4. **Planification** : pour DEEP/CRITICAL, transmets au `planificateur` les briefs déjà consolidés ; il ne recommence pas une exploration valide.
-5. **Implémentation** : l'agent principal Muse Spark reste propriétaire des décisions et du code applicatif. `little-tasks` n'écrit que sur un périmètre mécanique explicitement disjoint.
-6. **Vérification indépendante** : après un diff/PR/CI significatif, lance `github-code-review`. Refaire Opus seulement si de nouvelles preuves ou un échec changent la stratégie.
-
-Règles : ne sérialise pas des missions indépendantes ; aucun fichier écrit par deux agents en parallèle ; chaque Task précise mission, périmètre, livrable, dépendances et droits d'écriture ; vise au plus 4 subagents actifs sauf gain clair ; pas de fan-out décoratif sur FAST.
-
-**Table de routage exhaustive (12 subagents `~/.config/opencode/agents/`) :**
-| Signal | Subagent à appeler |
-|---|---|
-| Où est X, architecture, appelants, dépendances, blast radius, CodeGraph/Graphify | `decouverte` |
-| Doc versionnée lib/framework/SDK/API, signature, option de config, pattern déprécié (avant de coder) | `docs-fetcher` |
-| Branche, PR, `git diff`, `gh pr`, workflow CI/CD, revue de code | `github-code-review` |
-| Conversion brute/répétitive (JSON↔YAML, cURL→env, mocks/fixtures, JSDoc, scaffolding) | `little-tasks` |
-| Infra/VPS/stack/ports/env manquants, fiche projet, lecture vault Obsidian | `obsidian-context-retriever` |
-| Écriture dans le vault (créer/corriger/déplacer/renommer/réindexer notes) | `obsidian-vault-maintainer` |
-| Incertitude ou blast radius élevé : migration, refactor large, feature importante, audit, architecture → `plan.md`/`progress.md` | `planificateur` |
-| Audit SEO, maillage, Schema.org, cocon sémantique, métadonnées, Core Web Vitals | `seo-expert` |
-| Fichier >500 Ko ou >1000 lignes, logs/dumps/CSV/JSON massifs, dossier volumineux, output de build | `triage-contexte` |
-| Linux, systemd, Docker/Compose, PM2, SSH, pare-feu, réseau/VPN, backup, état VPS | `vps-sysadmin` |
-| Recherche web, état de l'art, veille, doc API externe en ligne | `web-researcher` |
-| Seconde passe de réflexion : critique d'analyse, angles morts, causes, risques hiérarchisés (audit, archi, diagnostic, décision, migration, revue de travail produit) | `opus-seconde-passe` |
-
-**Seules exceptions (à justifier en 1 ligne si utilisées) :**
-- Fichier unique <200 lignes explicitement nommé par l'utilisateur.
-- Fix one-liner évident déjà localisé, sans exploration.
-- Tout le reste → subagent. En cas de doute entre deux subagents → appeler les deux en parallèle.
+- **FAST** : exécution directe ; aucun fan-out.
+- **STANDARD** : un spécialiste ciblé pour l'incertitude réelle ; plusieurs seulement si les axes sont indépendants.
+- **DEEP / CRITICAL** : si au moins deux workstreams indépendants existent, lancer 2 à 4 spécialistes en parallèle, puis consolider.
+- L'agent principal reste propriétaire des décisions et des écritures applicatives ; aucun fichier n'est modifié par deux agents en parallèle.
+- Utiliser `opus-seconde-passe` après consolidation des faits et avant une décision structurante complexe.
+- Les subagents génériques `general` / `explore` restent interdits si la configuration les désactive ; utiliser les spécialistes réellement disponibles.
+- Ne jamais déléguer par réflexe : le gain attendu doit être parallélisme, isolation de contexte, spécialisation ou vérification indépendante.
 
 ## Mode de Communication Ultra-Compressé (Skill Caveman)
 
@@ -99,15 +60,15 @@ node_modules/
 
 **Instruction d'exécution** : Vérifier la présence de `.claudeignore` / `.opencodeignore` à la racine dès le premier tour dans un projet. Si absent, créer le fichier immédiatement avec ces règles avant d'effectuer les recherches et lectures de fichiers.
 
-## Génération, navigation et mise à jour automatique de Graphify & Code Graph
+## Navigation de code adaptative — Graphify / CodeGraph
 
-**INTERDIT home `C:\Users\Juliann`.** Jamais `codegraph init/index`, jamais `graphify extract/update` si CWD = home ou sans git root ; DB/scopes uniquement sous `C:\projet\<nom>\`.
+**INTERDIT home `C:\\Users\\Juliann`.** Jamais d'initialisation de graphe sans git root projet.
 
-Si un projet possède un fichier `CLAUDE.md`, `GEMINI.md` ou `AGENTS.md` à sa racine :
-1. **Génération initiale** : Générer automatiquement la base de connaissances `graphify` (`graphify extract <chemin> --code-only` puis `graphify tree`) et le graphe de dépendances `codegraph` si absents dès le démarrage des travaux.
-2. **Navigation intelligente** : Se référer en priorité aux données `graphify` (`graphify query`, `graphify god-nodes`, `graphify-out/graph.json`) et `codegraph` pour comprendre l'architecture, naviguer intelligemment et cibler les fichiers à modifier de manière optimisée.
-3. **Mise à jour post-développement** : Après avoir créé ou modifié d'importantes fonctionnalités dans le projet, ré-exécuter automatiquement la mise à jour des graphes `graphify` et `codegraph`.
-
+- Architecture, rôle de fichier, communautés → **Graphify**.
+- Symboles, appelants, dépendances, blast radius → **CodeGraph**.
+- Refactor/migration large avec incertitude structurelle → **les deux**.
+- Fix localisé / fichier et impact déjà connus → **aucun graphe obligatoire**.
+- Mettre à jour uniquement les graphes réellement utilisés lorsqu'un changement structurel significatif le justifie.
 
 ## Autonomie Maximale & Prise de Décision Proactive
 
@@ -252,3 +213,9 @@ revue d'un travail produit — travail systématique en deux passes, SANS demand
 - Règles complémentaires : AVANT la décision/stratégie principale (pas après coup) ;
   nouvel appel si nouvelles preuves/échec changent la stratégie ; pas d'Opus pour
   trivial/déterministe ; Opus n'est pas source factuelle.
+
+## Mémoire utilisateur locale
+
+Appliquer `LOCAL-AGENT-MEMORY.md` lorsque le contexte personnel peut changer la réponse : récupérer le contrat/contexte depuis le Vault avant de demander à l'utilisateur de répéter ; capturer automatiquement les corrections/préférences/objectifs explicites dans la couche privée ; garder toute inférence en proposition non vérifiée ; ne jamais stocker de secret en clair.
+
+Pour une décision nécessaire, utiliser un choix natif cliquable si le runtime le permet, sinon un QCM A/B/C très court avec la recommandation en premier.
