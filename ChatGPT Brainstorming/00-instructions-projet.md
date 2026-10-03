@@ -1,6 +1,6 @@
 # Instructions du projet Brainstorming (ChatGPT)
 
-Comportement canonique : **`PROMPT-BRAINSTORMING.md`** (même Project) — cadrage,
+Comportement canonique : **`PROMPT-BRAINSTORMING.md`** (Sources du projet) — cadrage,
 architecture, génération de prompts. Ce loader ne duplique pas son contenu.
 
 ## Bootstrap
