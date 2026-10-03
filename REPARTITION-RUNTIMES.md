@@ -1,6 +1,7 @@
 # Répartition actuelle des runtimes
 
 Ce fichier décrit le **routage logique actuel**. Les versions de modèles, IP, ports et mesures de contexte vieillissent vite et ne sont pas figés ici ; les récupérer dans les configurations runtime, le Vault ou l'état réel.
+Autorité routage : `ENVIRONMENT-MAP.md` (carte canonique). Ce fichier détaille le rôle de chaque runtime.
 
 ## Claude Code CLI / Desktop — primaire
 
@@ -46,11 +47,11 @@ Usage : rapports, transformations, extraction, documentation passive et tâches 
 
 Pas de dépendance supposée à des MCP ou sous-agents. Donner un brief minimal et le payload strictement nécessaire. Ne pas lui transmettre toute la topologie de la stack.
 
-## OpenCode + Qwen local — local / expérimental
+## OpenCode + Muse Spark 1.3 — fallback quota préféré
 
-Usage rare : tâches simples, essais locaux, gros volume peu exigeant en raisonnement, cas où le coût marginal local est intéressant.
+Fallback préféré quand le quota Claude/Codex est bloquant et que la tâche ne contient pas de données sensibles (UOC) : mécanique/locale/réversible, scripts/config/tests/doc, et implémentations complexes déjà cadrées par un plan/protocole stable. Modèle actif vérifié : `opencode/muse-spark-1.3-contributor-free` (config OpenCode, 2026-10-03) — revérifier en live, ne jamais figer ici.
 
-Ne pas en faire le chemin critique d'une migration, d'une architecture ou d'une intervention risquée tant que la fiabilité tool-use/agentique du modèle local n'est pas suffisante.
+Ne pas lui confier seul une décision scientifique ou architecturale encore ouverte. Pour une mission complexe, le prompt impose une seconde passe MCP Claude Opus réelle (`PROMPT-BRAINSTORMING.md` § 2 bis).
 
 ## Règle de choix
 
@@ -58,7 +59,7 @@ Ne pas en faire le chemin critique d'une migration, d'une architecture ou d'une 
 2. Claude indisponible/quota épuisé → **AGY en fallback complet**.
 3. Besoin d'un runtime fort multi-agent, exécution depuis ChatGPT ou parallélisation pertinente → **Codex**.
 4. Rapport/transformation/tâche textuelle peu risquée → **Freebuff**.
-5. Besoin local/offline/expérimental ou gros volume peu exigeant → **OpenCode/Qwen**.
+5. Quota Claude/Codex bloquant, données non sensibles → **OpenCode + Muse Spark 1.3** (fallback préféré UOC) ; sinon usage local/expérimental simple.
 
 La disponibilité réelle, les outils nécessaires, le blast radius et le coût de contexte priment sur cette préférence.
 

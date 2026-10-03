@@ -9,7 +9,7 @@ Ce fichier décrit **la topologie logique stable** de la stack IA. Il ne contien
 - **Codex** : runtime d'exécution complet et multi-agent, alternative de premier rang à Claude Code et bras local de ChatGPT quand c'est pertinent.
 - **Antigravity / AGY** : **fallback complet** quand le quota Claude est épuisé. Il doit recevoir le même niveau d'exigence qu'une mission Claude. Son mécanisme d'orchestration peut différer (rules / skills / plugins / hooks / capacités effectivement disponibles), mais le prompt ne doit jamais être volontairement “dégradé”.
 - **Freebuff** : worker économique pour rapports, transformations et tâches textuelles peu risquées. Ne pas lui envoyer inutilement toute la stack.
-- **OpenCode + Qwen local** : runtime local/expérimental, utile pour tâches simples, gros volume à coût marginal faible ou essais ; pas le chemin critique par défaut.
+- **OpenCode + Muse Spark 1.3** : fallback préféré quand le quota Claude/Codex est bloquant et que la tâche ne contient pas de données sensibles (UOC). Mécanique/locale/réversible, scripts/config/tests/doc, implémentations déjà cadrées ; pas de décision scientifique ou architecturale ouverte en solo. Modèle exact et disponibilité : état live, jamais figés ici.
 
 ## Sources de vérité
 
@@ -130,6 +130,6 @@ La complexité en nombre d'étapes n'est pas un motif suffisant pour payer les d
 2. Claude indisponible ou quota contraint → **AGY comme fallback complet**, sans réduire l'ambition de la mission.
 3. Besoin d'un second runtime fort, multi-agent, ou exécution issue de ChatGPT → **Codex**.
 4. Rapport/transformation/tâche textuelle peu risquée → **Freebuff ou worker économique**.
-5. Besoin local/offline/expérimental ou volume peu exigeant → **OpenCode/Qwen**.
+5. Quota Claude/Codex bloquant + données non sensibles → **OpenCode + Muse Spark 1.3** (fallback préféré UOC) ; sinon besoin local/offline/expérimental simple.
 
 Le choix doit aussi tenir compte de la disponibilité réelle, des outils nécessaires et du coût de contexte ; il n'est jamais basé sur une ancienne mesure figée.

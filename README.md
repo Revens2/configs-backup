@@ -6,7 +6,7 @@ Ce dépôt archive les configurations réutilisables et assainies de Claude Code
 
 Les fichiers à lire en priorité sont :
 
-- [`PROMPT-BRAINSTORMING.md`](PROMPT-BRAINSTORMING.md) — comportement du Brainstormer ChatGPT et bootstrap `@RAG` + `@GitHub`.
+- [`PROMPT-BRAINSTORMING.md`](PROMPT-BRAINSTORMING.md) — comportement du Brainstormer ChatGPT et bootstrap `@RAG` + `@GitHub` (canonique unique ; `PROMPT-BRAINSTORMING-v2.md` n'est qu'un stub de redirection).
 - [`ENVIRONMENT-MAP.md`](ENVIRONMENT-MAP.md) — carte logique de la stack et sources de vérité.
 - [`CONTEXT-ENGINEERING.md`](CONTEXT-ENGINEERING.md) — gestion du contexte, lost-in-the-middle, handoff et artefacts de mission.
 - [`REPARTITION-RUNTIMES.md`](REPARTITION-RUNTIMES.md) — choix entre Claude, ChatGPT/Codex, AGY, Freebuff et OpenCode.
