@@ -60,3 +60,12 @@ freebuff/*
 plan.md
 progress*.md
 errors.md
+
+# Skills propres au PC fixe (vidéo) — installés localement, jamais synchronisés entre PC
+**/skills/hyperframes/
+**/skills/hyperframes-*/
+**/skills/media-use/
+
+# Archives locales (peuvent contenir des secrets)
+**/archives/
+_archive/

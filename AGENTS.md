@@ -40,3 +40,13 @@ Ce dépôt archive les configurations réutilisables de plusieurs runtimes IA. I
 - Vérifier les changements avec les tests/checks adaptés.
 - Ne pas pousser, déployer, merger ou effectuer d'action externe sans le périmètre demandé.
 - Les artefacts de mission (`plan.md`, `progress.md`, `errors.md`) ne sont pas de la configuration durable et restent hors Git.
+
+## Dépôt partagé entre plusieurs PC
+
+Ce dépôt sert à recopier la configuration entre au moins deux PC (PC fixe et autre machine).
+
+- Une config live (`~/.claude`, `~/.codex`, `~/.gemini`, `~/.config/opencode`) **peut légitimement différer** de ce dépôt ou de l'autre PC : chemins locaux, runtimes installés, modèles disponibles, MCP présents, skills propres à une machine.
+- Ne pas « corriger » une divergence à l'aveugle : vérifier d'abord si elle est spécifique à la machine. Dans le doute, conserver la version locale et signaler l'écart.
+- Ne jamais écraser une config live avec ce dépôt sans comparer d'abord les deux (diff).
+- Éléments propres au PC fixe, exclus via `.gitignore` et à ne pas recopier : skills `hyperframes*` et `media-use` (production vidéo).
+- Un nouvel élément propre à une seule machine va dans `.gitignore` et dans cette liste.
