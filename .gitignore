@@ -69,3 +69,6 @@ errors.md
 # Archives locales (peuvent contenir des secrets)
 **/archives/
 _archive/
+
+# Claude Desktop : cache OAuth chiffré, propre à la machine
+claude-code-desktop/config.json
