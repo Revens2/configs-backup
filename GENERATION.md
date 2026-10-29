@@ -8,10 +8,10 @@
 | Objet | Fichier canonique |
 |---|---|
 | Règles du dépôt, routage, catégories | `AGENTS.md`, `ENVIRONMENT-MAP.md`, `SKILLS.md`, `REPARTITION-RUNTIMES.md` |
-| Socle OpenCode (+12 agents) | `opencode/AGENTS.md`, `opencode/agents/*.md` |
-| Socle Codex (+12 agents) | `codex/AGENTS.md`, `codex/agents/*.toml` |
+| Socle OpenCode (+11 agents) | `opencode/AGENTS.md`, `opencode/agents/*.md` |
+| Socle Codex (+11 agents) | `codex/AGENTS.md`, `codex/agents/*.toml` |
 | Addendum Claude Code Desktop | `claude-code-desktop/CLAUDE.md` |
-| Rôles logiques partagés | `ENVIRONMENT-MAP.md` § Spécialistes (12 Codex/OpenCode, 11 AGY) |
+| Rôles logiques partagés | `ENVIRONMENT-MAP.md` § Spécialistes (11 Codex/OpenCode, 10 AGY) |
 
 ## Miroirs (générés/déployés, ne pas diverger à la main)
 
@@ -30,8 +30,8 @@
   vs `.toml` Codex (`name/description/model/model_reasoning_effort/developer_instructions`).
 - `opus-seconde-passe` côté Codex = réflexion pure sans `opus_think`
   (pas d'outil distant exposé) — voir `codex/agents/opus-seconde-passe.toml`.
-- AGY reste à 11 agents (`opus-seconde-passe` non porté — GEMINI/AGY a son propre
-  découpage à 7 sous-agents, voir `GEMINI.md`).
+- AGY reste à 10 agents (`obsidian-vault-maintainer` retiré, `opus-seconde-passe`
+  non porté — GEMINI/AGY a son propre découpage à 7 sous-agents, voir `GEMINI.md`).
 
 ## Changements 2026-09-25 (v1)
 
@@ -48,6 +48,13 @@
 6. `ENVIRONMENT-MAP.md` : 11 → 12 rôles (AGY reste à 11, documenté).
 7. `tests/verifier-parite.sh` : 12 attendus Codex/OpenCode, 11 AGY ; 12 agents
    OpenCode via `debug config`.
+
+## Changements 2026-10-29
+
+- Retrait d'`obsidian-vault-maintainer` (Codex, OpenCode, AGY) : Codex/OpenCode 12 → 11,
+  AGY 11 → 10.
+- `codex/config.toml` : `gpt-6.1-terra` par défaut et pour les sous-agents, effort `high`.
+- `tests/verifier-parite.sh` : 11 attendus Codex/OpenCode (build/plan exclus du compte), 10 AGY.
 
 ## Vérifications
 

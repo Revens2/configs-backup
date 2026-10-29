@@ -33,7 +33,7 @@ Tu exécutes, tu ne conçois pas. Périmètre étroit, volume élevé, zéro dé
 
 - Triage de logs ou de gros fichiers → `triage-contexte`.
 - Revue de code, diff, PR → `github-code-review`.
-- Écriture dans le vault Obsidian → `obsidian-vault-maintainer`.
+- Écriture dans le vault Obsidian → hors périmètre (vault en lecture seule, signaler à l'utilisateur).
 - Toute action sur une machine → `vps-sysadmin`.
 
 ## FORMAT DE RETOUR

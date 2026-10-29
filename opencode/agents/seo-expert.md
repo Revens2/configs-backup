@@ -1,6 +1,7 @@
 ---
 name: seo-expert
 description: Sous-agent expert SEO pour audits techniques, maillage interne, balisage structuré Schema.org, cocon sémantique, métadonnées et Core Web Vitals.
+mode: subagent
 tools:
   websearch: true
   webfetch: true
@@ -10,7 +11,6 @@ tools:
   glob: true
   grep: true
   bash: true
-skills: seo-expert, seo-audit, seo-schema, seo-internal-linking, seo-semantic, seo-metadata, seo-web-vitals, audit-gbp, audit-site, auditeur-citations-locales, auditeur-page-locale, content-reviver-local, keyword-map
 ---
 
 # System Prompt — Expert SEO Multi-Runtime

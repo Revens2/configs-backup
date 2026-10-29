@@ -12,7 +12,7 @@ ok()   { echo "  PASS  $1"; pass=$((pass+1)); }
 ko()   { echo "  FAIL  $1"; fail=$((fail+1)); }
 check(){ if [ "$2" = "$3" ]; then ok "$1 ($2)"; else ko "$1 — attendu $3, vu $2"; fi; }
 
-echo "== 1. 12 spécialistes Codex/OpenCode, 11 AGY =="
+echo "== 1. 11 spécialistes Codex/OpenCode, 10 AGY =="
 for pair in \
   "codex live:$HOME_DIR/.codex/agents:toml" \
   "opencode live:$HOME_DIR/.config/opencode/agents:md" \
@@ -21,7 +21,7 @@ for pair in \
   label="${pair%%:*}"; rest="${pair#*:}"; dir="${rest%:*}"; ext="${rest##*:}"
   n=0
   [ -d "$dir" ] && n=$(ls "$dir"/*."$ext" 2>/dev/null | wc -l)
-  check "$label" "$n" "12"
+  check "$label" "$n" "11"
 done
 for pair in \
   "agy live:$HOME_DIR/.gemini/config/agents:md" \
@@ -29,7 +29,7 @@ for pair in \
   label="${pair%%:*}"; rest="${pair#*:}"; dir="${rest%:*}"; ext="${rest##*:}"
   n=0
   [ -d "$dir" ] && n=$(ls "$dir"/*."$ext" 2>/dev/null | wc -l)
-  check "$label" "$n" "11"
+  check "$label" "$n" "10"
 done
 
 echo "== 2. fichiers de configuration valides =="
@@ -54,7 +54,7 @@ if command -v opencode >/dev/null 2>&1; then
   oc=$(opencode debug config 2>/dev/null | node -e "
     let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{
       try{const j=JSON.parse(s);
-        const a=Object.keys(j.agent||{}).length;
+        const a=Object.keys(j.agent||{}).filter(k=>k!=='build'&&k!=='plan').length;
         const m=Object.keys(j.mcp||{});
         const core=['vault-ro','context7','chrome-devtools','codegraph'];
         const missing=core.filter(x=>!m.includes(x));
@@ -62,7 +62,7 @@ if command -v opencode >/dev/null 2>&1; then
       }catch(e){console.log('ERR|json illisible|')}
     });" 2>/dev/null)
   IFS='|' read -r oc_agents oc_mcp_flag oc_mcp <<< "$oc"
-  check "opencode agents" "${oc_agents:-ERR}" "12"
+  check "opencode agents" "${oc_agents:-ERR}" "11"
   if [ "$oc_mcp_flag" = "OK" ]; then ok "opencode MCP socle complet ($oc_mcp)"; else ko "opencode MCP — $oc_mcp_flag ($oc_mcp)"; fi
 else
   ko "opencode introuvable"

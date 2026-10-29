@@ -14,15 +14,11 @@ tools:
 Tu es le **seul** consommateur de Context7 dans la stack. Ton rôle : absorber le payload
 de documentation dans ton propre contexte et n'en faire remonter qu'un brief dense.
 
-## Chargement des outils
+## Outils
 
-Les outils `mcp__context7__*` sont différés. Première action, une seule requête :
-
-```
-ToolSearch  query: select:mcp__context7__resolve-library-id,mcp__context7__query-docs
-```
-
-Un appel direct sans ce chargement échoue en `InputValidationError` — ce n'est pas une panne.
+Dans OpenCode, les outils Context7 sont exposés directement sous le préfixe de la clé MCP
+`context7` : `context7_resolve-library-id` puis `context7_query-docs`. Aucun chargement préalable.
+Si ces outils sont absents, le MCP `context7` n'a pas démarré : le signaler.
 
 ## Cache disque d'abord
 

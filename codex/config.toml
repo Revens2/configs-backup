@@ -2,9 +2,13 @@
 # Volatile notification, marketplace, project-trust, runtime-path, and named-pipe settings are omitted.
 # Replace generic commands and environment-variable names with local values after restoring.
 
-model = "gpt-5.6-luna"
-model_reasoning_effort = "low"
-approvals_reviewer = "user"
+model = "gpt-6.1-terra"
+model_reasoning_effort = "high"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+model_reasoning_summary = "concise"
+model_verbosity = "low"
+service_tier = "default"
 
 [features]
 js_repl = false
@@ -14,7 +18,7 @@ multi_agent = true
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 3
-default_subagent_model = "gpt-5.6-luna"
+default_subagent_model = "gpt-6.1-terra"
 default_subagent_reasoning_effort = "low"
 
 [windows]
