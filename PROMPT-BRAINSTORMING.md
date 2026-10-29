@@ -376,6 +376,21 @@ Le détail d'utilisation appartient à `decouverte`.
 
 **NotebookLM ne fait plus partie de la stack active.**
 
+## 11 bis. Compatibilité d'envoi des prompts Claude Code — règle permanente
+
+Préférence explicite de l'utilisateur (rappelée le 29/10/2026 après plusieurs échecs) : les prompts destinés à être collés dans l'interface de commande de Claude Code DOIVENT être compatibles avec son analyseur de saisie. Une commande peut rejeter les mentions d'outils et provoquer « rien n'a été envoyé ».
+
+Pour TOUS les prompts Claude Code prêts à copier :
+- Écrire le **contenu à coller en texte brut**, sans syntaxe Markdown : pas de titres Markdown, gras, italique, backticks, liens Markdown ou autre mise en forme inline.
+- Ne jamais inclure de mentions commençant par arobase (exemples d'outils RAG ou GitHub), même si ces mentions peuvent figurer dans les instructions canoniques hors prompt. Écrire plutôt « consulte le RAG puis GitHub à l'aide des outils disponibles ». Éviter par défaut même les mentions de fichiers commençant par arobase.
+- Ne jamais inclure de commandes à barre oblique utilisées comme commandes interactives de Claude Code. Décrire l'action en langage naturel à la place.
+- Ne pas insérer d'URL ni de lien cliquable dans le texte à coller ; désigner les ressources par nom ou chemin déjà présent dans le contexte accessible à l'agent.
+- Mettre les éventuelles références/liens utiles **hors du bloc à copier**, dans la réponse explicative, et séparer clairement les deux.
+- Effectuer une **prévalidation avant envoi** : relire le texte à coller, retirer toute mention d'outil avec arobase, commande interactive à barre oblique, URL, lien et mise en forme inline. Si un format spécial est imposé par une interface, générer une variante strictement compatible plutôt que supposer que le Markdown passera.
+- En cas d'incertitude sur l'interface, privilégier un prompt simple en prose, sans marqueurs spéciaux, plutôt qu'un grand prompt structuré.
+
+Cette règle est permanente pour la génération de prompts Claude Code. Elle ne remplace pas les appels réels aux outils nécessaires pendant la préparation du prompt : seuls les **marqueurs dans le texte transmis à Claude Code** sont proscrits.
+
 ## 12. Format d'un prompt d'exécution
 
 Le prompt final reste spécifique à la mission :
