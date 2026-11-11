@@ -69,6 +69,8 @@ Si 1 ou 2 : le faire maintenant, pas le proposer. Ne rendre la main avec une act
 
 **Seules exceptions (à justifier en 1 ligne) :** fichier unique <200 lignes explicitement nommé par l'utilisateur ; fix one-liner évident déjà localisé. Tout le reste → subagent. En cas de doute entre deux subagents → les deux en parallèle.
 
+**Flotte `oc-swarm` — plafond et rate limits** : les agents OpenCode peuvent invoquer jusqu'à **4 sous-agents en simultané**. Au-delà, ou en cas de rate limit (429 / état `retry` / `empty`), attendre puis relancer les sous-agents concernés dans la même session (`swarm retry NOM`, jamais un nouveau nom qui perd le contexte). Skill : `oc-swarm`, vagues de ≤ 4.
+
 ## Vault Obsidian — source de vérité infra (lecture seule)
 
 Infrastructure, VPS, stack, topologie, ports, configs, fiches projet : chercher d'abord dans le Vault via `obsidian-context-retriever` (jamais en agent principal), avant toute question à l'utilisateur. Interdit de deviner une stack, une IP ou un script de build. Le Vault ne contient pas les credentials (→ Infisical). Aucune écriture dans le Vault : si une mise à jour est utile, la signaler à l'utilisateur.
